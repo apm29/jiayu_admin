@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <router-view></router-view>
+    <notifications group="success" />
   </v-app>
 </template>
 

@@ -84,7 +84,11 @@
           let res = await this.$remote.post({
             url: '/auth/captcha'
           })
-          this.$notify.success(res.Msg)
+          this.$notify({
+            group: 'foo',
+            title: 'Important message',
+            text: res.Msg
+          });
         } catch (e) {
           console.log(e)
         }
