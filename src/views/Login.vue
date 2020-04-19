@@ -58,6 +58,7 @@
                             <v-spacer/>
                             <v-btn color="primary" @click="login">Login</v-btn>
                         </v-card-actions>
+
                     </v-card>
                 </v-col>
             </v-row>
@@ -85,9 +86,7 @@
             url: '/auth/captcha'
           })
           this.$notify({
-            group: 'foo',
-            title: 'Important message',
-            text: res.Msg
+            title: res.Msg,
           });
         } catch (e) {
           console.log(e)
@@ -96,11 +95,25 @@
       },
 
       login: async function () {
-        let res = await this.$remote.post({
-          url: '/auth/login',
-          data:this.form
-        })
-        console.log(res)
+        try {
+          let res = await this.$remote.post({
+            url: '/auth/login',
+            data: this.form
+          })
+          this.$notify({
+            title: res.Msg,
+          });
+          let noRedirectQuery = {...this.$route.query}
+          noRedirectQuery.redirect = undefined
+          let path = this.$route.query.redirect || '/'
+          await this.$router.push({
+            path: path,
+            query:noRedirectQuery,
+            replace:true
+          })
+        } catch (e) {
+          console.log(e)
+        }
       }
     }
   }

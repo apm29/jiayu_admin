@@ -11,6 +11,7 @@ import remote from '@/utils/remote'
 Vue.use(Notifications)
 Vue.config.productionTip = false
 Vue.prototype.$remote = remote
+Vue.prototype.$validator = validator
 router.beforeEach((to, from, next) => {
   if (validator.isValidateUser() || to.path === '/login') {
     next()

@@ -1,10 +1,11 @@
 import axios from 'axios'
 import config from '@/utils/config'
-
+import router from '@/router/router'
+import Vue from 'vue'
 axios.defaults.withCredentials = true // 是否允许跨域
 axios.defaults.timeout = 10000
-axios.defaults.baseURL = config.baseUrl
-
+axios.defaults.baseURL = 'http://localhost:9998//'//config.baseUrl
+axios.defaults.validateStatus = () => true
 export default {
   // 上传处理
   async upload (options) {
@@ -47,13 +48,21 @@ export default {
       },
     })
     if (axiosResponse.data.Code === 200) {
-      if (axiosResponse.data.token) {
-        localStorage.setItem(config.tokenKey, axiosResponse.data.token)
+      if (axiosResponse.data.Token) {
+        localStorage.setItem(config.tokenKey, axiosResponse.data.Token)
       }
       return axiosResponse.data
-    } else {
-      throw Error(axiosResponse.data.Msg || axiosResponse.statusText)
     }
-
+    if (axiosResponse.data.Code === 401) {
+      router.push({
+        path: '/login'
+      })
+    }
+    if(axiosResponse.data.Code === 403){
+      Vue.notify({
+        title:axiosResponse.data.Msg,
+      })
+    }
+    throw Error("")
   },
 }

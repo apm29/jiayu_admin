@@ -5,4 +5,7 @@ export default {
     let token = localStorage.getItem(config.tokenKey)
     return !!token
   },
+  logout:function () {
+    localStorage.setItem(config.tokenKey,null)
+  }
 }

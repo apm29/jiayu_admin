@@ -13,5 +13,15 @@ export default new VueRouter({
         name: 'login',
         component: () => import("@/views/Login")
       },
+
+
+
+
+
+      {
+        path: '*',
+        name: '404',
+        component: () => import("@/views/NotFound")
+      },
     ]
 })
