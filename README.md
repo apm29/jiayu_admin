@@ -1,5 +1,7 @@
 # jiayu_admin
 
+[![构建状态](https://apm29.coding.net/badges/jiayu_java/job/223149/master/build.svg)](https://apm29.coding.net/p/jiayu_java/ci/job)
+
 ## Project setup
 ```
 npm install

@@ -104,7 +104,7 @@
             title: res.Msg,
           });
           let noRedirectQuery = {...this.$route.query}
-          noRedirectQuery.redirect = undefined
+          delete noRedirectQuery.redirect
           let path = this.$route.query.redirect || '/'
           await this.$router.push({
             path: path,

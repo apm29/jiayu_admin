@@ -13,6 +13,8 @@
         <v-btn @click="getKit">Kit</v-btn>
         <v-btn @click="getRoles">Roles</v-btn>
         <v-btn @click="logout">Logout</v-btn>
+        <v-btn @click="alert">Alert</v-btn>
+        <v-btn @click="toast">Toast</v-btn>
     </div>
 </template>
 
@@ -40,8 +42,26 @@
         console.log(res)
         this.roles = res.Data
       },
-      logout:function () {
-        this.$validator.logout()
+      logout: async function () {
+        let logout = await this.$messenger.confirm({
+          msg: "确定退出吗?"
+        })
+        console.log(logout)
+        if(logout) {
+          this.$validator.logout()
+        }
+      },
+      alert: async function () {
+        let logout = await this.$messenger.alert({
+          msg: "ALERT!"
+        })
+        console.log(logout)
+      },
+      toast: async function () {
+        let logout = await this.$messenger.toast({
+          msg: "TOAST"
+        })
+        console.log(logout)
       }
     }
   }

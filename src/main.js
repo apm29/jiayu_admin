@@ -9,10 +9,12 @@ import nprogress from 'nprogress'
 import router from '@/router/router'
 import validator from '@/utils/validator'
 import remote from '@/utils/remote'
+import messenger from '@/utils/messenger/messenger'
 Vue.use(Notifications)
 Vue.config.productionTip = false
 Vue.prototype.$remote = remote
 Vue.prototype.$validator = validator
+Vue.prototype.$messenger = messenger
 router.beforeEach((to, from, next) => {
   nprogress.start()
   if (validator.isValidateUser() || to.path === '/login') {
