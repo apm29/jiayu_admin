@@ -1,0 +1,232 @@
+<template>
+    <div>
+        <v-menu offset-y :close-on-content-click="false" v-model="showMenu" min-width="50px">
+            <template v-slot:activator="{on}">
+                <v-text-field v-on="on" :style="textFieldStyle"
+                              readonly
+                              flat
+                              :dense="dense"
+                              v-model="resultText"
+                              hide-details
+                              :disabled="disabled"
+                              :outlined="outlined"
+                              :clearable="clearable"
+                              :clear-icon="(clearable&&result)?'mdi-close':''"
+                              @click:clear="clearResult"
+                              :append-icon="showMenu?'mdi-menu-up':'mdi-menu-down'"
+                              @click:append="showMenu=!showMenu"
+                              :placeholder="placeholder">
+                </v-text-field>
+            </template>
+            <div class="d-flex flex-row white">
+                <v-sheet v-for="(subOptions,index) of cascade.keys()" :key="index+'cascade'">
+                    <v-list v-model="cascade.get(subOptions)">
+                        <v-list-item
+                                :dense="dense"
+                                v-for="(subOptionsItem,subIndex) of subOptions"
+                                :key="subIndex+'sub'"
+                                @click="(e)=>onItemClick(subOptionsItem,e)"
+                                :value="subIndex"
+                                :disabled="subOptionsItem[itemDisabled]"
+                        >
+                            <v-list-item-content>
+                                <slot name="label" :subOptionsItem="subOptionsItem">
+                                    <v-list-item-title>
+                                        <span :class="{'blue--text':cascade.get(subOptions) === subIndex}"
+                                              :style="labelStyle">
+                                            {{subOptionsItem[itemLabel]}}
+                                        </span>
+                                    </v-list-item-title>
+                                </slot>
+                            </v-list-item-content>
+                            <v-list-item-icon v-if="subOptionsItem[itemChildren]">
+                                <v-icon x-small>mdi-chevron-right</v-icon>
+                            </v-list-item-icon>
+                        </v-list-item>
+                    </v-list>
+                </v-sheet>
+            </div>
+        </v-menu>
+    </div>
+</template>
+
+<script>
+
+  export default {
+    name: 'VCascader',
+    props: {
+      options: {
+        type: Array,
+        default: function () {
+          return []
+        },
+      },
+      result: {
+        type: Array,
+        default: function () {
+          return []
+        },
+      },
+      itemLabel: {
+        type: String,
+        default: 'label',
+      },
+      itemValue: {
+        type: String,
+        default: 'value',
+      },
+      itemChildren: {
+        type: String,
+        default: 'children',
+      },
+      itemDisabled: {
+        type: String,
+        default: 'disabled',
+      },
+      separator: {
+        type: String,
+        default: '/',
+      },
+      placeholder: {
+        type: String,
+        default: '选择',
+      },
+      textFieldStyle: {
+        type: Object,
+        default: function () {
+          return {}
+        },
+      },
+      labelStyle: {
+        type: Object,
+        default: function () {
+          return {}
+        },
+      },
+      labelWidth: {
+        type: Number,
+        default: 160,
+      },
+      clearable: {
+        type: Boolean,
+        default: true,
+      },
+      dense: {
+        type: Boolean,
+        default: true,
+      },
+      showAllLevels: {
+        type: Boolean,
+        default: true,
+      },
+      changeOnSelect: {
+        type: Boolean,
+        default: true,
+      },
+      disabled: {
+        type: Boolean,
+        default: false,
+      },
+      outlined: {
+        type: Boolean,
+        default: false,
+      },
+      returnObject: {
+        type: Boolean,
+        default: false,
+      },
+    },
+    model: {
+      prop: 'result',
+      event: 'changeCascadeResult',
+    },
+    data: function () {
+      return {
+        cascade: new Map(),
+        showMenu: false,
+        resultText: undefined,
+      }
+    },
+    created () {
+      this.cascade.set(this.options, -1)
+    },
+    watch: {
+      showAllLevels: {
+        handler: function () {
+          this.calculateStringResult()
+        },
+      },
+      returnObject: {
+        handler: function () {
+          this.calculateStringResult()
+        },
+      },
+    },
+    methods: {
+      onItemClick: function (item) {
+        let deleteNext = false
+        let deleteArr = []
+        for (let key of this.cascade.keys()) {
+          if (deleteNext) {
+            deleteArr.push(key)
+          }
+          if (key.indexOf(item) !== -1) {
+            this.cascade.set(key, key.indexOf(item))
+            deleteNext = true
+          }
+        }
+        for (let key of deleteArr) {
+          this.cascade.delete(key)
+        }
+        let children = item[this.itemChildren]
+        if (children) {
+          this.cascade.set(children, -1)
+          this.showMenu = true
+        } else {
+          this.showMenu = false
+        }
+        if (this.changeOnSelect || !children) {
+          this.calculateStringResult()
+        }
+        this.$forceUpdate()
+      },
+      clearResult: function () {
+        this.cascade.clear()
+        this.cascade.set(this.options, -1)
+        this.calculateStringResult()
+      },
+
+      calculateStringResult: function () {
+        let result = []
+        let text = []
+        let objectResult = []
+        for (let key of this.cascade.keys()) {
+          let index = this.cascade.get(key)
+          if (index >= 0) {
+            result.push(index)
+            objectResult.push(key[index])
+          }
+          if (key[index]) {
+            let optionItem = key[index]
+            text.push(optionItem[this.itemLabel])
+          }
+        }
+        if (!this.returnObject) {
+          this.$emit('changeCascadeResult', result)
+        } else {
+          this.$emit('changeCascadeResult', objectResult)
+        }
+        if (this.showAllLevels) {
+          this.resultText = text.join(this.separator)
+        } else {
+          this.resultText = text[text.length - 1]
+        }
+      },
+    },
+
+  }
+</script>
+
+<style scoped>
+
+</style>

@@ -2,6 +2,7 @@ import axios from 'axios'
 import config from '@/utils/config'
 import router from '@/router/router'
 import Vue from 'vue'
+
 axios.defaults.withCredentials = true // 是否允许跨域
 axios.defaults.timeout = 10000
 axios.defaults.baseURL = config.baseUrl
@@ -54,15 +55,15 @@ export default {
       return axiosResponse.data
     }
     if (axiosResponse.data.Code === 401) {
-      router.push({
-        path: '/login'
+      await router.push({
+        path: '/login',
       })
     }
-    if(axiosResponse.data.Code === 403){
+    if (axiosResponse.data.Code === 403) {
       Vue.notify({
-        title:axiosResponse.data.Msg,
+        title: axiosResponse.data.Msg,
       })
     }
-    throw Error("")
+    throw Error(axiosResponse.data.Msg || '未知错误')
   },
 }

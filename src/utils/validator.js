@@ -6,6 +6,6 @@ export default {
     return !!token
   },
   logout:function () {
-    localStorage.setItem(config.tokenKey,null)
+    localStorage.setItem(config.tokenKey,'')
   }
 }

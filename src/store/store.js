@@ -5,8 +5,15 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    layout:{
+      miniSide:false,
+      hideToolBar:false
+    }
   },
   mutations: {
+    HIDE_TOOLBAR:function () {
+
+    }
   },
   actions: {
   },
