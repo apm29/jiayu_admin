@@ -2,5 +2,12 @@ module.exports = {
   "transpileDependencies": [
     "vuetify"
   ],
-  publicPath:"/manager/"
+  publicPath: './',
+  outputDir: 'dist',
+  assetsDir: 'static',
+  lintOnSave: process.env.NODE_ENV === 'development',
+  productionSourceMap: false,
+  devServer: {
+    port: 3154
+  },
 }

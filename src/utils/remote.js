@@ -4,7 +4,7 @@ import router from '@/router/router'
 import Vue from 'vue'
 axios.defaults.withCredentials = true // 是否允许跨域
 axios.defaults.timeout = 10000
-axios.defaults.baseURL = 'http://localhost:9998//'//config.baseUrl
+axios.defaults.baseURL = config.baseUrl
 axios.defaults.validateStatus = () => true
 export default {
   // 上传处理

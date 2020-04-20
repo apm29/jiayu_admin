@@ -5,6 +5,7 @@ import vuetify from './plugins/vuetify'
 import Notifications from 'vue-notification'
 import 'roboto-fontface/css/roboto/roboto-fontface.css'
 import '@mdi/font/css/materialdesignicons.css'
+import nprogress from 'nprogress'
 import router from '@/router/router'
 import validator from '@/utils/validator'
 import remote from '@/utils/remote'
@@ -13,6 +14,7 @@ Vue.config.productionTip = false
 Vue.prototype.$remote = remote
 Vue.prototype.$validator = validator
 router.beforeEach((to, from, next) => {
+  nprogress.start()
   if (validator.isValidateUser() || to.path === '/login') {
     next()
   } else {
@@ -24,6 +26,9 @@ router.beforeEach((to, from, next) => {
       },
     })
   }
+})
+router.afterEach(()=>{
+  nprogress.start()
 })
 
 new Vue({
