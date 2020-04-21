@@ -73,6 +73,12 @@ let router =  new VueRouter({
           icon: 'mdi-monitor-lock',
           component: () => import('@/views/system/AdminManager'),
         },
+        {
+          path: '/system/permission',
+          name: '权限设置',
+          icon: 'mdi-eye-plus',
+          component: () => import('@/views/system/PermissionManager'),
+        },
       ],
     },
     {
