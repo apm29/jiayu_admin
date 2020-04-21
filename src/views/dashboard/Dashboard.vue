@@ -37,7 +37,7 @@
       },
       getRoles: async function () {
         let res = await this.$remote.post({
-          url: "/authorization/roles"
+          url: "/authorization/roles/mine"
         })
         console.log(res)
         this.roles = res.Data

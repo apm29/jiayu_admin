@@ -4,14 +4,14 @@
             <v-card  outlined
                      class="my-3">
                 <v-card-title
-                        class="grey lighten-3"
+
                 >
                     Markdown测试
                 </v-card-title>
                 <v-card-text>
                     <v-switch v-model="preview" inset class="ma-2" :label="preview?'预览':'编辑'">
                     </v-switch>
-                    <markdown-editor :preview="preview" v-model="markdown"></markdown-editor>
+                    <markdown-editor :preview="preview" v-model="markdown"/>
                 </v-card-text>
             </v-card>
         </div>

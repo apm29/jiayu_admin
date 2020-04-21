@@ -2,18 +2,18 @@
     <v-container fluid class="fill-height d-flex flex-column">
         <div class="flex-grow-1 overflow-y-auto overflow-x-hidden" style="width: 100%">
             <v-row justify="space-around">
-                <v-switch v-model="disabled" class="ma-2" label="Disabled"></v-switch>
-                <v-switch v-model="clearable" class="ma-2" label="Clearable"></v-switch>
-                <v-switch v-model="dense" class="ma-2" label="Dense"></v-switch>
-                <v-switch v-model="showAllLevels" class="ma-2" label="ShowAllLevels"></v-switch>
-                <v-switch v-model="changeOnSelect" class="ma-2" label="ChangeOnSelect"></v-switch>
-                <v-switch v-model="returnObject" class="ma-2" label="ReturnObject"></v-switch>
-                <v-switch v-model="labelStyle" class="ma-2" label="使用LabelStyle"></v-switch>
-                <v-switch v-model="outlined" class="ma-2" label="Outlined"></v-switch>
+                <v-switch v-model="disabled" class="ma-2" label="Disabled"/>
+                <v-switch v-model="clearable" class="ma-2" label="Clearable"/>
+                <v-switch v-model="dense" class="ma-2" label="Dense"/>
+                <v-switch v-model="showAllLevels" class="ma-2" label="ShowAllLevels"/>
+                <v-switch v-model="changeOnSelect" class="ma-2" label="ChangeOnSelect"/>
+                <v-switch v-model="returnObject" class="ma-2" label="ReturnObject"/>
+                <v-switch v-model="labelStyle" class="ma-2" label="使用LabelStyle"/>
+                <v-switch v-model="outlined" class="ma-2" label="Outlined"/>
             </v-row>
             <v-card class="my-3" outlined>
                 <v-card-title
-                        class="grey lighten-3"
+
                 >
                     演示
                 </v-card-title>
@@ -50,7 +50,7 @@
                     class="my-3"
             >
                 <v-card-title
-                        class="grey lighten-3"
+
                 >
                     props说明
                 </v-card-title>
@@ -79,7 +79,7 @@
                     class="my-3"
             >
                 <v-card-title
-                        class="grey lighten-3"
+
                 >
                     event说明
                 </v-card-title>
@@ -94,7 +94,7 @@
                     class="my-3"
             >
                 <v-card-title
-                        class="grey lighten-3"
+
                 >
                     slot说明
                 </v-card-title>
@@ -109,7 +109,7 @@
                     class="my-3"
             >
                 <v-card-title
-                        class="grey lighten-3"
+
                 >
                     使用
                 </v-card-title>

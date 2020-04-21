@@ -1,29 +1,41 @@
 <template>
     <v-container>
+        <div class="d-flex flex-row">
+            <v-spacer/>
+            <v-btn color="primary" @click="addPermission(0)">添加根权限</v-btn>
+        </div>
         <v-treeview :items="permissions" item-key="id">
             <template v-slot:append="{item}">
-                <v-btn text @click="addSubPermission(item)">
+                <v-btn x-small @click="addPermission(item.id)" color="info" tile text>
                     添加子权限
-                    <v-icon>mdi-plus</v-icon>
+                    <v-icon x-small>mdi-plus</v-icon>
                 </v-btn>
-                <v-btn text @click="deleteSubPermission(item)">
+                <v-btn x-small @click="deletePermission(item)" color="error" tile text>
                     删除权限
-                    <v-icon>mdi-plus</v-icon>
+                    <v-icon x-small>mdi-delete</v-icon>
                 </v-btn>
             </template>
             <template v-slot:label="{item}">
-                {{item.name}}
+                <v-list-item>
+                    <v-list-item-title>
+                        {{item.name}}
+                    </v-list-item-title>
+                    <v-list-item-subtitle>
+                        {{item.permission}}
+                    </v-list-item-subtitle>
+                </v-list-item>
             </template>
         </v-treeview>
         <v-dialog v-model="showAddMenu" max-width="60vw">
             <v-card>
                 <v-card-title>添加权限</v-card-title>
                 <v-card-text>
-                    <v-text-field label="权限名称" v-model="form.permission"></v-text-field>
-                    <v-text-field label="权限描述" v-model="form.name"></v-text-field>
+                    <v-text-field placeholder="权限名称(如role_operation)" v-model="form.permission"/>
+                    <v-text-field placeholder="权限描述" v-model="form.name"/>
                 </v-card-text>
                 <v-card-actions>
-                    <v-btn @click="doAddSubPermission">确定</v-btn>
+                    <v-spacer/>
+                    <v-btn color="primary" @click="doAddSubPermission">确定</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -54,13 +66,13 @@
         })
         this.permissions = res.Data
       },
-      addSubPermission: function (item) {
+      addPermission: function (parentId) {
         this.form = {
-          parentId: item.id,
+          parentId: parentId,
         }
         this.showAddMenu = true
       },
-      deleteSubPermission: async function (item) {
+      deletePermission: async function (item) {
         await this.$messenger.confirm({
           msg: `确定删除${item.name}吗?`,
         }) && await this.doDeletePermission(item)

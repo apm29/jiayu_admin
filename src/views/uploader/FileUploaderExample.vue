@@ -13,7 +13,7 @@
             </v-row>
             <v-card class="my-3" outlined>
                 <v-card-title
-                        class="grey lighten-3"
+
                 >
                     演示
                 </v-card-title>
@@ -52,7 +52,7 @@
                     class="my-3"
             >
                 <v-card-title
-                        class="grey lighten-3"
+
                 >
                     props说明
                 </v-card-title>
@@ -81,7 +81,7 @@
                     class="my-3"
             >
                 <v-card-title
-                        class="grey lighten-3"
+
                 >
                     event说明
                 </v-card-title>
@@ -96,7 +96,7 @@
                     class="my-3"
             >
                 <v-card-title
-                        class="grey lighten-3"
+
                 >
                     slot说明
                 </v-card-title>

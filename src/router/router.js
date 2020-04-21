@@ -51,6 +51,12 @@ let router =  new VueRouter({
           icon: 'mdi-android-messages',
           component: () => import('@/views/markdown/MarkdownEditorExample'),
         },
+        {
+          path: '/pc/list',
+          name: '列表',
+          icon: 'mdi-format-list-checks',
+          component: () => import('@/views/listMore/LoadMoreExample'),
+        },
       ],
     },
     {

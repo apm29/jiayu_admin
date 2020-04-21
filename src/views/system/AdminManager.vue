@@ -92,7 +92,7 @@
         if(this.tableSettings.loading){
           return
         }
-        let url = '/authorization/users'
+        let url = '/authorization/users/get'
         let data = {
           pageNo: this.tableSettings.page,
           pageSize: this.tableSettings.rows,

@@ -4,7 +4,7 @@
         <div class="flex-grow-1 overflow-y-auto overflow-x-hidden" style="width: 100%">
             <v-card class="my-3" outlined>
                 <v-card-title
-                        class="grey lighten-3"
+
                 >
                     演示
                 </v-card-title>
@@ -18,7 +18,7 @@
                                 <v-list-item-title>{{index}}</v-list-item-title>
                                 <v-list-item-subtitle>列表填充剩余高度</v-list-item-subtitle>
                             </v-list-item>
-                            <v-divider class="lighten-3 grey"/>
+                            <v-divider class="lighten-3 grey" :key="index+'_list_divider'"/>
                         </template>
                     </load-more-list>
                 </v-card-text>
@@ -28,7 +28,7 @@
                     class="my-3"
             >
                 <v-card-title
-                        class="grey lighten-3"
+
                 >
                     props说明
                 </v-card-title>
@@ -47,7 +47,7 @@
                     class="my-3"
             >
                 <v-card-title
-                        class="grey lighten-3"
+
                 >
                     event说明
                 </v-card-title>
@@ -62,7 +62,7 @@
                     class="my-3"
             >
                 <v-card-title
-                        class="grey lighten-3"
+
                 >
                     slot说明
                 </v-card-title>
@@ -78,7 +78,7 @@
                     class="my-3"
             >
                 <v-card-text>
-                    <markdown-editor preview :value="markdown"></markdown-editor>
+                    <markdown-editor preview :value="markdown"/>
                 </v-card-text>
             </v-card>
         </div>
@@ -87,8 +87,8 @@
 
 <script>
   import LoadMoreList from './LoadMoreList'
-  import MarkdownEditor from '../../pc/markdown/MarkdownEditor'
-  import dio from '../../pc/uploader/dio'
+  import MarkdownEditor from '../markdown/MarkdownEditor'
+  import dio from '../uploader/dio'
   export default {
     name: 'LoadMoreExample',
     components:{
@@ -130,12 +130,13 @@
             this.pageInfo.hasMore = false
           }
         } catch (e) {
+          console.log(e)
         } finally {
           this.pageInfo.loading = false;
         }
       },
       delay: function (time) {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
           setTimeout(() => {
             resolve();
           }, time)

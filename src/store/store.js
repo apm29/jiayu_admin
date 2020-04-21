@@ -57,7 +57,7 @@ export default new Vuex.Store({
         return
       }
       let rolesRes = await remote.post({
-        url: '/authorization/roles',
+        url: '/authorization/roles/mine',
       })
       let infoRes = await remote.post({
         url: '/user/getUserInfo',
