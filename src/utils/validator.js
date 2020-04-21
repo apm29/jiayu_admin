@@ -1,9 +1,14 @@
 import config from '@/utils/config'
+import store from '@/store/store'
 
 export default {
-  isValidateUser: function () {
+  isValidateUser: async function () {
     let token = localStorage.getItem(config.tokenKey)
-    return !!token
+    let validate = !!token
+    if(validate){
+      await store.dispatch('login')
+    }
+    return validate
   },
   logout:function () {
     localStorage.setItem(config.tokenKey,'')

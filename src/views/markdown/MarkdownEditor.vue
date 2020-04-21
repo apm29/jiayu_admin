@@ -131,4 +131,28 @@
         elevation: 0;
         box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2), 0 0 0 0 rgba(0, 0, 0, 0.14), 0 0 0 0 rgba(0, 0, 0, 0.12)
     }
+    h1{
+        padding-bottom: 12px;
+        padding-top: 12px;
+    }
+    h2{
+        padding-bottom: 12px;
+        padding-top: 12px;
+    }
+    h3{
+        padding-bottom: 12px;
+        padding-top: 12px;
+    }
+    h4{
+        padding-bottom: 12px;
+        padding-top: 12px;
+    }
+    h5{
+        padding-bottom: 12px;
+        padding-top: 12px;
+    }
+    h6{
+        padding-bottom: 12px;
+        padding-top: 12px;
+    }
 </style>

@@ -20,7 +20,7 @@
             </template>
             <div class="d-flex flex-row white">
                 <v-sheet v-for="(subOptions,index) of cascade.keys()" :key="index+'cascade'">
-                    <v-list v-model="cascade.get(subOptions)">
+                    <v-list >
                         <v-list-item
                                 :dense="dense"
                                 v-for="(subOptionsItem,subIndex) of subOptions"

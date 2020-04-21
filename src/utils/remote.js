@@ -47,6 +47,7 @@ export default {
         'Authorization': token,
         'Content-Type': 'application/json',
       },
+      baseURL:  config.baseUrl,
     })
     if (axiosResponse.data.Code === 200) {
       if (axiosResponse.data.Token) {

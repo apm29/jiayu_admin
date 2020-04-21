@@ -29,7 +29,7 @@
                                     icon
                                     v-on="on"
                                     class="ml-2 mr-2"
-                                    @click.stop="miniVariant = !miniVariant"
+                                    @click.stop="$store.commit('toggleMiniSide')"
                             >
                                 <v-icon>{{!miniVariant?'mdi-menu-open':'mdi-menu-right'}}</v-icon>
                             </v-btn>
@@ -39,8 +39,8 @@
                     </v-tooltip>
                 </v-list-item-action>
                 <v-list-item-content>
-                    <v-list-item-title>Application</v-list-item-title>
-                    <v-list-item-subtitle>Subtext</v-list-item-subtitle>
+                    <v-list-item-title>{{$store.state.app.name}}</v-list-item-title>
+                    <v-list-item-subtitle>{{$store.state.app.subtext}}</v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
 
@@ -51,7 +51,6 @@
                         v-if="!route.hidden && route.children && route.children.length === 1"
                         :key="route.children[0].name + index"
                         :to="route.children[0].path"
-                        color="secondary"
                         active-class="accent elevation-3 white--text"
                         link
                 >
@@ -65,10 +64,12 @@
                 <v-list-group
                         v-if="!route.hidden && route.children && route.children.length > 1"
                         :key="route.name + index"
-                        :prepend-icon="route.icon || 'mdi-menu'"
                         color="secondary"
                         active-class="white--text"
                 >
+                    <template v-slot:prependIcon>
+                        <v-icon>{{ route.icon || 'mdi-menu'}}</v-icon>
+                    </template>
                     <template v-slot:activator>
                         <v-list-item-title>{{ route.name }}</v-list-item-title>
                     </template>
@@ -103,10 +104,10 @@
         ps: null,
         clipped: true,
         temporary: false,
-        sidebarColor : {
-          bgColor1: "rgba(0, 0, 0, 0.3)",
-          bgColor2: "rgba(0, 0, 0, 0.1)",
-          dark: true
+        sidebarColor: {
+          bgColor1: 'rgba(0, 0, 0, 0.6)',
+          bgColor2: 'rgba(0, 0, 0, 0.2)',
+          dark: true,
         },
       }
     },
@@ -115,14 +116,48 @@
         this.$emit('changeTemporary', newVal.smAndDown)
         this.temporary = newVal.smAndDown
       },
+      '$store.state.layout.showToolbar': {
+        immediate: true,
+        handler: function (val) {
+          this.drawer = val
+        },
+      },
+      '$store.state.layout.miniSide': {
+        immediate: true,
+        handler: function (val) {
+          this.miniVariant = val
+        },
+      },
+      '$store.state.user.roles': {
+        immediate: true,
+        handler: function () {
+        },
+      },
     },
     computed: {
       routes () {
         const { routes } = this.$router.options
-        return routes
-      },
-      current () {
-        return this.$route.name
+        let roles = this.$store.state.user.roles.map((e) => e.name)
+
+        return routes.filter((route) => {
+
+          if(route.children){
+            route.children = route.children.filter((subRoute)=>{
+              if(!subRoute.meta || !subRoute.meta.roles){
+                return true
+              }
+              return subRoute.meta.roles.some((role) => {
+                return roles.indexOf(role) >= 0
+              })
+            })
+          }
+          if(!route.meta || !route.meta.roles){
+            return true
+          }
+          return route.meta.roles.some((role) => {
+            return roles.indexOf(role) >= 0
+          })
+        })
       },
     },
 

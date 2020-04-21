@@ -177,8 +177,7 @@
         type: String,
         default: '点击选择文件',
       },
-      value: {
-        type: Array | Object,
+      result: {
         default: function () {
           return []
         },
@@ -239,15 +238,16 @@
       },
     },
     model: {
+      prop:'result',
       event: 'onFileValueChange',
     },
     mounted () {
       this.uploadResults = []
-      if (this.value) {
+      if (this.result) {
         if (this.single) {
-          this.uploadResults.push(this.value)
+          this.uploadResults.push(this.result)
         } else {
-          this.uploadResults = this.uploadResults.concat(this.value)
+          this.uploadResults = this.uploadResults.concat(this.result)
         }
       }
     },
@@ -314,6 +314,7 @@
           }
           this.uploadResults.push(res)
         } catch (e) {
+          console.log(e)
         } finally {
           this.loading = false
           this.$refs[this._uid + 'form'].reset()

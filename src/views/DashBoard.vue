@@ -6,10 +6,10 @@
                 clipped-left
         >
             <v-toolbar-items>
-                <v-btn>1</v-btn>
-                <v-btn>1</v-btn>
-                <v-btn>1</v-btn>
-                <v-btn>1</v-btn>
+                <v-btn @click="$store.commit('toggleToolbar')">Toggle Toolbar</v-btn>
+                <v-btn @click="$store.commit('toggleMiniSide')">Toggle MiniSide</v-btn>
+                <v-spacer/>
+                <v-app-full-screen/>
             </v-toolbar-items>
         </v-app-bar>
         <v-content>
@@ -22,9 +22,11 @@
 
 <script>
     import VAppSideBar from '@/components/app/VAppSideBar'
+    import VAppFullScreen from '@/components/app/VAppFullScreen'
   export default {
     name: 'DashBoard',
     components:{
+      VAppFullScreen,
       VAppSideBar
     },
 

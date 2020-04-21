@@ -106,6 +106,7 @@
           let noRedirectQuery = {...this.$route.query}
           delete noRedirectQuery.redirect
           let path = this.$route.query.redirect || '/'
+          await this.$store.dispatch('login', res.Data)
           await this.$router.push({
             path: path,
             query:noRedirectQuery,

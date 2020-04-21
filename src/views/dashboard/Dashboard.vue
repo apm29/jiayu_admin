@@ -48,7 +48,7 @@
         })
         console.log(logout)
         if(logout) {
-          this.$validator.logout()
+          await this.$store.dispatch('logout')
         }
       },
       alert: async function () {

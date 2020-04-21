@@ -15,9 +15,9 @@ Vue.config.productionTip = false
 Vue.prototype.$remote = remote
 Vue.prototype.$validator = validator
 Vue.prototype.$messenger = messenger
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   nprogress.start()
-  if (validator.isValidateUser() || to.path === '/login') {
+  if (await validator.isValidateUser() || to.path === '/login') {
     next()
   } else {
     next({

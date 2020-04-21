@@ -6,18 +6,12 @@ export default new VueRouter({
   routes: [
     {
       path: '/',
-      name: 'dashboard',
-      component: () => import('@/views/DashBoard'),
-      hidden: true,
-    },
-    {
-      path: '/main0',
       name: '父菜单0',
       icon:'mdi-compass',
       component: () => import('@/views/DashBoard'),
       children: [
         {
-          path: '/dashboard',
+          path: '/',
           name: '首页',
           icon: 'mdi-view-dashboard',
           component: () => import('@/views/dashboard/Dashboard'),
@@ -36,6 +30,7 @@ export default new VueRouter({
           component: () => import('@/views/cascader/CascaderExample'),
         },
         {
+
           path: '/uploader',
           name: '文件选择器',
           icon: 'mdi-tag-outline',
@@ -53,6 +48,28 @@ export default new VueRouter({
           name: 'Markdown',
           icon: 'mdi-android-messages',
           component: () => import('@/views/markdown/MarkdownEditorExample'),
+        },
+      ],
+    },
+    {
+      path: '/system',
+      name: '系统管理',
+      component: () => import('@/views/DashBoard'),
+      meta:{
+        roles:['admin']
+      },
+      children: [
+        {
+          path: '/system/role',
+          name: '角色管理',
+          icon: 'mdi-account-supervisor',
+          component: () => import('@/views/system/RoleManager'),
+        },
+        {
+          path: '/system/admin',
+          name: '管理员设置',
+          icon: 'mdi-monitor-lock',
+          component: () => import('@/views/system/AdminManager'),
         },
       ],
     },
