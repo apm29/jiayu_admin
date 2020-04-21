@@ -1,14 +1,16 @@
 import VueRouter from 'vue-router'
 import Vue from 'vue'
+import nprogress from 'nprogress'
+import validator from '@/utils/validator'
 
 Vue.use(VueRouter)
-export default new VueRouter({
+let router =  new VueRouter({
   routes: [
     {
       path: '/',
       name: '父菜单0',
       icon:'mdi-compass',
-      component: () => import('@/views/DashBoard'),
+      component: () => import('@/views/IndexLayout'),
       children: [
         {
           path: '/',
@@ -21,7 +23,7 @@ export default new VueRouter({
     {
       path: '/main1',
       name: '父菜单1',
-      component: () => import('@/views/DashBoard'),
+      component: () => import('@/views/IndexLayout'),
       children: [
         {
           path: '/cascader',
@@ -41,7 +43,7 @@ export default new VueRouter({
     {
       path: '/main2',
       name: '父菜单2',
-      component: () => import('@/views/DashBoard'),
+      component: () => import('@/views/IndexLayout'),
       children: [
         {
           path: '/pc/uploader',
@@ -54,7 +56,7 @@ export default new VueRouter({
     {
       path: '/system',
       name: '系统管理',
-      component: () => import('@/views/DashBoard'),
+      component: () => import('@/views/IndexLayout'),
       meta:{
         roles:['admin']
       },
@@ -87,3 +89,23 @@ export default new VueRouter({
     },
   ],
 })
+
+
+router.beforeEach(async (to, from, next) => {
+  nprogress.start()
+  if (await validator.isValidateUser() || to.path === '/login') {
+    next()
+  } else {
+    next({
+      path: '/login',
+      query: {
+        redirect: to.path,
+        ...to.query,
+      },
+    })
+  }
+})
+router.afterEach(()=>{
+  nprogress.start()
+})
+export default router

@@ -10,6 +10,7 @@ export default new Vuex.Store({
     app: {
       name: 'MY ADMIN',
       subtext: 'pearl',
+      dark:false
     },
     user: {
       info: undefined,
@@ -18,6 +19,7 @@ export default new Vuex.Store({
     layout: {
       miniSide: false,
       showToolbar: true,
+      tags:[]
     },
   },
   mutations: {
@@ -27,6 +29,10 @@ export default new Vuex.Store({
 
     toggleToolbar: function (state) {
       state.layout.showToolbar = !state.layout.showToolbar
+    },
+    dark:function(state, payload){
+      state.app.dark = payload.dark
+      payload.vue.$vuetify.theme.dark = payload.dark
     },
 
     setMiniSide: function (state, payload) {

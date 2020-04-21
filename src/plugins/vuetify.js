@@ -1,18 +1,18 @@
-import Vue from 'vue';
-import Vuetify from 'vuetify/lib';
-import zhHans from 'vuetify/es5/locale/zh-Hans';
+import Vue from 'vue'
+import Vuetify from 'vuetify/lib'
+import zhHans from 'vuetify/es5/locale/zh-Hans'
 
-Vue.use(Vuetify);
+Vue.use(Vuetify)
 
 export default new Vuetify({
   theme: {
-      options: {
-        customProperties: true,
-      },
+    options: {
+      customProperties: true,
+    },
     themes: {
       light: {
-        primary: "#FB8C00",
-        secondary: "#FFB74D",
+        primary: '#FB8C00',
+        secondary: '#FFB74D',
         accent: '#82B1FF',
         error: '#FF5252',
         info: '#2196F3',
@@ -29,9 +29,13 @@ export default new Vuetify({
         warning: '#FB8C00',
       },
     },
+    dark:false
   },
-    lang: {
-      locales: { zhHans },
-      current: 'zh-Hans',
-    },
-});
+  lang: {
+    locales: {zhHans},
+    current: "zhHans"
+  },
+  icons: {
+    iconfont: "mdi",
+  },
+})

@@ -2,6 +2,7 @@ import axios from 'axios'
 import config from '@/utils/config'
 import router from '@/router/router'
 import Vue from 'vue'
+import store from '@/store/store'
 
 axios.defaults.withCredentials = true // 是否允许跨域
 axios.defaults.timeout = 10000
@@ -56,6 +57,7 @@ export default {
       return axiosResponse.data
     }
     if (axiosResponse.data.Code === 401) {
+      await store.dispatch('logout')
       await router.push({
         path: '/login',
       })
