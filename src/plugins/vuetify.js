@@ -35,7 +35,5 @@ export default new Vuetify({
     locales: {zhHans},
     current: "zhHans"
   },
-  icons: {
-    iconfont: "mdi",
-  },
+
 })
