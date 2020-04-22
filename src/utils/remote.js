@@ -11,16 +11,34 @@ axios.defaults.validateStatus = () => true
 export default {
   // 上传处理
   async upload (options) {
+    let token = localStorage.getItem(config.tokenKey)
     let response = await axios({
       url: options.url,
       method: 'post',
       data: options.formData,
       headers: {
         'Content-Type': 'multipart/form-data',
+        'Authorization': token,
       },
-      baseURL: 'http://axj.ciih.net/',
     })
-    return response.data
+    if (response.data.Code === 200) {
+      if (response.data.Token) {
+        localStorage.setItem(config.tokenKey, response.data.Token)
+      }
+      return response.data
+    }
+    if (response.data.Code === 401) {
+      await store.dispatch('logout')
+      await router.push({
+        path: '/login',
+      })
+    }
+    if (response.data.Code === 403) {
+      Vue.notify({
+        title: response.data.Msg,
+      })
+    }
+    throw Error(response.data.Msg || '未知错误')
   },
   async downloadLocal (url) {
     let response = await axios({

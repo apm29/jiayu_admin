@@ -17,7 +17,7 @@
                 :items="data"
                 :server-items-length="tableSettings.total"
                 :options.sync="options"
-                :loading="tableSettings.loading"
+                :loading="tableSettings.loading || loadingRolePermissionMenu"
                 :footer-props="{'items-per-page-options': tableSettings.rowDict}"
         >
             <template v-slot:item.addTime="{item}">
@@ -30,7 +30,7 @@
                 <v-row justify="space-around">
                     <v-btn small color="error" @click="deleteRole(item)">删除</v-btn>
                     <v-btn small color="info" @click="editRole(item)">编辑</v-btn>
-                    <v-btn small color="warning">授权</v-btn>
+                    <v-btn small color="warning" @click="editRolePermission(item)">授权</v-btn>
                 </v-row>
             </template>
             <template v-slot:header.operation>
@@ -50,6 +50,28 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="showRolePermissionMenu" max-width="60vw">
+            <v-card :loading="loadingRolePermissionMenu">
+                <v-card-title>角色授权</v-card-title>
+                <v-card-text>
+                    <v-treeview
+                            :items="permissions"
+                            selectable
+                            v-model="rolePermission"
+                            open-on-click
+                    >
+                        <template v-slot:label="{item}">
+                            {{item.name}}--{{item.id}}
+                        </template>
+                    </v-treeview>
+                    {{rolePermission}}
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer/>
+                    <v-btn color="primary" @click="doAddRolePermission">授权</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-card>
 </template>
 
@@ -61,7 +83,7 @@
         data: [],
         options: {},
         tableSettings: {
-          search:undefined,
+          search: undefined,
           headers: [
             {
               text: 'ID',
@@ -90,19 +112,24 @@
               text: '操作',
               value: 'operation',
               sortable: false,
-              width:'190px'
+              width: '190px',
             },
           ],
           loading: false,
           rowDict: [10, 20, 50],
           total: 0,
         },
-        form:{
-          id:undefined,
-          name:undefined,
-          description:undefined,
+        form: {
+          id: undefined,
+          name: undefined,
+          description: undefined,
         },
-        showAddMenu:false,
+        showAddMenu: false,
+        showRolePermissionMenu: false,
+        loadingRolePermissionMenu: false,
+        role:undefined,
+        rolePermission: [],
+        permissions: [],
       }
     },
     watch: {
@@ -111,8 +138,8 @@
         handler: function (val) {
           this.tableSettings.page = val.page
           this.tableSettings.rows = val.itemsPerPage
-          this.tableSettings.sort = val.sortBy && val.sortBy[0];
-          this.tableSettings.order = val.sortDesc && val.sortDesc[0] ? 'desc' : 'asc';
+          this.tableSettings.sort = val.sortBy && val.sortBy[0]
+          this.tableSettings.order = val.sortDesc && val.sortDesc[0] ? 'desc' : 'asc'
           if (val.sortDesc && val.sortDesc.length === 0) {
             this.tableSettings.order = undefined
           }
@@ -122,7 +149,7 @@
     },
     methods: {
       loadRolesData: async function () {
-        if(this.tableSettings.loading){
+        if (this.tableSettings.loading) {
           return
         }
         let url = '/authorization/roles/get'
@@ -153,22 +180,22 @@
         this.form = {}
         this.showAddMenu = true
       },
-      deleteRole: async function (item) {
+      deleteRole: async function (role) {
         await this.$messenger.confirm({
-          msg: `确定删除${item.name}吗?`,
-        }) && await this.doDeleteRole(item)
+          msg: `确定删除${role.name}吗?`,
+        }) && await this.doDeleteRole(role)
       },
 
-      editRole: async function (item) {
-        this.form = { ...item }
+      editRole: async function (role) {
+        this.form = { ...role }
         this.showAddMenu = true
       },
-      doDeleteRole: async function (item) {
+      doDeleteRole: async function (role) {
         try {
           let res = await this.$remote.post({
             url: '/authorization/roles/delete',
             data: {
-              id: item.id,
+              id: role.id,
             },
           })
           this.$notify({
@@ -205,6 +232,59 @@
           this.loadRolesData()
         }
 
+      },
+      editRolePermission: async function (role) {
+        this.loadingRolePermissionMenu = true
+        try {
+          let resRolePermission = await this.$remote.post({
+            url: '/authorization/permission/byRole',
+            data: role,
+          })
+          this.rolePermission = resRolePermission.Data.map(p => p.id)
+          let resAllPermission = await this.$remote.post({
+            url: '/authorization/permission/getAsTree',
+          })
+          this.permissions = resAllPermission.Data
+          this.role = role
+        } catch (e) {
+          this.$notify({
+            text: e,
+            type: 'error',
+          })
+        } finally {
+          this.showRolePermissionMenu = true
+          this.loadingRolePermissionMenu = false
+          this.$forceUpdate()
+        }
+      },
+      doAddRolePermission:async function(){
+        this.loadingRolePermissionMenu = true
+        try {
+          let res = await this.$remote.post({
+            url: '/authorization/roles/authorize',
+            data: {
+              role: this.role,
+              permissions:this.rolePermission.map(id=>{
+                return {
+                  id:id
+                }
+              })
+            },
+          })
+          this.showRolePermissionMenu = false
+          this.$notify({
+            text: res.Msg,
+            type: 'success',
+          })
+        } catch (e) {
+          this.$notify({
+            text: e,
+            type: 'error',
+          })
+        } finally {
+          this.loadingRolePermissionMenu = false
+          this.loadRolesData()
+        }
       },
     },
   }

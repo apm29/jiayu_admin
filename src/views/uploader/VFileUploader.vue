@@ -226,15 +226,15 @@
       },
       fileName: {
         type: String,
-        default: 'file_name',
+        default: 'fileName',
       },
       fileValue: {
         type: String,
-        default: 'key',
+        default: 'filePath',
       },
       fileBaseUrl: {
         type: String,
-        default: 'http://files.ciih.net/',
+        default: '',
       },
     },
     model: {
@@ -309,10 +309,12 @@
         try {
           this.loading = true
           let res = await this.upload(file)
-          if (this.single) {
-            this.uploadResults = []
+          if(res && res[this.fileName]&&res[this.fileValue]) {
+            if (this.single) {
+              this.uploadResults = []
+            }
+            this.uploadResults.push(res)
           }
-          this.uploadResults.push(res)
         } catch (e) {
           console.log(e)
         } finally {
