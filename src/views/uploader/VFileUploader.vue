@@ -234,11 +234,11 @@
       },
       fileBaseUrl: {
         type: String,
-        default: '',
+        default: 'http://jiayu-pearl-mall.oss-cn-beijing.aliyuncs.com/',
       },
     },
     model: {
-      prop:'result',
+      prop: 'result',
       event: 'onFileValueChange',
     },
     mounted () {
@@ -309,7 +309,7 @@
         try {
           this.loading = true
           let res = await this.upload(file)
-          if(res && res[this.fileName]&&res[this.fileValue]) {
+          if (res && res[this.fileName] && res[this.fileValue]) {
             if (this.single) {
               this.uploadResults = []
             }
@@ -336,6 +336,8 @@
         return image.indexOf('.jpg') >= 0
           || image.indexOf('.png') >= 0
           || image.indexOf('.jpeg') >= 0
+          || image.indexOf('.gif') >= 0
+          || image.indexOf('.bmp') >= 0
       },
     },
   }

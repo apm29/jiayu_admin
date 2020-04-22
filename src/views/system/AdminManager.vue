@@ -46,7 +46,7 @@
                     <v-text-field placeholder="管理员名称(如admin)" v-model="form.username"/>
                     <v-text-field placeholder="管理员密码" v-model="form.password"/>
                     <v-file-uploader single :upload="upload" placeholder="管理员头像" accept="image/*"
-                                     v-model="form.avatar"></v-file-uploader>
+                                     v-model="form.avatar"/>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer/>
@@ -225,8 +225,8 @@
             url: '/files/upload',
           })
           return {
-            fileName: res.fileName,
-            filePath: res.filePath,
+            fileName: res.Data.fileName,
+            filePath: res.Data.filePath,
           }
         } catch (e) {
           this.$notify({
