@@ -1,7 +1,7 @@
 <template>
     <div>
         <form :ref="_uid+'form'">
-            <input @change="onFileAdded" :ref="_uid+'input'" type="file" v-show="false"/>
+            <input @change="onFileAdded" :accept="accept" :ref="_uid+'input'" type="file" v-show="false"/>
         </form>
         <slot name="trigger" :addFile="onAddFileClick">
             <v-btn
@@ -14,7 +14,7 @@
             >
                 {{placeholder}}
             </v-btn>
-            <div class="mt-3 grey--text subtitle-1">支持上传word文档,excel表格,pdf文件以及视频,图片</div>
+            <div class="mt-3 grey--text subtitle-1">{{hint||'支持上传word文档,excel表格,pdf文件以及视频,图片'}}</div>
         </slot>
         <v-progress-linear
                 indeterminate
@@ -177,12 +177,24 @@
         type: String,
         default: '点击选择文件',
       },
+      hint: {
+        type: String,
+        default: '上传图片',
+      },
       result: {
         default: function () {
-          return []
+          return undefined
         },
       },
       disabled: {
+        type: Boolean,
+        default: false,
+      },
+      produceOnlyPath: {
+        type: Boolean,
+        default: false,
+      },
+      acceptOnlyPath: {
         type: Boolean,
         default: false,
       },
@@ -242,35 +254,43 @@
       event: 'onFileValueChange',
     },
     mounted () {
-      this.uploadResults = []
-      if (this.result) {
-        if (this.single) {
-          this.uploadResults.push(this.result)
-        } else {
-          this.uploadResults = this.uploadResults.concat(this.result)
-        }
-      }
     },
     watch: {
+      result:{
+        deep: true,
+        immediate: true,
+        handler:function (val) {
+          this.uploadResults = []
+          if (val) {
+            if (this.single) {
+              if (this.acceptOnlyPath) {
+                let item = {}
+                item[this.fileName] = val
+                item[this.fileValue] = val
+                this.uploadResults.push(item)
+              } else {
+                this.uploadResults.push(val)
+              }
+            } else {
+              if (this.acceptOnlyPath) {
+                val.forEach(path => {
+                  let item = {}
+                  item[this.fileName] = path
+                  item[this.fileValue] = path
+                  this.uploadResults.push(item)
+                })
+              } else {
+                this.uploadResults = this.uploadResults.concat(val)
+              }
+            }
+          }
+        }
+
+      },
       single: {
         handler: function (val) {
           if (val && this.uploadResults.length > 1) {
             this.uploadResults = this.uploadResults.slice(0, 1)
-          }
-        },
-      },
-      uploadResults: {
-        deep: true,
-        immediate: true,
-        handler: function (val) {
-          if (!this.single) {
-            this.$emit('onFileValueChange', this.uploadResults)
-          } else {
-            if (val.length === 0) {
-              this.$emit('onFileValueChange', undefined)
-            } else {
-              this.$emit('onFileValueChange', val[0])
-            }
           }
         },
       },
@@ -309,11 +329,38 @@
         try {
           this.loading = true
           let res = await this.upload(file)
-          if (res && res[this.fileName] && res[this.fileValue]) {
+          if (!this.acceptOnlyPath && res && res[this.fileName] && res[this.fileValue]) {
             if (this.single) {
               this.uploadResults = []
             }
             this.uploadResults.push(res)
+          } else if(res){
+            //包装为{fileName:xxx,fileValue:xxx}
+            if (this.single) {
+              this.uploadResults = []
+            }
+            let item = {}
+            item[this.fileName] = res
+            item[this.fileValue] = res
+            this.uploadResults.push(item)
+          }
+          let val = this.uploadResults
+          if (!this.single) {
+            if (this.produceOnlyPath) {
+              this.$emit('onFileValueChange', val[this.fileValue])
+            } else {
+              this.$emit('onFileValueChange', val)
+            }
+          } else {
+            if (val.length === 0) {
+              this.$emit('onFileValueChange', undefined)
+            } else {
+              if (this.produceOnlyPath) {
+                this.$emit('onFileValueChange', val[0][this.fileValue])
+              } else {
+                this.$emit('onFileValueChange', val[0])
+              }
+            }
           }
         } catch (e) {
           console.log(e)
@@ -333,6 +380,9 @@
       },
 
       isImage: function (image) {
+        if(!image){
+          return  false
+        }
         return image.indexOf('.jpg') >= 0
           || image.indexOf('.png') >= 0
           || image.indexOf('.jpeg') >= 0

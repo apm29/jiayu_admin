@@ -113,7 +113,10 @@
             replace:true
           })
         } catch (e) {
-          console.log(e)
+          this.$notify({
+            text:e,
+            type:"error"
+          })
         }
       }
     }

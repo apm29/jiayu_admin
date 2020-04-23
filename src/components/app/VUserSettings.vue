@@ -12,7 +12,7 @@
                 tile
         >
             <v-list shaped>
-                <v-subheader>{{info.username}}</v-subheader>
+                <v-subheader>管理员信息</v-subheader>
                 <v-list-item-group color="primary">
                     <v-list-item
                     >
@@ -27,19 +27,7 @@
                             </v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
-                    <v-list-item
-                    >
-                        <v-list-item-icon>
-                            <v-icon>
-                                mdi-phone
-                            </v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-content>
-                            <v-list-item-title>
-                                {{info.mobile || '--'}}
-                            </v-list-item-title>
-                        </v-list-item-content>
-                    </v-list-item>
+
                     <v-list-item
                     >
                         <v-list-item-icon>

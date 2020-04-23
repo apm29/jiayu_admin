@@ -8,7 +8,6 @@ let router =  new VueRouter({
   routes: [
     {
       path: '/',
-      name: '父菜单0',
       icon:'mdi-compass',
       component: () => import('@/views/IndexLayout'),
       children: [
@@ -68,16 +67,16 @@ let router =  new VueRouter({
       },
       children: [
         {
-          path: '/system/role',
-          name: '角色管理',
-          icon: 'mdi-account-supervisor',
-          component: () => import('@/views/system/RoleManager'),
-        },
-        {
           path: '/system/admin',
           name: '管理员设置',
           icon: 'mdi-monitor-lock',
           component: () => import('@/views/system/AdminManager'),
+        },
+        {
+          path: '/system/role',
+          name: '角色管理',
+          icon: 'mdi-account-supervisor',
+          component: () => import('@/views/system/RoleManager'),
         },
         {
           path: '/system/permission',

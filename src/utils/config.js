@@ -3,4 +3,5 @@ export default {
     ? 'http://localhost:9998/'
     : 'http://jiayupearl.shop:9998/',
   tokenKey: 'token',
+  fileBaseUrl: 'http://jiayu-pearl-mall.oss-cn-beijing.aliyuncs.com/',
 }

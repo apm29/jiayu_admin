@@ -20,6 +20,17 @@
                 :loading="tableSettings.loading"
                 :footer-props="{'items-per-page-options': tableSettings.rowDict}"
         >
+            <template v-slot:item.avatar="{item}">
+                <v-list-item-avatar class="info lighten-1" size="60"   >
+                    <v-img :src="$path+item.avatar" style="min-height: 60px" v-if="item.avatar"></v-img>
+                    <span v-else class="title white--text">{{item.username.slice(0,1)}}</span>
+                </v-list-item-avatar>
+            </template>
+            <template v-slot:item.roles="{item}">
+                <v-chip-group>
+                    <v-chip color="info" small v-for="(role) of item.roles" :key="role.id">{{role.name}}</v-chip>
+                </v-chip-group>
+            </template>
             <template v-slot:item.lastLoginTime="{item}">
                 {{$moment(item.lastLoginTime).format('YYYY-MM-DD HH:mm:ss')}}
             </template>
@@ -39,14 +50,34 @@
                 <v-btn small color="success" block text @click="addUser">添加管理员</v-btn>
             </template>
         </v-data-table>
-        <v-dialog v-model="showAddMenu" max-width="60vw">
+        <v-dialog v-model="showAddMenu" max-width="40vw">
             <v-card>
                 <v-card-title>{{form.id?'编辑管理员':'添加管理员'}}</v-card-title>
                 <v-card-text>
                     <v-text-field placeholder="管理员名称(如admin)" v-model="form.username"/>
                     <v-text-field type="password" placeholder="管理员密码" v-model="form.password"/>
-                    <v-file-uploader single :upload="upload" placeholder="管理员头像" accept="image/*"
-                                     v-model="form.avatar"/>
+                    <v-select
+                            v-model="form.roles"
+                            :items="rolesDict"
+                            label="选择角色"
+                            item-value="id"
+                            item-text="name"
+                            chips
+                            multiple
+                            return-object
+                    >
+
+                    </v-select>
+                    <v-file-uploader
+                            single
+                            grid
+                            :upload="upload"
+                            hint="选择管理员头像"
+                            accept="image/*"
+                            accept-only-path
+                            produce-only-path
+                            v-model="form.avatar"
+                    />
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer/>
@@ -76,8 +107,18 @@
               sortable: false,
             },
             {
+              text: '头像',
+              value: 'avatar',
+              sortable: false,
+            },
+            {
               text: '账号',
               value: 'username',
+              sortable: false,
+            },
+            {
+              text: '角色',
+              value: 'roles',
               sortable: false,
             },
             {
@@ -111,7 +152,11 @@
           avatar: undefined,
           roles: [],
         },
+        rolesDict: [],
       }
+    },
+    created () {
+      this.loadRolesDict()
     },
     watch: {
       options: {
@@ -129,6 +174,21 @@
       },
     },
     methods: {
+      loadRolesDict: async function () {
+        let url = '/authorization/roles/get'
+        try {
+          let res = await this.$remote.post({
+            url: url,
+            data: {
+              pageNo: 1,
+              pageSize: 9999,
+            },
+          })
+          this.rolesDict = res.Data.records
+        } catch (e) {
+          console.log(e)
+        }
+      },
       loadUserData: async function () {
         if (this.tableSettings.loading) {
           return
@@ -195,13 +255,23 @@
       },
       doAddUser: async function () {
         try {
-          this.form.avatar = this.form.avatar?this.form.avatar.filePath:undefined
           let res = await this.$remote.post({
             url: this.form.id ? '/user/update' : '/user/create',
             data: this.form,
           })
           this.$notify({
             text: res.Msg,
+            type: 'success',
+          })
+          let roleDispatchRes = await this.$remote.post({
+            url: '/user/dispatchRoles',
+            data: {
+              user:this.form,
+              roles:this.form.roles
+            },
+          })
+          this.$notify({
+            text: roleDispatchRes.Msg,
             type: 'success',
           })
           this.showAddMenu = false
@@ -224,10 +294,7 @@
             formData: formData,
             url: '/files/upload',
           })
-          return {
-            fileName: res.Data.fileName,
-            filePath: res.Data.filePath,
-          }
+          return res.Data.filePath
         } catch (e) {
           this.$notify({
             text: e,

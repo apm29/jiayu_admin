@@ -13,7 +13,15 @@
             </div>
             <v-btn color="primary" @click="addPermission(0)">添加根权限</v-btn>
         </div>
-        <v-treeview :items="permissions" item-key="id" hoverable open-all>
+        <v-treeview
+                :items="permissions"
+                item-key="id"
+                ref="permission"
+                hoverable
+                open-all
+                :open="opened"
+                open-on-click
+        >
             <template v-slot:append="{item}">
                 <v-btn x-small @click="addPermission(item.id)" color="info" tile text>
                     添加
@@ -69,6 +77,7 @@
     data: function () {
       return {
         permissions: [],
+        opened: [],
         showAddMenu: false,
         form: {
           parentId: undefined,
@@ -79,14 +88,28 @@
       }
     },
     async mounted () {
-      this.getPermissionTree()
+      await this.getPermissionTree()
     },
     methods: {
       getPermissionTree: async function () {
         let res = await this.$remote.post({
           url: '/authorization/permission/getAsTree',
         })
-        this.permissions = res.Data
+        let data = res.Data
+        this.permissions = data
+        this.opened = this.flatTree([...data]).map(p=>p.id)
+      },
+
+      flatTree:function(tree){
+        return tree.flatMap(leaf=>{
+          if(leaf.children){
+            let sub = this.flatTree(leaf.children)
+            sub.push(leaf)
+            return sub
+          }else {
+            return [leaf]
+          }
+        })
       },
       addPermission: function (parentId) {
         this.form = {

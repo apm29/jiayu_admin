@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@tinymce/tinymce-vue": "3.0.1",
     "@mdi/font": "^3.6.95",
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
