@@ -20,7 +20,6 @@ export default {
         'Content-Type': 'multipart/form-data',
         'Authorization': token,
       },
-      baseURL:'http://jiayupearl.shop:9998/'
     })
     if (response.data.Code === 200) {
       if (response.data.Token) {

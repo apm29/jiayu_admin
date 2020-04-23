@@ -44,7 +44,7 @@
                 <v-card-title>{{form.id?'编辑管理员':'添加管理员'}}</v-card-title>
                 <v-card-text>
                     <v-text-field placeholder="管理员名称(如admin)" v-model="form.username"/>
-                    <v-text-field placeholder="管理员密码" v-model="form.password"/>
+                    <v-text-field type="password" placeholder="管理员密码" v-model="form.password"/>
                     <v-file-uploader single :upload="upload" placeholder="管理员头像" accept="image/*"
                                      v-model="form.avatar"/>
                 </v-card-text>
@@ -195,7 +195,7 @@
       },
       doAddUser: async function () {
         try {
-          this.form.avatar = this.form.avatar?undefined:this.form.avatar
+          this.form.avatar = this.form.avatar?this.form.avatar.filePath:undefined
           let res = await this.$remote.post({
             url: this.form.id ? '/user/update' : '/user/create',
             data: this.form,
