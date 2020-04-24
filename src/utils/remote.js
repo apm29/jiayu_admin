@@ -56,7 +56,8 @@ export default {
    */
   async post (options) {
 
-    let token = localStorage.getItem(config.tokenKey)
+    let token = localStorage.getItem(config.tokenKey)||undefined
+    console.log(token)
     let axiosResponse = await axios({
       url: options.url,
       method: 'post',
