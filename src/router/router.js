@@ -87,6 +87,50 @@ let router =  new VueRouter({
       ],
     },
     {
+      path: '/',
+      name: '商品管理',
+      component: () => import('@/views/IndexLayout'),
+      meta:{
+        roles:['admin']
+      },
+      children: [
+        {
+          path: '/goods/create',
+          name: '商品上架',
+          icon: 'mdi-upload',
+          component: () => import('@/views/goods/GoodsCreate'),
+        },
+        {
+          path: '/goods/manager',
+          name: '商品管理',
+          icon: 'mdi-view-module',
+          component: () => import('@/views/goods/GoodsManager'),
+        },
+      ],
+    },
+    {
+      path: '/',
+      name: '商城管理',
+      component: () => import('@/views/IndexLayout'),
+      meta:{
+        roles:['admin']
+      },
+      children: [
+        {
+          path: '/brand/manager',
+          name: '品牌管理',
+          icon: 'mdi-cards-playing-outline',
+          component: () => import('@/views/brand/BrandManager'),
+        },
+        {
+          path: '/category/manager',
+          name: '类目管理',
+          icon: 'mdi-file-tree',
+          component: () => import('@/views/brand/BrandManager'),
+        },
+      ],
+    },
+    {
       path: '/login',
       name: 'login',
       component: () => import('@/views/Login'),
