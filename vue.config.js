@@ -1,3 +1,4 @@
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 module.exports = {
   "transpileDependencies": [
     "vuetify"
@@ -10,4 +11,9 @@ module.exports = {
   devServer: {
     port: 3154
   },
+  configureWebpack: {
+    plugins: [
+      new BundleAnalyzerPlugin()
+    ]
+  }
 }

@@ -40,11 +40,13 @@
 </template>
 
 <script>
-  import 'highlight.js/styles/default.css'
   import marked from 'marked'
-  import hljs from 'highlight.js'
-  import 'highlight.js/styles/atom-one-dark.css';
+
   const rendererMD = new marked.Renderer()
+  import 'highlight.js/styles/default.css'
+  import hljs from 'highlight.js'
+  import 'highlight.js/styles/atom-one-dark.css'
+
   const highlightCode = () => {
     const preEl = document.querySelectorAll('pre')
     preEl.forEach((el) => {
@@ -116,42 +118,67 @@
         return marked(this.text)
       },
     },
+    async created () {
+      await this.loadHighLightJS()
+      highlightCode()
+    },
+    methods: {
+      loadHighLightJS: function () {
+        return new Promise(function (resolve) {
+          let url = 'https://cdn.bootcss.com/highlight.js/10.0.0/highlight.min.js'
+          let highLightJS = document.createElement('script')
+          highLightJS.id = 'echarts'
+          highLightJS.charset = 'utf-8'
+          highLightJS.src = url
+          document.head.appendChild(highLightJS)
+          highLightJS.onload = function () {
+            resolve()
+          }
+        })
+      },
+    },
     mounted () {
       highlightCode()
     },
 
     updated () {
       highlightCode()
-    }
+    },
   }
 </script>
 <style>
-    .v-application .markdown-editor code{
+    .v-application .markdown-editor code {
         background-color: #282c34;
         elevation: 0;
         box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2), 0 0 0 0 rgba(0, 0, 0, 0.14), 0 0 0 0 rgba(0, 0, 0, 0.12)
     }
-    h1{
+
+    h1 {
         padding-bottom: 12px;
         padding-top: 12px;
     }
-    h2{
+
+    h2 {
         padding-bottom: 12px;
         padding-top: 12px;
     }
-    h3{
+
+    h3 {
         padding-bottom: 12px;
         padding-top: 12px;
     }
-    h4{
+
+    h4 {
         padding-bottom: 12px;
         padding-top: 12px;
     }
-    h5{
+
+    h5 {
         padding-bottom: 12px;
         padding-top: 12px;
     }
-    h6{
+
+    h6 {
         padding-bottom: 12px;
         padding-top: 12px;
     }

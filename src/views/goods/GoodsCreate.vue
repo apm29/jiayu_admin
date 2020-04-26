@@ -36,7 +36,7 @@
       '$store.state.app.dark': {
         immediate: true,
         handler: function (val) {
-          this.settings.skin_url = val ?  './tinymce/skins/ui/oxide-dark' : './tinymce/skins/ui/oxide',
+          this.settings.skin_url = val ?  './tinymce/skins/ui/oxide-dark' : './tinymce/skins/ui/oxide'
           this.settings.content_css = val ? 'dark' : 'writer'
           this.show = false
           this.$nextTick(() => {
