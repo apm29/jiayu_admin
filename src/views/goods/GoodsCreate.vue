@@ -26,7 +26,7 @@
             'insertdatetime media table paste code help wordcount'
           ],
           language: 'zh_CN',
-          skin_url: this.$store.state.app.dark ? '/tinymce/skins/ui/oxide-dark' : '/tinymce/skins/ui/oxide',
+          skin_url: this.$store.state.app.dark ? '@/assets/tinymce/skins/ui/oxide-dark' : '@/assets/tinymce/skins/ui/oxide',
           content_css: this.$store.state.app.dark ? 'dark' : 'writer',
           images_upload_handler: this.upload
         }
