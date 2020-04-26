@@ -26,7 +26,7 @@
             'insertdatetime media table paste code help wordcount'
           ],
           language: 'zh_CN',
-          skin_url: this.$store.state.app.dark ? '@/assets/tinymce/skins/ui/oxide-dark' : '@/assets/tinymce/skins/ui/oxide',
+          skin_url: this.$store.state.app.dark ? '@/assets/skins/ui/oxide-dark' : '@/assets/skins/ui/oxide',
           content_css: this.$store.state.app.dark ? 'dark' : 'writer',
           images_upload_handler: this.upload
         }
@@ -36,7 +36,7 @@
       '$store.state.app.dark': {
         immediate: true,
         handler: function (val) {
-          this.settings.skin_url = val ? '/tinymce/skins/ui/oxide-dark' : '/tinymce/skins/ui/oxide'
+          this.settings.skin_url = val ? '@/assets/skins/ui/oxide-dark' : '@/assets/skins/ui/oxide'
           this.settings.content_css = val ? 'dark' : 'writer'
           this.show = false
           this.$nextTick(() => {
