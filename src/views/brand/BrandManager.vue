@@ -16,6 +16,12 @@
                     添加品牌
                 </v-btn>
             </template>
+            <template v-slot:item.operation="{item}">
+                <v-row justify="space-around">
+                    <v-btn small color="error" @click="deleteBrand(item)">删除</v-btn>
+                    <v-btn small color="info" @click="editBrand(item)">编辑</v-btn>
+                </v-row>
+            </template>
         </v-data-table>
         <v-dialog width="50vw" v-model="showAddMenu">
             <v-card>
@@ -79,6 +85,10 @@
               sortable: false,
             },
             {
+              text: '排序',
+              value: 'sortOrder',
+            },
+            {
               text: '图片',
               value: 'addTime',
             },
@@ -113,10 +123,30 @@
     },
     methods: {
       loadBrandList: async function () {
-        let res = await this.$remote.post({
-          url: '/brand/list',
-        })
-        this.data = res.Data.records
+        if (this.tableSettings.loading) {
+          return
+        }
+        let url = '/brand/list'
+        let data = {
+          pageNo: this.tableSettings.page,
+          pageSize: this.tableSettings.rows,
+          sort: this.tableSettings.sort,
+          order: this.tableSettings.order,
+          search: this.tableSettings.search,
+        }
+        try {
+          this.tableSettings.loading = true
+          let res = await this.$remote.post({
+            url: url,
+            data: data,
+          })
+          this.data = res.Data.records
+          this.tableSettings.total = parseInt(res.Data.total)
+        } catch (e) {
+          console.log(e)
+        } finally {
+          this.tableSettings.loading = false
+        }
       },
       addBrand: function () {
         this.form = {}
@@ -126,6 +156,12 @@
         this.form = brand
         this.showAddMenu = true
       },
+      deleteBrand: async function (brand) {
+        await this.$messenger.confirm({
+          msg: `确定删除${brand.name}吗?`,
+        }) && await this.doDeleteBrand(brand)
+      },
+
       doEditBrand: async function () {
         try {
           let res = await this.$remote.post({
@@ -146,6 +182,28 @@
           await this.loadBrandList()
         }
       },
+      doDeleteBrand: async function (brand) {
+        try {
+          let res = await this.$remote.post({
+            url: '/brand/delete',
+            data: {
+              id: brand.id,
+            },
+          })
+          this.$notify({
+            text: res.Msg,
+            type: 'success',
+          })
+          this.showAddMenu = false
+        } catch (e) {
+          this.$notify({
+            text: e,
+            type: 'error',
+          })
+        } finally {
+          await this.loadBrandList()
+        }
+      }
     },
   }
 </script>
