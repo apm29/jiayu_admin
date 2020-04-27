@@ -1,4 +1,4 @@
-import Vue from 'vue'
+
 import ConfirmDialog from './ConfirmDialog.vue'
 import AlertDialog from './AlertDialog.vue'
 import Toast from './Toast.vue'

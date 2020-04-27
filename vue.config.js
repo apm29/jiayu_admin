@@ -30,7 +30,9 @@ module.exports = {
         }),
       ],
     externals: {
-      'moment':'moment'
+      'moment':'moment',
+      'vue':'Vue',
+      'vuetify':'Vuetify'
     },
   },
 }

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import config from '@/utils/config'
 import router from '@/router/router'
-import Vue from 'vue'
+
 import store from '@/store/store'
 
 axios.defaults.withCredentials = true // 是否允许跨域
@@ -52,12 +52,10 @@ export default {
   /**
    *
    * @param {*} options
-   * @param {*} count
    */
   async post (options) {
 
     let token = localStorage.getItem(config.tokenKey)||undefined
-    console.log(token)
     let axiosResponse = await axios({
       url: options.url,
       method: 'post',

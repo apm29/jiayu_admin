@@ -1,4 +1,4 @@
-import Vue from 'vue'
+
 import Vuex from 'vuex'
 import remote from '@/utils/remote'
 import router from '@/router/router'
