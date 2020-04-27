@@ -47,7 +47,7 @@ export default new Vuex.Store({
       state.user.roles = payload.roles
     },
     logout: function (state) {
-      state.user.info = undefined
+      state.user.info = {}
       state.user.roles = []
     },
   },
