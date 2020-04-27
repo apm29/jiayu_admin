@@ -13,7 +13,7 @@ export default new Vuex.Store({
       dark:false
     },
     user: {
-      info: undefined,
+      info: {},
       roles: [],
     },
     layout: {
@@ -53,19 +53,23 @@ export default new Vuex.Store({
   },
   actions: {
     login: async function (context) {
-      if(context.state.user.info){
+      if(context.state.user.info.id){
         return
       }
-      let rolesRes = await remote.post({
-        url: '/authorization/roles/mine',
-      })
-      let infoRes = await remote.post({
-        url: '/user/getUserInfo',
-      })
-      context.commit('login', {
-        roles: rolesRes.Data,
-        info:infoRes.Data
-      })
+      try {
+        let rolesRes = await remote.post({
+          url: '/authorization/roles/mine',
+        })
+        let infoRes = await remote.post({
+          url: '/user/getUserInfo',
+        })
+        context.commit('login', {
+          roles: rolesRes.Data,
+          info:infoRes.Data
+        })
+      } catch (e) {
+        console.log(e)
+      }
     },
     logout: async function (context) {
       validator.logout()

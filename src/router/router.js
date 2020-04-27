@@ -19,45 +19,7 @@ let router =  new VueRouter({
         },
       ],
     },
-    {
-      path: '/main1',
-      name: '父菜单1',
-      component: () => import('@/views/IndexLayout'),
-      children: [
-        {
-          path: '/cascader',
-          name: '级联选择器',
-          icon: 'mdi-onenote',
-          component: () => import('@/views/cascader/CascaderExample'),
-        },
-        {
 
-          path: '/uploader',
-          name: '文件选择器',
-          icon: 'mdi-tag-outline',
-          component: () => import('@/views/uploader/FileUploaderExample'),
-        },
-      ],
-    },
-    {
-      path: '/main2',
-      name: '父菜单2',
-      component: () => import('@/views/IndexLayout'),
-      children: [
-        {
-          path: '/pc/uploader',
-          name: 'Markdown',
-          icon: 'mdi-android-messages',
-          component: () => import('@/views/markdown/MarkdownEditorExample'),
-        },
-        {
-          path: '/pc/list',
-          name: '列表',
-          icon: 'mdi-format-list-checks',
-          component: () => import('@/views/listMore/LoadMoreExample'),
-        },
-      ],
-    },
     {
       path: '/system',
       name: '系统管理',
@@ -91,7 +53,7 @@ let router =  new VueRouter({
       name: '商品管理',
       component: () => import('@/views/IndexLayout'),
       meta:{
-        roles:['admin']
+        roles:['admin','operator']
       },
       children: [
         {
