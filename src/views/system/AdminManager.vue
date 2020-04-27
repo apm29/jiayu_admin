@@ -71,7 +71,6 @@
                     <v-file-uploader
                             single
                             grid
-                            :upload="upload"
                             hint="选择管理员头像"
                             accept="image/*"
                             accept-only-path
@@ -250,7 +249,7 @@
             type: 'error',
           })
         } finally {
-          this.loadUserData()
+          await this.loadUserData()
         }
       },
       doAddUser: async function () {
@@ -286,22 +285,6 @@
 
       },
 
-      upload: async function (file) {
-        let formData = new FormData()
-        formData.append('file', file)
-        try {
-          let res = await this.$remote.upload({
-            formData: formData,
-            url: '/files/upload',
-          })
-          return res.Data.filePath
-        } catch (e) {
-          this.$notify({
-            text: e,
-            type: 'error',
-          })
-        }
-      },
     },
   }
 </script>

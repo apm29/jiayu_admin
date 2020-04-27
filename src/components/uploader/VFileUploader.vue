@@ -232,164 +232,202 @@
       },
       upload: {
         type: Function,
-        default: function (file) {
-          return file
-        },
-      },
-      fileName: {
-        type: String,
-        default: 'fileName',
-      },
-      fileValue: {
-        type: String,
-        default: 'filePath',
-      },
-      fileBaseUrl: {
-        type: String,
-        default: 'http://jiayu-pearl-mall.oss-cn-beijing.aliyuncs.com/',
-      },
-    },
-    model: {
-      prop: 'result',
-      event: 'onFileValueChange',
-    },
-    mounted () {
-    },
-    watch: {
-      result:{
-        deep: true,
-        immediate: true,
-        handler:function (val) {
-          this.uploadResults = []
-          if (val) {
-            if (this.single) {
-              if (this.acceptOnlyPath) {
-                let item = {}
-                item[this.fileName] = val
-                item[this.fileValue] = val
-                this.uploadResults.push(item)
-              } else {
-                this.uploadResults.push(val)
-              }
-            } else {
-              if (this.acceptOnlyPath) {
-                val.forEach(path => {
-                  let item = {}
-                  item[this.fileName] = path
-                  item[this.fileValue] = path
-                  this.uploadResults.push(item)
-                })
-              } else {
-                this.uploadResults = this.uploadResults.concat(val)
-              }
-            }
+        default: async function (file) {
+          let formData = new FormData()
+          formData.append('file', file)
+          try {
+            let res = await this.$remote.upload({
+              formData: formData,
+              url: '/files/upload',
+            })
+            return res.Data.filePath
+          } catch (e) {
+            this.$notify({
+              text: e,
+              type: 'error',
+            })
           }
-        }
+        },
+    },
+    fileName: {
+      type: String,
+      default: 'fileName',
+    },
+    fileValue: {
+      type: String,
+      default: 'filePath',
+    },
+    fileBaseUrl: {
+      type: String,
+      default: 'http://jiayu-pearl-mall.oss-cn-beijing.aliyuncs.com/',
+    },
+  }
+  ,
+  model: {
+    prop: 'result',
+      event
+  :
+    'onFileValueChange',
+  }
+  ,
+  mounted()
+  {
+  }
+  ,
+  watch: {
+    result:{
+      deep: true,
+        immediate
+    :
+      true,
+        handler
+    :
 
-      },
-      single: {
-        handler: function (val) {
-          if (val && this.uploadResults.length > 1) {
-            this.uploadResults = this.uploadResults.slice(0, 1)
-          }
-        },
-      },
-    },
-    data: function () {
-      return {
-        loading: false,
-        showPreviewDialog: false,
-        uploadResults: [],
-        preview: undefined,
-        previewName: undefined,
-      }
-    },
-    computed: {
-      showAdd: function () {
-        if (this.disabled) {
-          return false
-        }
-        if (this.uploadResults.length < this.limit && !this.single && this.gridAddBtn) {
-          return true
-        }
-        if (this.uploadResults.length >= this.limit) {
-          return false
-        }
-        return !(this.single && this.uploadResults.length === 1)
-      },
-    },
-    methods: {
-      onFileAdded: function () {
-        this.doUpload(this.$refs[this._uid + 'input'].files[0])
-      },
-      onAddFileClick: function (e) {
-        this.$refs[this._uid + 'input'].click(e)
-      },
-      doUpload: async function (file) {
-        try {
-          this.loading = true
-          let res = await this.upload(file)
-          if (!this.acceptOnlyPath && res && res[this.fileName] && res[this.fileValue]) {
-            if (this.single) {
-              this.uploadResults = []
-            }
-            this.uploadResults.push(res)
-          } else if(res){
-            //包装为{fileName:xxx,fileValue:xxx}
-            if (this.single) {
-              this.uploadResults = []
-            }
-            let item = {}
-            item[this.fileName] = res
-            item[this.fileValue] = res
-            this.uploadResults.push(item)
-          }
-          let val = this.uploadResults
-          if (!this.single) {
-            if (this.produceOnlyPath) {
-              this.$emit('onFileValueChange', val[this.fileValue])
+      function (val) {
+        this.uploadResults = []
+        if (val) {
+          if (this.single) {
+            if (this.acceptOnlyPath) {
+              let item = {}
+              item[this.fileName] = val
+              item[this.fileValue] = val
+              this.uploadResults.push(item)
             } else {
-              this.$emit('onFileValueChange', val)
+              this.uploadResults.push(val)
             }
           } else {
-            if (val.length === 0) {
-              this.$emit('onFileValueChange', undefined)
+            if (this.acceptOnlyPath) {
+              val.forEach(path => {
+                let item = {}
+                item[this.fileName] = path
+                item[this.fileValue] = path
+                this.uploadResults.push(item)
+              })
             } else {
-              if (this.produceOnlyPath) {
-                this.$emit('onFileValueChange', val[0][this.fileValue])
-              } else {
-                this.$emit('onFileValueChange', val[0])
-              }
+              this.uploadResults = this.uploadResults.concat(val)
             }
           }
-        } catch (e) {
-          console.log(e)
-        } finally {
-          this.loading = false
-          this.$refs[this._uid + 'form'].reset()
         }
-      },
-      onDeleteClick: function (fileResult, index) {
-        this.uploadResults.splice(index, 1)
-      },
+      }
 
-      previewImage: function (fileUploadResult) {
-        this.preview = this.fileBaseUrl + fileUploadResult[this.fileValue]
-        this.previewName = fileUploadResult[this.fileName]
-        this.showPreviewDialog = true
-      },
-
-      isImage: function (image) {
-        if(!image){
-          return  false
+    }
+  ,
+    single: {
+      handler: function (val) {
+        if (val && this.uploadResults.length > 1) {
+          this.uploadResults = this.uploadResults.slice(0, 1)
         }
-        return image.indexOf('.jpg') >= 0
-          || image.indexOf('.png') >= 0
-          || image.indexOf('.jpeg') >= 0
-          || image.indexOf('.gif') >= 0
-          || image.indexOf('.bmp') >= 0
-      },
-    },
+      }
+    ,
+    }
+  ,
+  }
+  ,
+  data: function () {
+    return {
+      loading: false,
+      showPreviewDialog: false,
+      uploadResults: [],
+      preview: undefined,
+      previewName: undefined,
+    }
+  }
+  ,
+  computed: {
+    showAdd: function () {
+      if (this.disabled) {
+        return false
+      }
+      if (this.uploadResults.length < this.limit && !this.single && this.gridAddBtn) {
+        return true
+      }
+      if (this.uploadResults.length >= this.limit) {
+        return false
+      }
+      return !(this.single && this.uploadResults.length === 1)
+    }
+  ,
+  }
+  ,
+  methods: {
+    onFileAdded: function () {
+      this.doUpload(this.$refs[this._uid + 'input'].files[0])
+    }
+  ,
+    onAddFileClick: function (e) {
+      this.$refs[this._uid + 'input'].click(e)
+    }
+  ,
+    doUpload: async function (file) {
+      try {
+        this.loading = true
+        let res = await this.upload(file)
+        if (!this.acceptOnlyPath && res && res[this.fileName] && res[this.fileValue]) {
+          if (this.single) {
+            this.uploadResults = []
+          }
+          this.uploadResults.push(res)
+        } else if (res) {
+          //包装为{fileName:xxx,fileValue:xxx}
+          if (this.single) {
+            this.uploadResults = []
+          }
+          let item = {}
+          item[this.fileName] = res
+          item[this.fileValue] = res
+          this.uploadResults.push(item)
+        }
+        let val = this.uploadResults
+        if (!this.single) {
+          if (this.produceOnlyPath) {
+            this.$emit('onFileValueChange', val[this.fileValue])
+          } else {
+            this.$emit('onFileValueChange', val)
+          }
+        } else {
+          if (val.length === 0) {
+            this.$emit('onFileValueChange', undefined)
+          } else {
+            if (this.produceOnlyPath) {
+              this.$emit('onFileValueChange', val[0][this.fileValue])
+            } else {
+              this.$emit('onFileValueChange', val[0])
+            }
+          }
+        }
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.loading = false
+        this.$refs[this._uid + 'form'].reset()
+      }
+    }
+  ,
+    onDeleteClick: function (fileResult, index) {
+      this.uploadResults.splice(index, 1)
+    }
+  ,
+
+    previewImage: function (fileUploadResult) {
+      this.preview = this.fileBaseUrl + fileUploadResult[this.fileValue]
+      this.previewName = fileUploadResult[this.fileName]
+      this.showPreviewDialog = true
+    }
+  ,
+
+    isImage: function (image) {
+      if (!image) {
+        return false
+      }
+      return image.indexOf('.jpg') >= 0
+        || image.indexOf('.png') >= 0
+        || image.indexOf('.jpeg') >= 0
+        || image.indexOf('.gif') >= 0
+        || image.indexOf('.bmp') >= 0
+    }
+  ,
+  }
+  ,
   }
 </script>
 
