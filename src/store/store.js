@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import remote from '@/utils/remote'
-import validator from '@/utils/validator'
 import router from '@/router/router'
+import config from '@/utils/config'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -21,6 +21,9 @@ export default new Vuex.Store({
       showToolbar: true,
       tags:[]
     },
+  },
+  getters:{
+
   },
   mutations: {
     showToolBar: function (state, payload) {
@@ -72,12 +75,20 @@ export default new Vuex.Store({
       }
     },
     logout: async function (context) {
-      validator.logout()
+      localStorage.setItem(config.tokenKey,'')
       context.commit('logout')
       await router.push({
         path:"/login",
         replace:true
       })
+    },
+    isLogin: async function () {
+      let token = localStorage.getItem(config.tokenKey)
+      let validate = !!token
+      if(validate){
+        await this.dispatch('login')
+      }
+      return validate
     },
   },
   modules: {},

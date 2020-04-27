@@ -89,7 +89,7 @@
 </template>
 
 <script>
-  import VFileUploader from '@/views/uploader/VFileUploader'
+  import VFileUploader from '@/components/uploader/VFileUploader'
 
   export default {
     name: 'AdminManager',

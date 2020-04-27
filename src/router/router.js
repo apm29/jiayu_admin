@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router'
 import Vue from 'vue'
 import nprogress from 'nprogress'
-import validator from '@/utils/validator'
+import store from '@/store/store'
 
 Vue.use(VueRouter)
 let router =  new VueRouter({
@@ -110,7 +110,7 @@ let router =  new VueRouter({
 
 router.beforeEach(async (to, from, next) => {
   nprogress.start()
-  if (await validator.isValidateUser() || to.path === '/login') {
+  if (await store.dispatch('isLogin') || to.path === '/login') {
     next()
   } else {
     next({
