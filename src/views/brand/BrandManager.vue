@@ -10,6 +10,9 @@
                 :loading="tableSettings.loading"
                 :footer-props="{'items-per-page-options': tableSettings.rowDict}"
         >
+            <template v-slot:item.picUrl="{item}">
+                <v-img class="image-thumbnail" :src="$path+item.picUrl"></v-img>
+            </template>
             <template v-slot:header.operation>
                 <v-btn text color="success" @click="addBrand">
                     <v-icon>mdi-plus</v-icon>
@@ -90,11 +93,11 @@
             },
             {
               text: '图片',
-              value: 'addTime',
+              value: 'picUrl',
             },
             {
               text: '低价',
-              value: 'updateTime',
+              value: 'floorPrice',
             },
             {
               text: '操作',

@@ -88,7 +88,7 @@ let router =  new VueRouter({
           path: '/category/manager',
           name: '类目管理',
           icon: 'mdi-file-tree',
-          component: () => import('@/views/brand/BrandManager'),
+          component: () => import('@/views/brand/CategoryManager'),
         },
       ],
     },
