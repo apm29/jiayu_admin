@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@tinymce/tinymce-vue": "^3.0.1",
+    "@mdi/font": "^5.1.45",
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
     "moment": "^2.24.0",
