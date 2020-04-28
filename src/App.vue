@@ -17,4 +17,8 @@ export default {
   .image-thumbnail{
     width: 90px;
   }
+  .image-icon{
+    width: 50px;
+    height: 50px;
+  }
 </style>

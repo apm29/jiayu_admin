@@ -49,12 +49,17 @@
                         :dark="dragOnItem === item"
                         :class="{ 'info':dragOnItem === item, 'lighten-1':dragOnItem === item}"
                 >
-                    <v-list-item-title class="text--white">
-                        {{item.name}}
-                    </v-list-item-title>
-                    <v-list-item-subtitle>
-                        {{item.description}}
-                    </v-list-item-subtitle>
+                    <v-list-item-action>
+                        <v-img class="image-icon" :src="$path+item.iconUrl"></v-img>
+                    </v-list-item-action>
+                    <v-list-item-content class="white--text">
+                        <v-list-item-title >
+                            {{item.name}}
+                        </v-list-item-title>
+                        <v-list-item-subtitle>
+                            {{item.description}}
+                        </v-list-item-subtitle>
+                    </v-list-item-content>
                 </v-list-item>
             </template>
         </v-treeview>
@@ -254,7 +259,7 @@
 
 <style>
     .category-tree .v-treeview-node__content {
-        background-color: rgba(23, 54, 88, 0.7) !important;
+        background-color: rgba(35, 138, 255, 0.8) !important;
         margin-bottom: 2px;
         box-shadow: 2px 2px 3px #888888;
         padding-right: 12px;
