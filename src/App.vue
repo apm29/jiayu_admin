@@ -7,6 +7,10 @@
 <script>
 export default {
   name: 'App',
+  async mounted () {
+    await this.$delay(800)
+    document.getElementById('loading-view').remove();
+  },
 };
 </script>
 <style>

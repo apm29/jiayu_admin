@@ -12,7 +12,11 @@ Vue.prototype.$remote = remote
 Vue.prototype.$messenger = messenger
 Vue.prototype.$moment = moment
 Vue.prototype.$path = config.fileBaseUrl
-
+Vue.prototype.$delay =  function (delay) {
+  return new Promise((resolve)=>{
+    setTimeout(resolve,delay)
+  })
+}
 
 new Vue({
   store,
