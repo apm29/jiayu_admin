@@ -79,16 +79,16 @@ let router =  new VueRouter({
       },
       children: [
         {
-          path: '/brand/manager',
+          path: '/mall/manager',
           name: '品牌管理',
           icon: 'mdi-cards-playing-outline',
-          component: () => import('@/views/brand/BrandManager'),
+          component: () => import('@/views/mall/BrandManager'),
         },
         {
           path: '/category/manager',
           name: '类目管理',
           icon: 'mdi-file-tree',
-          component: () => import('@/views/brand/CategoryManager'),
+          component: () => import('@/views/mall/CategoryManager'),
         },
       ],
     },

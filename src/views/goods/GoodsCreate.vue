@@ -1,26 +1,78 @@
 <template>
-    <v-card class="fill-height d-flex flex-column">
-        <tiny-editor v-model="text" @textChange="onTextChange"/>
-    </v-card>
+    <v-container>
+        <v-card class="fill-height d-flex flex-column">
+            <v-card-title>
+                商品介绍
+            </v-card-title>
+            <v-card-text>
+               <v-form>
+                   <v-text-field outlined label="商品编号" v-model="form.goodsSn"></v-text-field>
+                   <v-text-field outlined label="商品名称" v-model="form.name"></v-text-field>
+                   <v-cascader
+                           outlined
+                           v-model="form.categoryId"
+                           :options="categories"
+                           placeholder="选择商品类目"
+                           item-value="id"
+                           item-label="name"
+                   ></v-cascader>
+                   <paged-menu
+                           outlined
+                           v-model="form.brandId"
+                           placeholder="选择商品品牌"
+                           item-label="name"
+                           item-value="id"
+                   ></paged-menu>
+                   {{form.brandId}}
+                   <tiny-editor v-model="text"/>
+               </v-form>
+            </v-card-text>
+        </v-card>
+    </v-container>
 
 </template>
 
 <script>
 
   import TinyEditor from '@/components/editor/TinyEditor'
-  import VCascader from '@/components/cascader/VCascader'
+  import VCascader from '@/components/select/VCascader'
+  import PagedMenu from '@/components/select/PagedMenu'
+
   export default {
     name: 'GoodsCreate',
-    components: { VCascader, TinyEditor },
+    components: { PagedMenu, VCascader, TinyEditor },
     data:function () {
         return {
-          selection:[],
           text:'',
+          categories:[],
+          form:{
+            goodsSn:undefined,
+            name:undefined,
+            categoryId:undefined,
+            brandId:undefined,
+            gallery:undefined,
+            keywords:undefined,
+            brief:undefined,
+            picUrl:undefined,
+            sortOrder:undefined,
+            isNew:undefined,
+            isHot:undefined,
+            unit:undefined,
+            originPrice:undefined,
+            retailPrice:undefined,
+            detail:undefined,
+          }
         }
     },
+    created () {
+      this.loadCategoryDict()
+    },
     methods:{
-      onTextChange:function (val) {
-        console.log(val)
+      loadCategoryDict:async function () {
+        let res = await this.$remote.post({
+          url: '/category/getAsTree',
+        })
+        this.categories = res.Data
       }
     }
   }

@@ -7087,7 +7087,7 @@ window.tinymce.Resource.add("tinymce.plugins.emoticons", {
     category: "symbols"
   },
   tm: {
-    keywords: [ "trademark", "brand", "law", "legal" ],
+    keywords: [ "trademark", "mall", "law", "legal" ],
     "char": "\u2122\ufe0f",
     fitzpatrick_scale: false,
     category: "symbols"

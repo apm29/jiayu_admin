@@ -7,7 +7,8 @@
                               flat
                               :dense="dense"
                               v-model="resultText"
-                              hide-details
+                              :hide-details="hideDetail"
+                              :rules="rules"
                               :disabled="disabled"
                               :outlined="outlined"
                               :clearable="clearable"
@@ -20,7 +21,7 @@
             </template>
             <div class="d-flex flex-row white">
                 <v-sheet v-for="(subOptions,index) of cascade.keys()" :key="index+'cascade'">
-                    <v-list >
+                    <v-list>
                         <v-list-item
                                 :dense="dense"
                                 v-for="(subOptionsItem,subIndex) of subOptions"
@@ -39,7 +40,8 @@
                                     </v-list-item-title>
                                 </slot>
                             </v-list-item-content>
-                            <v-list-item-icon v-if="subOptionsItem[itemChildren]">
+                            <v-list-item-icon
+                                    v-if="subOptionsItem[itemChildren] && subOptionsItem[itemChildren].length && subOptionsItem[itemChildren].length>0">
                                 <v-icon x-small>mdi-chevron-right</v-icon>
                             </v-list-item-icon>
                         </v-list-item>
@@ -113,7 +115,17 @@
       },
       dense: {
         type: Boolean,
-        default: true,
+        default: false,
+      },
+      hideDetail: {
+        type: Boolean,
+        default: false,
+      },
+      rules: {
+        type: Array,
+        default: function () {
+          return []
+        },
       },
       showAllLevels: {
         type: Boolean,
@@ -147,10 +159,13 @@
         resultText: undefined,
       }
     },
-    created () {
-      this.cascade.set(this.options, -1)
-    },
     watch: {
+      options: {
+        immediate: true,
+        handler: function () {
+          this.cascade.set(this.options, -1)
+        },
+      },
       showAllLevels: {
         handler: function () {
           this.calculateStringResult()
@@ -181,11 +196,11 @@
         let children = item[this.itemChildren]
         if (children) {
           this.cascade.set(children, -1)
-          this.showMenu = true
+          this.showMenu = !(children && children.length === 0);
         } else {
           this.showMenu = false
         }
-        if (this.changeOnSelect || !children) {
+        if (this.changeOnSelect || !children || children.length === 0) {
           this.calculateStringResult()
         }
         this.$forceUpdate()

@@ -26,7 +26,7 @@
                 </v-row>
             </template>
         </v-data-table>
-        <v-dialog width="50vw" v-model="showAddMenu">
+        <v-dialog width="50vw" v-model="showAddMenu" scrollable>
             <v-card>
                 <v-card-title>{{form.id?'编辑品牌':'添加品牌'}}</v-card-title>
                 <v-card-text>
