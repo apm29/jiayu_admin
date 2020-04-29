@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container fluid>
         <v-card class="fill-height d-flex flex-column">
             <v-card-title>
                 商品介绍

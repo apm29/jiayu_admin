@@ -10,14 +10,14 @@ export default new Vuex.Store({
     app: {
       name: 'MY ADMIN',
       subtext: 'pearl',
-      dark:false
+      dark:true
     },
     user: {
       info: {},
       roles: [],
     },
     layout: {
-      miniSide: false,
+      miniSide: true,
       showToolbar: true,
       tags:[]
     },

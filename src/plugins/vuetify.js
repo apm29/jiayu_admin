@@ -26,7 +26,7 @@ export default new Vuetify({
         warning: '#FB8C00',
       },
     },
-    dark:false
+    dark:true
   },
   lang: {
     locales: {zhHans},
