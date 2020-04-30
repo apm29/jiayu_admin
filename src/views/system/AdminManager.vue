@@ -22,7 +22,7 @@
         >
             <template v-slot:item.avatar="{item}">
                 <v-list-item-avatar class="info lighten-1" size="60"   >
-                    <v-img :src="$path+item.avatar" style="min-height: 60px" v-if="item.avatar"></v-img>
+                    <v-image-viewer :src="$path+item.avatar" img-style="height: 60px;width:60px" v-if="item.avatar"></v-image-viewer>
                     <span v-else class="title white--text">{{item.username.slice(0,1)}}</span>
                 </v-list-item-avatar>
             </template>
@@ -89,10 +89,11 @@
 
 <script>
   import VFileUploader from '@/components/uploader/VFileUploader'
+  import VImageViewer from '@/components/image/VImageViewer'
 
   export default {
     name: 'AdminManager',
-    components: { VFileUploader },
+    components: { VImageViewer, VFileUploader },
     data () {
       return {
         data: [],
