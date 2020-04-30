@@ -12,6 +12,8 @@
                     :disabled="disabled"
                     :outlined="outlined"
                     :clearable="clearable"
+                    :label="label"
+                    :persistent-hint="persistentHint"
                     @click:clear="clear"
                     @input="search"
                     :clear-icon="(clearable&&result)?'mdi-close':''"
@@ -70,7 +72,6 @@
       },
       placeholder: {
         type: String,
-        default: '选择',
       },
       textFieldStyle: {
         type: Object,
@@ -115,6 +116,13 @@
         default: false,
       },
       returnObject: {
+        type: Boolean,
+        default: false,
+      },
+      label: {
+        type: String,
+      },
+      persistentHint: {
         type: Boolean,
         default: false,
       },

@@ -11,6 +11,8 @@
                               :rules="rules"
                               :disabled="disabled"
                               :outlined="outlined"
+                              :label="label"
+                              :persistent-hint="persistentHint"
                               :clearable="clearable"
                               :clear-icon="(clearable&&result)?'mdi-close':''"
                               @click:clear="clearResult"
@@ -20,8 +22,8 @@
                 </v-text-field>
             </template>
             <div class="d-flex flex-row white">
-                <v-sheet v-for="(subOptions,index) of cascade.keys()" :key="index+'cascade'">
-                    <v-list>
+                <v-sheet v-for="(subOptions,index) of cascade.keys()" :key="index+'cascade'" tile>
+                    <v-list tile>
                         <v-list-item
                                 :dense="dense"
                                 v-for="(subOptionsItem,subIndex) of subOptions"
@@ -91,7 +93,6 @@
       },
       placeholder: {
         type: String,
-        default: '选择',
       },
       textFieldStyle: {
         type: Object,
@@ -127,6 +128,9 @@
           return []
         },
       },
+      label: {
+        type: String,
+      },
       showAllLevels: {
         type: Boolean,
         default: true,
@@ -136,6 +140,10 @@
         default: true,
       },
       disabled: {
+        type: Boolean,
+        default: false,
+      },
+      persistentHint: {
         type: Boolean,
         default: false,
       },

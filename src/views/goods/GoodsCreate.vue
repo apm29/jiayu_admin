@@ -1,25 +1,27 @@
 <template>
-    <v-container fluid>
+    <v-container fluid class="pa-12">
         <v-card class="fill-height d-flex flex-column">
             <v-card-title>
                 商品介绍
             </v-card-title>
             <v-card-text>
                <v-form>
-                   <v-text-field outlined label="商品编号" v-model="form.goodsSn"></v-text-field>
-                   <v-text-field outlined label="商品名称" v-model="form.name"></v-text-field>
+                   <v-text-field outlined label="商品编号" persistent-hint v-model="form.goodsSn"></v-text-field>
+                   <v-text-field outlined label="商品名称" persistent-hint v-model="form.name"></v-text-field>
                    <v-cascader
                            outlined
                            v-model="form.categoryId"
                            :options="categories"
-                           placeholder="选择商品类目"
+                           persistent-hint
+                           label="选择商品类目"
                            item-value="id"
                            item-label="name"
                    ></v-cascader>
                    <paged-menu
                            outlined
                            v-model="form.brandId"
-                           placeholder="选择商品品牌"
+                           label="选择商品品牌"
+                           persistent-hint
                            item-label="name"
                            item-value="id"
                    ></paged-menu>

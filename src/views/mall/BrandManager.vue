@@ -11,7 +11,7 @@
                 :footer-props="{'items-per-page-options': tableSettings.rowDict}"
         >
             <template v-slot:item.picUrl="{item}">
-                <v-img class="image-thumbnail" :src="$path+item.picUrl"></v-img>
+                <v-image-viewer img-class="image-thumbnail" :src="$path+item.picUrl"></v-image-viewer>
             </template>
             <template v-slot:header.operation>
                 <v-btn text color="success" @click="addBrand">
@@ -59,10 +59,12 @@
 
 <script>
   import VFileUploader from '@/components/uploader/VFileUploader'
+  import VImageViewer from '@/components/image/VImageViewer'
 
   export default {
     name: 'BrandManager',
     components: {
+      VImageViewer,
       VFileUploader,
     },
     data: function () {
