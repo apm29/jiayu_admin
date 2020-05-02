@@ -155,7 +155,6 @@
       result: {
         immediate: true,
         handler: function (val) {
-          console.log(val,this.searching)
           if(this.searching){
             return
           }

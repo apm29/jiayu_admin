@@ -1,7 +1,6 @@
 import axios from 'axios'
 import config from '@/utils/config'
 import router from '@/router/router'
-
 import store from '@/store/store'
 
 axios.defaults.withCredentials = true // 是否允许跨域

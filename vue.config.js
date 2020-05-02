@@ -1,11 +1,10 @@
-const BundleAnalyzerPlugin = require(
-  'webpack-bundle-analyzer').BundleAnalyzerPlugin
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 module.exports = {
   'transpileDependencies': [
     'vuetify',
   ],
-  publicPath: '/manager',
+  publicPath: process.env.NODE_ENV === 'development'?'./':'/manager',
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: process.env.NODE_ENV === 'development',

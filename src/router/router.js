@@ -1,5 +1,4 @@
 import VueRouter from 'vue-router'
-
 import nprogress from 'nprogress'
 import store from '@/store/store'
 
