@@ -9,7 +9,7 @@ export default new Vuex.Store({
     app: {
       name: 'MY ADMIN',
       subtext: 'pearl',
-      dark:true
+      dark:false
     },
     user: {
       info: {},

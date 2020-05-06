@@ -66,7 +66,7 @@
         },
       },
       result: {
-        type: Array,
+        type: Array | Number,
         default: function () {
           return []
         },
@@ -155,6 +155,14 @@
         type: Boolean,
         default: false,
       },
+      returnLeaf: {
+        type: Boolean,
+        default: false,
+      },
+      returnValue: {
+        type: Boolean,
+        default: false,
+      },
     },
     model: {
       prop: 'result',
@@ -204,7 +212,7 @@
         let children = item[this.itemChildren]
         if (children) {
           this.cascade.set(children, -1)
-          this.showMenu = !(children && children.length === 0);
+          this.showMenu = !(children && children.length === 0)
         } else {
           this.showMenu = false
         }
@@ -235,9 +243,33 @@
           }
         }
         if (!this.returnObject) {
-          this.$emit('changeCascadeResult', result)
+          if (this.returnLeaf) {
+            if(this.returnValue){
+              this.$emit('changeCascadeResult', objectResult.pop()[this.itemValue])
+            }else {
+              this.$emit('changeCascadeResult', result.pop())
+            }
+          } else {
+            if(this.returnValue){
+              this.$emit('changeCascadeResult',objectResult.map(e=>e[this.itemValue]))
+            }else {
+              this.$emit('changeCascadeResult', result)
+            }
+          }
         } else {
-          this.$emit('changeCascadeResult', objectResult)
+          if (this.returnLeaf) {
+            if(this.returnValue){
+              this.$emit('changeCascadeResult', objectResult.pop()[this.itemValue])
+            }else {
+              this.$emit('changeCascadeResult', objectResult.pop())
+            }
+          } else {
+            if(this.returnValue){
+              this.$emit('changeCascadeResult',objectResult.map(e=>e[this.itemValue]))
+            }else {
+              this.$emit('changeCascadeResult', objectResult)
+            }
+          }
         }
         if (this.showAllLevels) {
           this.resultText = text.join(this.separator)

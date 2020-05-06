@@ -5,6 +5,7 @@
                 商品介绍
             </v-card-title>
             <v-card-text>
+                {{form}}
                 <v-form>
                     <v-text-field outlined label="商品编号" persistent-hint v-model="form.goodsSn"/>
                     <v-text-field outlined label="商品名称" persistent-hint v-model="form.name"/>
@@ -24,38 +25,26 @@
                             v-model="form.picUrl"
                             hint="商品图片"
                             grid
+                            produceOnlyPath
+                            acceptOnlyPath
                     />
                     <v-file-uploader
                             v-model="form.gallery"
                             hint="商品画廊"
                             grid
+                            produceOnlyPath
+                            acceptOnlyPath
                     />
                     <v-text-field outlined label="商品单位(如 个/斤/盒)" persistent-hint v-model="form.unit"/>
-                    <v-combobox
-                            v-model="form.keywords"
-                            label="关键字"
-                            outlined
-                            persistent-hint
-                            :items="keywordsDict"
-                            clearable
-                            chips
-                            multiple
-                    >
-                        <template v-slot:no-data>
-                            <v-list-item>
-                                <v-list-item-content>
-                                    <v-list-item-title>
-                                        没有匹配的关键词. 按下 <kbd>enter</kbd> 创建新关键词
-                                    </v-list-item-title>
-                                </v-list-item-content>
-                            </v-list-item>
-                        </template>
-                    </v-combobox>
+
+                    <v-addable-chips v-model="form.keywords" class="mb-4"/>
                     <v-cascader
                             outlined
                             v-model="form.categoryId"
                             :options="categories"
                             persistent-hint
+                            return-leaf
+                            return-value
                             label="选择商品类目"
                             item-value="id"
                             item-label="name"
@@ -68,11 +57,25 @@
                             item-label="name"
                             item-value="id"
                     />
-                    {{form.brandId}}
-                    <tiny-editor v-model="text"/>
+                    <v-text-field outlined label="商品简介" persistent-hint v-model="form.brief"/>
+                    <v-label>商品详细介绍</v-label>
+                    <tiny-editor v-model="form.detail"/>
                 </v-form>
             </v-card-text>
         </v-card>
+        <v-card class="mt-8">
+            <v-card-title>
+                商品规格
+            </v-card-title>
+        </v-card>
+
+        <v-footer>
+            <v-btn
+                    @click="saveGoods"
+            >
+                上架
+            </v-btn>
+        </v-footer>
     </v-container>
 
 </template>
@@ -83,13 +86,13 @@
   import VCascader from '@/components/select/VCascader'
   import PagedMenu from '@/components/select/PagedMenu'
   import VFileUploader from '@/components/uploader/VFileUploader'
+  import VAddableChips from '@/components/select/VAddableChips'
 
   export default {
     name: 'GoodsCreate',
-    components: { VFileUploader, PagedMenu, VCascader, TinyEditor },
+    components: { VAddableChips, VFileUploader, PagedMenu, VCascader, TinyEditor },
     data: function () {
       return {
-        text: '',
         categories: [],
         form: {
           goodsSn: undefined,
@@ -109,10 +112,6 @@
           retailPrice: undefined,
           detail: undefined,
         },
-        keywordsDict:[
-          "测试",
-          "淡水"
-        ],
       }
     },
     created () {
@@ -124,6 +123,23 @@
           url: '/category/getAsTree',
         })
         this.categories = res.Data
+      },
+      saveGoods: async function () {
+        try {
+          let res = await this.$remote.post({
+            url: '/goods/create',
+            data: this.form
+          })
+          this.$notify({
+            text:res.text,
+            type:'success'
+          })
+        } catch (e) {
+          this.$notify({
+            text:e,
+            type:'error'
+          })
+        }
       }
     }
   }

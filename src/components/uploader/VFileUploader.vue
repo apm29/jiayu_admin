@@ -361,7 +361,7 @@
           let val = this.uploadResults
           if (!this.single) {
             if (this.produceOnlyPath) {
-              this.$emit('onFileValueChange', val[this.fileValue])
+              this.$emit('onFileValueChange', val.map(e=>e[this.fileValue]))
             } else {
               this.$emit('onFileValueChange', val)
             }
