@@ -1,37 +1,35 @@
 <template>
-    <div>
-        <v-img
-                :src="src"
-                :alt="alt"
-                :contain="contain"
-                :eager="eager"
-                :gradient="gradient"
-                :lazy-src="lazySrc"
-                :options="options"
-                :position="position"
-                :sizes="sizes"
-                :srcset="srcset"
-                :transition="transition"
-                :class="imgClass"
-                :style="imgStyle"
-                :height="height"
-                :max-height="maxHeight"
-                :width="width"
-                :max-width="maxWidth"
-                :min-height="minHeight"
-                :min-width="minWidth"
-                @click="showImageDetail"
-        >
-            <template v-slot:placeholder>
-                <v-row
-                        class="fill-height ma-0"
-                        align="center"
-                        justify="center"
-                >
-                    <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-                </v-row>
-            </template>
-        </v-img>
+    <v-img
+            :src="src"
+            :alt="alt"
+            :contain="contain"
+            :eager="eager"
+            :gradient="gradient"
+            :lazy-src="lazySrc"
+            :options="options"
+            :position="position"
+            :sizes="sizes"
+            :srcset="srcset"
+            :transition="transition"
+            :class="imgClass"
+            :style="imgStyle"
+            :height="height"
+            :max-height="maxHeight"
+            :width="width"
+            :max-width="maxWidth"
+            :min-height="minHeight"
+            :min-width="minWidth"
+            @click="showImageDetail"
+    >
+        <template v-slot:placeholder>
+            <v-row
+                    class="fill-height ma-0"
+                    align="center"
+                    justify="center"
+            >
+                <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+            </v-row>
+        </template>
         <v-dialog v-model="showDetail" fullscreen>
             <v-card class="bg-preview" height="100%" width="100%">
                 <div class="images" v-viewer.static="{inline: true}">
@@ -42,7 +40,8 @@
                 <v-icon>mdi-close</v-icon>
             </v-btn>
         </v-dialog>
-    </div>
+    </v-img>
+
 </template>
 
 <script>

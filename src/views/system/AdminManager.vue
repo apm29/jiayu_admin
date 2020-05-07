@@ -21,10 +21,8 @@
                 :footer-props="{'items-per-page-options': tableSettings.rowDict}"
         >
             <template v-slot:item.avatar="{item}">
-                <v-list-item-avatar class="info lighten-1" size="60"   >
-                    <v-image-viewer :src="$path+item.avatar" img-style="height: 60px;width:60px" v-if="item.avatar"></v-image-viewer>
-                    <span v-else class="title white--text">{{item.username.slice(0,1)}}</span>
-                </v-list-item-avatar>
+                <v-image-viewer class="grey lighten-2" :src="$path+item.avatar" img-style="height: 60px;width:60px" v-if="item.avatar"></v-image-viewer>
+                <span v-else class="title white--text">{{item.username.slice(0,1)}}</span>
             </template>
             <template v-slot:item.roles="{item}">
                 <v-chip-group>
