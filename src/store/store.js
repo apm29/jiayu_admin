@@ -2,6 +2,7 @@ import Vuex from 'vuex'
 import remote from '@/utils/remote'
 import router from '@/router/router'
 import config from '@/utils/config'
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -9,7 +10,8 @@ export default new Vuex.Store({
     app: {
       name: 'MY ADMIN',
       subtext: 'pearl',
-      dark:false
+      dark: false,
+      loading: 0,
     },
     user: {
       info: {},
@@ -18,12 +20,10 @@ export default new Vuex.Store({
     layout: {
       miniSide: true,
       showToolbar: true,
-      tags:[]
+      tags: [],
     },
   },
-  getters:{
-
-  },
+  getters: {},
   mutations: {
     showToolBar: function (state, payload) {
       state.layout.showToolbar = payload
@@ -32,7 +32,7 @@ export default new Vuex.Store({
     toggleToolbar: function (state) {
       state.layout.showToolbar = !state.layout.showToolbar
     },
-    dark:function(state, payload){
+    dark: function (state, payload) {
       state.app.dark = payload.dark
       payload.vue.$vuetify.theme.dark = payload.dark
     },
@@ -52,10 +52,13 @@ export default new Vuex.Store({
       state.user.info = {}
       state.user.roles = []
     },
+    loading: function (state, payload) {
+      state.app.loading += payload
+    },
   },
   actions: {
     login: async function (context) {
-      if(context.state.user.info.id){
+      if (context.state.user.info.id) {
         return
       }
       try {
@@ -67,24 +70,24 @@ export default new Vuex.Store({
         })
         context.commit('login', {
           roles: rolesRes.Data,
-          info:infoRes.Data
+          info: infoRes.Data,
         })
       } catch (e) {
         console.log(e)
       }
     },
     logout: async function (context) {
-      localStorage.setItem(config.tokenKey,'')
+      localStorage.setItem(config.tokenKey, '')
       context.commit('logout')
       await router.push({
-        path:"/login",
-        replace:true
+        path: '/login',
+        replace: true,
       })
     },
     isLogin: async function () {
       let token = localStorage.getItem(config.tokenKey)
       let validate = !!token
-      if(validate){
+      if (validate) {
         await this.dispatch('login')
       }
       return validate

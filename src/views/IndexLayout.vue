@@ -3,6 +3,9 @@
         <v-app-side-bar></v-app-side-bar>
         <v-app-setting-bar/>
         <v-content class="fill-height">
+            <v-overlay :value="loading" absolute>
+                <v-progress-circular indeterminate size="64"></v-progress-circular>
+            </v-overlay>
             <keep-alive>
                 <router-view></router-view>
             </keep-alive>
@@ -11,13 +14,30 @@
 </template>
 
 <script>
-    import VAppSideBar from '@/components/app/VAppSideBar'
-    import VAppSettingBar from '@/components/app/VAppSettingBar'
+  import VAppSideBar from '@/components/app/VAppSideBar'
+  import VAppSettingBar from '@/components/app/VAppSettingBar'
+
   export default {
     name: 'DashBoard',
-    components:{
+    components: {
       VAppSettingBar,
-      VAppSideBar
+      VAppSideBar,
+    },
+    data: function () {
+      return {
+        loading: false,
+      }
+    },
+    watch: {
+      '$store.state.app.loading': {
+        immediate: true,
+        handler: async function (val) {
+          if (val <= 0) {
+            await this.$delay(800)
+          }
+          this.loading = val > 0
+        },
+      },
     },
 
   }
