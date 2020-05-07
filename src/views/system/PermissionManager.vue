@@ -14,6 +14,7 @@
             <v-btn color="primary" @click="addPermission(0)">添加根权限</v-btn>
         </div>
         <v-treeview
+                class="category-tree"
                 :items="permissions"
                 item-key="id"
                 ref="permission"
@@ -214,6 +215,11 @@
   }
 </script>
 
-<style scoped>
-
+<style>
+    .category-tree .v-treeview-node__content {
+        background-color: #ffffff !important;
+        margin-bottom: 2px;
+        box-shadow: 1px 1px 3px #e9edf5;
+        padding-right: 12px;
+    }
 </style>

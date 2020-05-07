@@ -14,6 +14,8 @@
             <v-btn color="primary" @click="addCategory(0)">添加根类目</v-btn>
         </div>
         <v-treeview
+                dense
+                light
                 class="category-tree"
                 :items="categories"
                 item-key="id"
@@ -50,9 +52,9 @@
                         :class="{ 'info':dragOnItem === item, 'lighten-1':dragOnItem === item}"
                 >
                     <v-list-item-action>
-                        <v-img class="image-icon" :src="$path+item.iconUrl"></v-img>
+                        <v-img class="image-icon grey lighten-2" :src="$path+item.iconUrl"></v-img>
                     </v-list-item-action>
-                    <v-list-item-content class="white--text">
+                    <v-list-item-content class="subtitle-1">
                         <v-list-item-title >
                             {{item.name}}
                         </v-list-item-title>
@@ -259,9 +261,9 @@
 
 <style>
     .category-tree .v-treeview-node__content {
-        background-color: rgba(35, 138, 255, 0.8) !important;
+        background-color: #ffffff !important;
         margin-bottom: 2px;
-        box-shadow: 2px 2px 3px #888888;
+        box-shadow: 1px 1px 3px #e9edf5;
         padding-right: 12px;
     }
 </style>
