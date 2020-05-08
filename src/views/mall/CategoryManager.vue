@@ -16,7 +16,7 @@
         <v-treeview
                 dense
                 light
-                class="category-tree"
+                class="expandable-tree"
                 :items="categories"
                 item-key="id"
                 ref="category"
@@ -260,10 +260,4 @@
 </script>
 
 <style>
-    .category-tree .v-treeview-node__content {
-        background-color: #ffffff !important;
-        margin-bottom: 2px;
-        box-shadow: 1px 1px 3px #e9edf5;
-        padding-right: 12px;
-    }
 </style>

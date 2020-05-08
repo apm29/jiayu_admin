@@ -14,7 +14,7 @@
             <v-btn color="primary" @click="addPermission(0)">添加根权限</v-btn>
         </div>
         <v-treeview
-                class="category-tree"
+                class="expandable-tree"
                 :items="permissions"
                 item-key="id"
                 ref="permission"
@@ -147,7 +147,7 @@
             type: 'error',
           })
         } finally {
-          this.getPermissionTree()
+          await this.getPermissionTree()
         }
       },
       doAddSubPermission: async function () {
@@ -167,7 +167,7 @@
             type: 'error',
           })
         } finally {
-          this.getPermissionTree()
+          await this.getPermissionTree()
         }
 
       },
@@ -208,7 +208,7 @@
             type: 'error',
           })
         } finally {
-          this.getPermissionTree()
+          await this.getPermissionTree()
         }
       }
     },
@@ -216,10 +216,4 @@
 </script>
 
 <style>
-    .category-tree .v-treeview-node__content {
-        background-color: #ffffff !important;
-        margin-bottom: 2px;
-        box-shadow: 1px 1px 3px #e9edf5;
-        padding-right: 12px;
-    }
 </style>

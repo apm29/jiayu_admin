@@ -21,4 +21,10 @@ export default {
     width: 50px;
     height: 50px;
   }
+  .expandable-tree .v-treeview-node__content {
+    background-color: #ffffff !important;
+    margin-bottom: 2px;
+    box-shadow: 1px 1px 3px #e9edf5;
+    padding-right: 12px;
+  }
 </style>

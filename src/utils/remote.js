@@ -7,54 +7,71 @@ axios.defaults.withCredentials = true // 是否允许跨域
 axios.defaults.timeout = 10000
 axios.defaults.baseURL = config.baseUrl
 axios.defaults.validateStatus = () => true
+class Response{
+  constructor (data,code,token,msg) {
+    this.Data = data
+    this.Code = code
+    this.Token = token
+    this.Msg = msg
+  }
+}
 export default {
   // 上传处理
   async upload (options) {
-    let token = localStorage.getItem(config.tokenKey)
-    let response = await axios({
-      url: options.url,
-      method: 'post',
-      data: options.formData,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'Authorization': token,
+    options = Object.assign(
+      {
+        hide: true,
       },
-      baseURL:config.uploadBaseUrl
-    })
-    if (response.data.Code === 200) {
-      if (response.data.Token) {
-        localStorage.setItem(config.tokenKey, response.data.Token)
+      options,
+    )
+    console.log(options)
+    if (!options.hide) {
+      store.commit('loading', 1)
+    }
+    try {
+      let token = localStorage.getItem(config.tokenKey)
+      let response = await axios({
+        url: options.url,
+        method: 'post',
+        data: options.formData,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': token,
+        },
+        baseURL: config.uploadBaseUrl,
+      })
+      if (response.data.Code === 200) {
+        if (response.data.Token) {
+          localStorage.setItem(config.tokenKey, response.data.Token)
+        }
+        return response.data
       }
-      return response.data
+      if (response.data.Code === 401) {
+        await store.dispatch('logout')
+        await router.push({
+          path: '/login',
+        })
+      }
+      if (response.data.Code === 403) {
+        Vue.notify({
+          title: response.data.Msg,
+        })
+      }
+      throw Error(response.data.Msg || response.data.message || '未知错误')
+    } finally {
+      if (!options.hide) {
+        store.commit('loading', -1)
+      }
     }
-    if (response.data.Code === 401) {
-      await store.dispatch('logout')
-      await router.push({
-        path: '/login',
-      })
-    }
-    if (response.data.Code === 403) {
-      Vue.notify({
-        title: response.data.Msg,
-      })
-    }
-    throw Error(response.data.Msg || '未知错误')
-  },
-  async downloadLocal (url) {
-    let response = await axios({
-      method: 'get',
-      url: url,
-      responseType: 'text',
-      baseURL: '/',
-    })
-    return response.data
   },
   /**
    *
    * @param {*} options
    */
   async post (options) {
-    store.commit('loading',1)
+    if (!options.hide) {
+      store.commit('loading', 1)
+    }
     try {
       let token = localStorage.getItem(config.tokenKey) || undefined
       let axiosResponse = await axios({
@@ -87,7 +104,9 @@ export default {
       }
       throw Error(axiosResponse.data.Msg || '未知错误')
     } finally {
-      store.commit('loading',-1)
+      if (!options.hide) {
+        store.commit('loading', -1)
+      }
     }
   },
 }
