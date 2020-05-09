@@ -491,44 +491,16 @@
       saveGoods: async function () {
         try {
           let res = await this.$remote.post({
-            url: '/goods/create',
-            data: this.form,
-          })
-          this.$notify({
-            text: res.Msg,
-            type: 'success',
-          })
-          let addAttr = await this.$remote.post({
-            url: '/goods/addAttributes',
+            url: '/goods/createAllInOne',
             data: {
-              goodsId:res.Data.id,
-              attributes:this.attributes
-            },
-          })
-          this.$notify({
-            text: addAttr.Msg,
-            type: 'success',
-          })
-          let addSpec = await this.$remote.post({
-            url: '/goods/addSpecifications',
-            data: {
-              goodsId:res.Data.id,
-              specifications:this.specifications
-            },
-          })
-          this.$notify({
-            text: addSpec.Msg,
-            type: 'success',
-          })
-          let addProd = await this.$remote.post({
-            url: '/goods/addProducts',
-            data: {
-              goodsId:res.Data.id,
+              goods:this.form,
+              attributes:this.attributes,
+              specifications:this.specifications,
               products:this.products
             },
           })
           this.$notify({
-            text: addProd.Msg,
+            text: res.Msg,
             type: 'success',
           })
         } catch (e) {
