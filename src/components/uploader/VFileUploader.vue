@@ -397,11 +397,12 @@
         if (!image) {
           return false
         }
-        return image.indexOf('.jpg') >= 0
-          || image.indexOf('.png') >= 0
-          || image.indexOf('.jpeg') >= 0
-          || image.indexOf('.gif') >= 0
-          || image.indexOf('.bmp') >= 0
+        let imageLower = image.toLowerCase()
+        return imageLower.indexOf('.jpg') >= 0
+          || imageLower.indexOf('.png') >= 0
+          || imageLower.indexOf('.jpeg') >= 0
+          || imageLower.indexOf('.gif') >= 0
+          || imageLower.indexOf('.bmp') >= 0
       },
     },
   }
