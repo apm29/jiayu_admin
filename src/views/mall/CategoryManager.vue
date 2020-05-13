@@ -106,7 +106,7 @@
 </template>
 
 <script>
-  import VFileUploader from '@/components/uploader/VFileUploader'
+  import VFileUploader from '@/components/file/VFileUploader'
 
   export default {
     name: 'CategoryManager',

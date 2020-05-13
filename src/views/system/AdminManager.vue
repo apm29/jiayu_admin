@@ -86,7 +86,7 @@
 </template>
 
 <script>
-  import VFileUploader from '@/components/uploader/VFileUploader'
+  import VFileUploader from '@/components/file/VFileUploader'
   import VImageViewer from '@/components/image/VImageViewer'
 
   export default {

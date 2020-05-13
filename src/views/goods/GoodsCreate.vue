@@ -5,6 +5,7 @@
                 商品介绍
             </v-card-title>
             <v-card-text>
+                {{form}}
                 <v-form>
                     <v-text-field outlined label="商品编号" persistent-hint v-model="form.goodsSn"/>
                     <v-text-field outlined label="商品名称" persistent-hint v-model="form.name"/>
@@ -42,7 +43,6 @@
                             v-model="form.categoryId"
                             :options="categories"
                             persistent-hint
-                            return-leaf
                             return-value
                             label="选择商品类目"
                             item-value="id"
@@ -262,7 +262,7 @@
   import TinyEditor from '@/components/editor/TinyEditor'
   import VCascader from '@/components/select/VCascader'
   import PagedMenu from '@/components/select/PagedMenu'
-  import VFileUploader from '@/components/uploader/VFileUploader'
+  import VFileUploader from '@/components/file/VFileUploader'
   import VAddableChips from '@/components/select/VAddableChips'
   import VImageViewer from '@/components/image/VImageViewer'
 
