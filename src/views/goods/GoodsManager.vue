@@ -31,9 +31,10 @@
 
 <script>
   import VFileBrowser from '@/components/file/VFileBrowser'
+  import VImageViewer from '@/components/image/VImageViewer'
   export default {
     name: 'GoodsManager',
-    components: { VFileBrowser },
+    components: { VFileBrowser,VImageViewer },
     data:function () {
         return {
           data: [],

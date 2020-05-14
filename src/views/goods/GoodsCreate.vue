@@ -319,6 +319,7 @@
     },
     created () {
       this.loadCategoryDict()
+      this.loadGoodsInfo()
     },
     watch: {
       specifications: {
@@ -420,6 +421,15 @@
         })
         this.categories = res.Data
       },
+      loadGoodsInfo: async function () {
+        try {
+          let res = await this.$remote.post({
+            url: '/goods/get',
+          })
+        } catch (e) {
+          console.log(e)
+        }
+      },
       deleteSpecification: async function (item) {
         await this.$messenger.confirm({
           msg: `确定删除规格:${item.specification}吗?`,
@@ -502,6 +512,9 @@
           this.$notify({
             text: res.Msg,
             type: 'success',
+          })
+          await this.$router.push({
+            path: '/goods/list'
           })
         } catch (e) {
           this.$notify({
