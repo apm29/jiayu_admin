@@ -426,6 +426,10 @@
           let res = await this.$remote.post({
             url: '/goods/get',
           })
+          this.form = res.Data.goods
+          this.specificationForm = res.Data.specifications
+          this.productForm = res.Data.products
+          this.attributeForm = res.Data.attributes
         } catch (e) {
           console.log(e)
         }
