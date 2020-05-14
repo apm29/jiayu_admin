@@ -166,12 +166,18 @@
                 </v-btn>
             </v-img>
         </v-dialog>
+        <v-bottom-sheet v-model="showDrawer" scrollable inset>
+            <v-file-browser @change="doUpload"></v-file-browser>
+        </v-bottom-sheet>
     </div>
 </template>
 
 <script>
+  import VFileBrowser from '@/components/file/VFileBrowser'
+
   export default {
     name: 'VFileUploader',
+    components: { VFileBrowser },
     props: {
       placeholder: {
         type: String,
@@ -189,6 +195,10 @@
       disabled: {
         type: Boolean,
         default: false,
+      },
+      useManager: {
+        type: Boolean,
+        default: true,
       },
       produceOnlyPath: {
         type: Boolean,
@@ -267,7 +277,7 @@
       prop: 'result',
       event: 'onFileValueChange',
     },
-    mounted () {
+    created () {
     },
     watch: {
       result: {
@@ -312,6 +322,7 @@
     data: function () {
       return {
         loading: false,
+        showDrawer: false,
         showPreviewDialog: false,
         uploadResults: [],
         preview: undefined,
@@ -337,12 +348,26 @@
         this.doUpload(this.$refs[this._uid + 'input'].files[0])
       },
       onAddFileClick: function (e) {
-        this.$refs[this._uid + 'input'].click(e)
+        if (this.useManager) {
+          this.showDrawer = true
+        } else {
+          this.$refs[this._uid + 'input'].click(e)
+        }
+      },
+
+      getFileInfo: function (file) {
+        return this.acceptOnlyPath ? file :{
+          [this.fileName]: file,
+          [this.fileValue]: file,
+        }
       },
       doUpload: async function (file) {
+
         try {
           this.loading = true
-          let res = await this.upload(file)
+          this.showDrawer = false
+          let res = this.useManager ? this.getFileInfo(file) : await this.upload(file)
+
           if (!this.acceptOnlyPath && res && res[this.fileName] && res[this.fileValue]) {
             if (this.single) {
               this.uploadResults = []
@@ -361,7 +386,7 @@
           let val = this.uploadResults
           if (!this.single) {
             if (this.produceOnlyPath) {
-              this.$emit('onFileValueChange', val.map(e=>e[this.fileValue]))
+              this.$emit('onFileValueChange', val.map(e => e[this.fileValue]))
             } else {
               this.$emit('onFileValueChange', val)
             }
@@ -397,6 +422,7 @@
         if (!image) {
           return false
         }
+        console.log(image)
         let imageLower = image.toLowerCase()
         return imageLower.indexOf('.jpg') >= 0
           || imageLower.indexOf('.png') >= 0
