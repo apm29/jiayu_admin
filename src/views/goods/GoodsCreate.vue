@@ -425,6 +425,9 @@
         try {
           let res = await this.$remote.post({
             url: '/goods/get',
+            data:{
+              id:this.$route.query.id
+            }
           })
           this.form = res.Data.goods
           this.specificationForm = res.Data.specifications
