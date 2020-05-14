@@ -182,6 +182,25 @@
           this.cascade.set(this.options, -1)
         },
       },
+      result: {
+        immediate: true,
+        handler: function (val) {
+          if(!this.options){
+            return
+          }
+          this.cascade.clear()
+          let subMenu = this.options
+          console.log(subMenu)
+          val.forEach((e)=>{
+            let menu = subMenu.find((menu)=>{
+              return menu[this.itemValue] === e
+            })
+            this.cascade.set(subMenu,subMenu.indexOf(menu))
+            subMenu = menu[this.itemChildren]
+          })
+          this.calculateStringResult(true)
+        },
+      },
       showAllLevels: {
         handler: function () {
           this.calculateStringResult()
@@ -227,7 +246,7 @@
         this.calculateStringResult()
       },
 
-      calculateStringResult: function () {
+      calculateStringResult: function (slient) {
         let result = []
         let text = []
         let objectResult = []
@@ -242,6 +261,16 @@
             text.push(optionItem[this.itemLabel])
           }
         }
+
+        if (this.showAllLevels) {
+          this.resultText = text.join(this.separator)
+        } else {
+          this.resultText = text[text.length - 1]
+        }
+        if(slient){
+          return
+        }
+
         if (!this.returnObject) {
           if (this.returnLeaf) {
             if(this.returnValue){
@@ -270,11 +299,6 @@
               this.$emit('changeCascadeResult', objectResult)
             }
           }
-        }
-        if (this.showAllLevels) {
-          this.resultText = text.join(this.separator)
-        } else {
-          this.resultText = text[text.length - 1]
         }
       },
     },

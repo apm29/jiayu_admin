@@ -61,6 +61,13 @@
         handler:function (val) {
           this.$emit('input',val)
         }
+      },
+      value:{
+        immediate:true,
+        deep:true,
+        handler:function (val) {
+          this.text = val
+        }
       }
     },
     methods: {

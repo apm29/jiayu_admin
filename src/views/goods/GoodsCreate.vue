@@ -318,16 +318,21 @@
       }
     },
     created () {
-      this.loadCategoryDict()
-      this.loadGoodsInfo()
+
     },
     watch: {
+      '$route.query.id':{
+        immediate:true,
+        handler:function () {
+          this.loadGoodsInfo()
+        }
+      },
       specifications: {
         deep: true,
         immediate: true,
         handler: function (val) {
           if (val) {
-            let groupedSpecifications = val.reduce((groups, current) => {
+            val.reduce((groups, current) => {
               if (groups.indexOf(current.specification) < 0) {
                 groups.push(current.specification)
               }
@@ -407,6 +412,7 @@
                 Object.assign(
                   p, find,
                 )
+                console.log(find)
               }
             })
             this.products = newProducts
@@ -422,6 +428,7 @@
         this.categories = res.Data
       },
       loadGoodsInfo: async function () {
+        await this.loadCategoryDict()
         try {
           let res = await this.$remote.post({
             url: '/goods/get',
@@ -430,9 +437,9 @@
             }
           })
           this.form = res.Data.goods
-          this.specificationForm = res.Data.specifications
-          this.productForm = res.Data.products
-          this.attributeForm = res.Data.attributes
+          this.specifications = res.Data.specifications
+          this.products = res.Data.products
+          this.attributes = res.Data.attributes
         } catch (e) {
           console.log(e)
         }
