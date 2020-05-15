@@ -3,7 +3,7 @@
         <v-app-side-bar></v-app-side-bar>
         <v-app-setting-bar/>
         <v-content class="fill-height">
-            <v-overlay :value="loading" absolute>
+            <v-overlay :value="loading">
                 <v-progress-circular indeterminate size="64"></v-progress-circular>
             </v-overlay>
             <keep-alive>
@@ -33,7 +33,7 @@
         immediate: true,
         handler: async function (val) {
           if (val <= 0) {
-            await this.$delay(400)
+            await this.$delay(350)
           }
           this.loading = val > 0
         },

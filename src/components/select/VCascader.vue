@@ -255,6 +255,7 @@
       onItemClick: function (item) {
         this.processOptions(this.options)
         this.findPath(item)
+        let children = item[this.itemChildren]
         if (this.changeOnSelect || !children || children.length === 0) {
           this.calculateStringResult()
         }

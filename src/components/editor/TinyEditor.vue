@@ -102,7 +102,7 @@
           failure(e)
         })
       },
-      showFileBrowser: function (callback, value, meta) {
+      showFileBrowser: function (callback) {
         // 打开文件浏览对话框
         this.showDrawer = true
         this.callback = callback

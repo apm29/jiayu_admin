@@ -4,7 +4,7 @@
         <notifications>
             <template slot="body" slot-scope="props">
                 <v-card class="mx-2 my-1">
-                    <v-list-item two-line dense :class="{
+                    <v-list-item three-line :class="{
                       [getColor(props.item.type)]:true,
                       'lighten-5':true
                     }">
@@ -12,11 +12,13 @@
                             <v-icon :color="props.item.type">{{getIcon(props.item.type)}}</v-icon>
                         </v-list-item-icon>
                         <v-list-item-content>
-                            <v-list-item-title>
+                            <v-list-item-title v-if="props.item.title">
                                 {{props.item.title}}
                             </v-list-item-title>
-                            <v-list-item-subtitle v-html="props.item.text">
+                            <v-list-item-subtitle v-if="props.item.title" v-html="props.item.text">
                             </v-list-item-subtitle>
+                            <div v-else v-html="props.item.text">
+                            </div>
                         </v-list-item-content>
                         <v-list-item-action>
                             <v-btn icon @click="props.close">
@@ -31,8 +33,6 @@
     </v-app>
 </template>
 <script>
-  import VueNotification from 'vue-notification'
-
   export default {
     name: 'App',
     async mounted () {
@@ -67,7 +67,7 @@
           case 'warning':
             return dark?'#424242':'orange'
           case 'success':
-            return dark?'#424242':'cyan'
+            return dark?'#424242':'white'
           default:
             return dark?'#424242':'white'
         }

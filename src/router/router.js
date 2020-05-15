@@ -1,7 +1,7 @@
 import VueRouter from 'vue-router'
 import nprogress from 'nprogress'
 import store from '@/store/store'
-
+import Vue from 'vue'
 Vue.use(VueRouter)
 let router =  new VueRouter({
   routes: [
@@ -111,6 +111,7 @@ let router =  new VueRouter({
 router.beforeEach(async (to, from, next) => {
   nprogress.start()
   if (await store.dispatch('isLogin') || to.path === '/login') {
+    document.title = to.name
     next()
   } else {
     next({

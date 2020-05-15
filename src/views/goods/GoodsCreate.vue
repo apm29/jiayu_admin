@@ -30,7 +30,8 @@
                             produceOnlyPath
                             acceptOnlyPath
                     />
-                    <v-autocomplete :items="unitDict" outlined label="商品单位(如 个/斤/盒)" persistent-hint v-model="form.unit"/>
+                    <v-autocomplete :items="unitDict" outlined label="商品单位(如 个/斤/盒)" persistent-hint
+                                    v-model="form.unit"/>
 
                     <v-addable-chips v-model="form.keywords" class="mb-4"/>
                     <v-cascader
@@ -151,7 +152,8 @@
                     <tr v-for="(item,index) of products" :key="item.specification + '_product_'+index">
                         <td>
                             <v-chip-group>
-                                <v-chip v-for="(value,index) of item.specifications" color="info" small>
+                                <v-chip v-for="(value,index) of item.specifications" color="info" small
+                                        :key="index='_specification'">
                                     {{value}}
                                 </v-chip>
                             </v-chip-group>
@@ -340,9 +342,8 @@
         attributes: [],
         products: [],
 
-
         //dict
-        unitDict:['条','个','件','对'],
+        unitDict: ['条', '个', '件', '对'],
 
         //backup
         prevSpecifications: [],
@@ -392,54 +393,13 @@
               specMap.set(s.specification, specArr)
             })
 
-            //递归方法
-            /**
-             * 算法二，非递归计算所有组合
-             * @param inputList 所有数组的列表
-             * */
-            function calculateCombination (inputList) {
-              let combination = []
-              let n = inputList.length
-              for (let i = 0; i < n; i++) {
-                combination.push(0)
-              }
-              let i = 0
-              let isContinue = false
-              let res = []
-              do {
-                //打印一次循环生成的组合
-                let resArr = []
-                for (let j = 0; j < n; j++) {
-                  resArr.push(inputList[j][combination[j]])
-                }
-                res.push(resArr)
-                i++
-                combination[n - 1] = i
-                for (let j = n - 1; j >= 0; j--) {
-                  if (combination[j] >= inputList[j].length) {
-                    combination[j] = 0
-                    i = 0
-                    if (j - 1 >= 0) {
-                      combination[j - 1] = combination[j - 1] + 1
-                    }
-                  }
-                }
-                isContinue = false
-                for (let integer of combination) {
-                  if (integer !== 0) {
-                    isContinue = true
-                  }
-                }
-              } while (isContinue)
-              return res
-            }
-
             let arr = []
             for (let key of specMap.keys()) {
               arr.push(specMap.get(key))
             }
+
             //组合:M选N
-            let res = calculateCombination(arr)
+            let res = this.calculateCombination(arr)
             let newProducts = res.map((arr, index) => {
               return {
                 productId: index,
@@ -463,6 +423,47 @@
       },
     },
     methods: {
+      //递归方法
+      /**
+       * 算法二，非递归计算所有组合
+       * @param inputList 所有数组的列表
+       * */
+      calculateCombination: function (inputList) {
+        let combination = []
+        let n = inputList.length
+        for (let i = 0; i < n; i++) {
+          combination.push(0)
+        }
+        let i = 0
+        let isContinue = false
+        let res = []
+        do {
+          //打印一次循环生成的组合
+          let resArr = []
+          for (let j = 0; j < n; j++) {
+            resArr.push(inputList[j][combination[j]])
+          }
+          res.push(resArr)
+          i++
+          combination[n - 1] = i
+          for (let j = n - 1; j >= 0; j--) {
+            if (combination[j] >= inputList[j].length) {
+              combination[j] = 0
+              i = 0
+              if (j - 1 >= 0) {
+                combination[j - 1] = combination[j - 1] + 1
+              }
+            }
+          }
+          isContinue = false
+          for (let integer of combination) {
+            if (integer !== 0) {
+              isContinue = true
+            }
+          }
+        } while (isContinue)
+        return res
+      },
       loadCategoryDict: async function () {
         let res = await this.$remote.post({
           url: '/category/getAsTree',
