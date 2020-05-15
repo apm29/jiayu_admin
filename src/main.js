@@ -1,6 +1,6 @@
-import App from './App.vue'
-import store from './store/store'
-import vuetify from './plugins/vuetify'
+import App from '@/App.vue'
+import store from '@/store/store'
+import vuetify from '@/plugins/vuetify'
 import Notifications from 'vue-notification'
 import router from '@/router/router'
 import remote from '@/utils/remote'
@@ -11,8 +11,13 @@ Vue.config.productionTip = false
 Vue.prototype.$remote = remote
 Vue.prototype.$messenger = messenger
 Vue.prototype.$moment = moment
+//OSS的BaseUrl
 Vue.prototype.$path = config.fileBaseUrl
-Vue.prototype.$thumbnail = config.fileThumbnailParams
+//OSS缩略图后缀
+Vue.prototype.$thumbnail = config.fileThumbnailParamsMedium
+Vue.prototype.$thumbnailLarge = config.fileThumbnailParamsLarge
+Vue.prototype.$thumbnailSmall = config.fileThumbnailParamsSmall
+//公共延迟方法
 Vue.prototype.$delay =  function (delay) {
   return new Promise((resolve)=>{
     setTimeout(resolve,delay)

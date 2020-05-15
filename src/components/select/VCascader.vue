@@ -188,9 +188,8 @@
           if(!this.options){
             return
           }
-          this.cascade.clear()
+          //this.cascade.clear()
           let subMenu = this.options
-          console.log(subMenu)
           val.forEach((e)=>{
             let menu = subMenu.find((menu)=>{
               return menu[this.itemValue] === e
@@ -246,7 +245,7 @@
         this.calculateStringResult()
       },
 
-      calculateStringResult: function (slient) {
+      calculateStringResult: function (silent) {
         let result = []
         let text = []
         let objectResult = []
@@ -267,7 +266,7 @@
         } else {
           this.resultText = text[text.length - 1]
         }
-        if(slient){
+        if(silent){
           return
         }
 

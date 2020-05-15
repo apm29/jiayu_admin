@@ -1,6 +1,6 @@
 <template>
     <v-img
-            :src="src"
+            :src="src+$thumbnail"
             :alt="alt"
             :contain="contain"
             :eager="eager"

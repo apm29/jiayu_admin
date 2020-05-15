@@ -4,7 +4,7 @@
                 class="flex-grow-0"
                 v-for="(text,index) of results" :key="text+index"
                 close
-                @click:close="remove(text)"
+                @click:close="removeChip(text)"
         >
             {{text}}
         </v-chip>
@@ -45,6 +45,13 @@
     model: {
       prop: 'results'
     },
+    watch:{
+      results:{
+        handler:function () {
+            this.chips = this.results
+        }
+      }
+    },
     data: function () {
       return {
         adding: false,
@@ -53,8 +60,9 @@
       }
     },
     methods: {
-      remove: function (text) {
-        this.chips.splice(this.chips.indexOf(text), 1)
+      removeChip: function (text) {
+        let start = this.chips.indexOf(text)
+        this.chips.splice(start, 1)
         this.$emit('change', this.chips)
       },
       add: function () {

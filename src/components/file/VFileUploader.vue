@@ -167,7 +167,7 @@
             </v-img>
         </v-dialog>
         <v-bottom-sheet v-model="showDrawer" scrollable inset>
-            <v-file-browser @change="doUpload"></v-file-browser>
+            <v-file-browser @file-selected="doUpload"></v-file-browser>
         </v-bottom-sheet>
     </div>
 </template>
@@ -422,7 +422,6 @@
         if (!image) {
           return false
         }
-        console.log(image)
         let imageLower = image.toLowerCase()
         return imageLower.indexOf('.jpg') >= 0
           || imageLower.indexOf('.png') >= 0

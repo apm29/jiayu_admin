@@ -5,21 +5,16 @@
                 商品介绍
             </v-card-title>
             <v-card-text>
-                {{form}}
                 <v-form>
-                    <v-text-field outlined label="商品编号" persistent-hint v-model="form.goodsSn"/>
+                    <v-text-field outlined label="商品编号" persistent-hint v-model="form.goodsSn" append-icon="mdi-cached"
+                                  @click:append="generatorNo">
+                    </v-text-field>
                     <v-text-field outlined label="商品名称" persistent-hint v-model="form.name"/>
-                    <v-row class="px-3">
-                        <v-col>
-                            <v-switch v-model="form.isNew" label="新品"/>
-                        </v-col>
-                        <v-col>
-                            <v-switch v-model="form.isHot" label="热卖"/>
-                        </v-col>
-                        <v-col>
-                            <v-switch v-model="form.isOnSale" label="在售"/>
-                        </v-col>
-                    </v-row>
+                    <div class="px-3 d-flex flex-row">
+                        <v-switch class="mr-7" v-model="form.isNew" label="新品"/>
+                        <v-switch class="mr-7" v-model="form.isHot" label="热卖"/>
+                        <v-switch class="mr-7" v-model="form.isOnSale" label="在售"/>
+                    </div>
                     <v-file-uploader
                             single
                             v-model="form.picUrl"
@@ -35,7 +30,7 @@
                             produceOnlyPath
                             acceptOnlyPath
                     />
-                    <v-text-field outlined label="商品单位(如 个/斤/盒)" persistent-hint v-model="form.unit"/>
+                    <v-autocomplete :items="unitDict" outlined label="商品单位(如 个/斤/盒)" persistent-hint v-model="form.unit"/>
 
                     <v-addable-chips v-model="form.keywords" class="mb-4"/>
                     <v-cascader
@@ -99,6 +94,9 @@
                 <v-spacer/>
                 <v-btn color="primary" @click="addSpecification">添加规格</v-btn>
             </v-card-title>
+            <v-card-subtitle>
+                例如:规格名称--尺寸 对应 规格值 M / S / L / XL
+            </v-card-subtitle>
             <v-card-text>
                 <v-simple-table>
                     <thead>
@@ -122,8 +120,8 @@
                                             :src="$path+item.url"></v-image-viewer>
                         </td>
                         <td>
-                            <v-btn small color="error" @click="deleteSpecification(item)">删除</v-btn>
-                            <v-btn small color="info" @click="editSpecification(item)">编辑</v-btn>
+                            <v-btn small class="mr-3" color="error" @click="deleteSpecification(item)">删除</v-btn>
+                            <v-btn small class="mr-3" color="info" @click="editSpecification(item)">编辑</v-btn>
                         </td>
                     </tr>
                     </tbody>
@@ -135,6 +133,9 @@
             <v-card-title>
                 商品库存
             </v-card-title>
+            <v-card-subtitle>
+                由规格产生的对应关系,需要手动输入库存和价格
+            </v-card-subtitle>
             <v-card-text>
                 <v-simple-table>
                     <thead>
@@ -170,13 +171,14 @@
             </v-card-text>
         </v-card>
 
-        <v-footer class="mt-8">
-            <v-spacer/>
+        <v-footer class="mt-8 transparent px-0">
             <v-btn
                     @click="saveGoods"
                     color="primary"
+                    x-large
+                    block
             >
-                上架
+                {{form.id?'更新':'上架'}}
             </v-btn>
         </v-footer>
 
@@ -187,7 +189,14 @@
                 </v-card-title>
                 <v-card-text>
                     <v-form ref="specificationForm">
-                        <v-text-field outlined label="规格名称" persistent-hint v-model="specificationForm.specification"/>
+                        <v-autocomplete
+                                outlined
+                                label="规格名称"
+                                persistent-hint
+                                v-model="specificationForm.specification"
+                                hide-no-data
+                                :items="specificationsExist"
+                        />
                         <v-text-field outlined label="规格值" persistent-hint v-model="specificationForm.value"/>
                         <v-file-uploader
                                 single
@@ -266,6 +275,25 @@
   import VAddableChips from '@/components/select/VAddableChips'
   import VImageViewer from '@/components/image/VImageViewer'
 
+  const defaultForm = {
+    goodsSn: undefined,
+    name: undefined,
+    categoryId: undefined,
+    brandId: undefined,
+    gallery: undefined,
+    keywords: [],
+    brief: undefined,
+    picUrl: undefined,
+    sortOrder: undefined,
+    isNew: undefined,
+    isHot: undefined,
+    isOnSale: undefined,
+    unit: undefined,
+    originPrice: undefined,
+    retailPrice: undefined,
+    detail: undefined,
+  }
+
   export default {
     name: 'GoodsCreate',
     components: { VImageViewer, VAddableChips, VFileUploader, PagedMenu, VCascader, TinyEditor },
@@ -312,6 +340,10 @@
         attributes: [],
         products: [],
 
+
+        //dict
+        unitDict:['条','个','件','对'],
+
         //backup
         prevSpecifications: [],
         prevProducts: [],
@@ -320,12 +352,23 @@
     created () {
 
     },
+
+    computed: {
+      specificationsExist: function () {
+        return this.specifications.reduce((groups, current) => {
+          if (groups.indexOf(current.specification) < 0) {
+            groups.push(current.specification)
+          }
+          return groups
+        }, [])
+      },
+    },
     watch: {
-      '$route.query.id':{
-        immediate:true,
-        handler:function () {
+      '$route.query.id': {
+        immediate: true,
+        handler: function () {
           this.loadGoodsInfo()
-        }
+        },
       },
       specifications: {
         deep: true,
@@ -412,7 +455,6 @@
                 Object.assign(
                   p, find,
                 )
-                console.log(find)
               }
             })
             this.products = newProducts
@@ -429,12 +471,19 @@
       },
       loadGoodsInfo: async function () {
         await this.loadCategoryDict()
+        let id = this.$route.query.id
+        if (!id) {
+          this.form = defaultForm
+          this.specifications = []
+          this.attributes = []
+          return
+        }
         try {
           let res = await this.$remote.post({
             url: '/goods/get',
-            data:{
-              id:this.$route.query.id
-            }
+            data: {
+              id: id,
+            },
           })
           this.form = res.Data.goods
           this.specifications = res.Data.specifications
@@ -512,15 +561,30 @@
         }
       },
 
+      generatorNo: async function () {
+        this.form.goodsSn = '生成中...'
+        try {
+          let res = await this.$remote.post({
+            url: '/goods/generateNo',
+          })
+          this.form.goodsSn = res.Data.no
+        } catch (e) {
+          this.$notify({
+            text: e,
+            type: 'error',
+          })
+        }
+      },
+
       saveGoods: async function () {
         try {
           let res = await this.$remote.post({
-            url: '/goods/createAllInOne',
+            url: this.form.id ? '/goods/updateAllInOne' : '/goods/createAllInOne',
             data: {
-              goods:this.form,
-              attributes:this.attributes,
-              specifications:this.specifications,
-              products:this.products
+              goods: this.form,
+              attributes: this.attributes,
+              specifications: this.specifications,
+              products: this.products,
             },
           })
           this.$notify({
@@ -528,7 +592,10 @@
             type: 'success',
           })
           await this.$router.push({
-            path: '/goods/list'
+            path: '/goods/manager',
+            query: {
+              timestamp: new Date().getTime(),
+            },
           })
         } catch (e) {
           this.$notify({

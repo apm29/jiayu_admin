@@ -48,6 +48,11 @@
                 sortable: false,
               },
               {
+                text: '商品编号',
+                value: 'goodsSn',
+                sortable: false,
+              },
+              {
                 text: '商品名称',
                 value: 'name',
                 sortable: false,
@@ -78,8 +83,17 @@
           },
         }
     },
-    created: function () {
+    mounted () {
       this.loadGoodsList()
+    },
+    watch:{
+      '$route.query.timestamp':{
+        handler:function (val) {
+            if(val){
+              this.loadGoodsList()
+            }
+        }
+      }
     },
     methods: {
       loadGoodsList: async function () {

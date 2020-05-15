@@ -96,7 +96,7 @@
     },
     model:{
       prop:'value',
-      event:'change'
+      event:'file-selected'
     },
     data: function () {
       return {
@@ -218,7 +218,7 @@
         await this.getDirectoryInfo()
       },
       chooseImage:function(){
-        this.$emit("change",this.selected)
+        this.$emit("file-selected",this.selected)
       },
 
       upload: async function (file) {

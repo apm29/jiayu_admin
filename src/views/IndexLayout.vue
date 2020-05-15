@@ -33,7 +33,7 @@
         immediate: true,
         handler: async function (val) {
           if (val <= 0) {
-            await this.$delay(800)
+            await this.$delay(400)
           }
           this.loading = val > 0
         },

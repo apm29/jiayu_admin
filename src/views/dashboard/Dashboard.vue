@@ -15,6 +15,10 @@
         <v-btn @click="logout">Logout</v-btn>
         <v-btn @click="alert">Alert</v-btn>
         <v-btn @click="toast">Toast</v-btn>
+        <v-btn @click="notify('error')">Notify</v-btn>
+        <v-btn @click="notify('success')">Notify</v-btn>
+        <v-btn @click="notify('warning')">Notify</v-btn>
+        <v-btn @click="notify('info')">Notify</v-btn>
     </div>
 </template>
 
@@ -62,6 +66,13 @@
           msg: "TOAST"
         })
         console.log(logout)
+      },
+      notify: async function (type) {
+        await this.$notify({
+          title:'标题',
+          text:'自己去玩恶趣味',
+          type:type||'error'
+        })
       }
     }
   }
