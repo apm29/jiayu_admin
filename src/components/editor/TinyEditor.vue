@@ -2,6 +2,7 @@
     <div>
         <editor
                 v-if="show"
+                ref="editor"
                 v-model="text"
                 :disabled="disabled"
                 :init="settings"
