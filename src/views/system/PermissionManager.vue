@@ -1,6 +1,6 @@
 <template>
-    <v-container>
-        <div class="d-flex flex-row">
+    <v-card flat>
+        <div class="d-flex flex-row ma-3">
             <div
                     @drop="drop"
                     @dragover.prevent="endDrag"
@@ -69,7 +69,7 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-    </v-container>
+    </v-card>
 </template>
 
 <script>

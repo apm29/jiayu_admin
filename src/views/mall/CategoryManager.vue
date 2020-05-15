@@ -1,6 +1,6 @@
 <template>
-    <v-card class="fill-height d-flex flex-column">
-        <div class="d-flex flex-row">
+    <v-card class="fill-height d-flex flex-column ma-3" flat>
+        <div class="d-flex flex-row ma-3">
             <div
                     @drop="drop"
                     @dragover.prevent="endDrag"

@@ -21,6 +21,7 @@
                               :placeholder="placeholder">
                 </v-text-field>
             </template>
+
             <div class="d-flex flex-row white">
                 <v-sheet v-for="(subOptions,index) of cascade.keys()" :key="index+'cascade'" tile>
                     <v-list tile>
@@ -66,7 +67,7 @@
         },
       },
       result: {
-        type: Array | Number,
+        type: Array,
         default: function () {
           return []
         },
@@ -155,11 +156,7 @@
         type: Boolean,
         default: false,
       },
-      returnLeaf: {
-        type: Boolean,
-        default: false,
-      },
-      returnValue: {
+      returnIndex: {
         type: Boolean,
         default: false,
       },
@@ -179,24 +176,33 @@
       options: {
         immediate: true,
         handler: function () {
+          this.cascade.clear()
           this.cascade.set(this.options, -1)
         },
       },
       result: {
         immediate: true,
         handler: function (val) {
-          if(!this.options){
-            return
-          }
-          //this.cascade.clear()
-          let subMenu = this.options
-          val.forEach((e)=>{
-            let menu = subMenu.find((menu)=>{
-              return menu[this.itemValue] === e
+          if (this.returnObject) {
+            let subOptions = this.options
+            val.forEach(e=>{
+                this.cascade.set(subOptions,subOptions.indexOf(e))
+                subOptions = e[this.itemChildren]
             })
-            this.cascade.set(subMenu,subMenu.indexOf(menu))
-            subMenu = menu[this.itemChildren]
-          })
+          } else if (this.returnIndex) {
+            let subOptions = this.options
+            val.forEach(e=>{
+              this.cascade.set(subOptions,e)
+              subOptions = subOptions[e][this.itemChildren]
+            })
+          } else {
+            let subOptions = this.options
+            val.forEach(e=>{
+              let find = subOptions.find(o=>o[this.itemValue] === e)
+              this.cascade.set(subOptions,subOptions.indexOf(find))
+              subOptions = find[this.itemChildren]
+            })
+          }
           this.calculateStringResult(true)
         },
       },
@@ -212,28 +218,43 @@
       },
     },
     methods: {
-      onItemClick: function (item) {
-        let deleteNext = false
-        let deleteArr = []
-        for (let key of this.cascade.keys()) {
-          if (deleteNext) {
-            deleteArr.push(key)
-          }
-          if (key.indexOf(item) !== -1) {
-            this.cascade.set(key, key.indexOf(item))
-            deleteNext = true
-          }
-        }
-        for (let key of deleteArr) {
-          this.cascade.delete(key)
-        }
+      findPath: function (item) {
+        this.cascade.clear()
+        let path = []
         let children = item[this.itemChildren]
-        if (children) {
-          this.cascade.set(children, -1)
-          this.showMenu = !(children && children.length === 0)
+        if (children && children.length > 0) {
+          path.unshift(children)
+          this.showMenu = true
         } else {
           this.showMenu = false
         }
+        path.unshift(item)
+        let parent = item._parent
+        while (parent) {
+          path.unshift(parent)
+          parent = parent._parent
+        }
+        let options = this.options
+        path.forEach(e => {
+          this.cascade.set(options, options.indexOf(e))
+          options = e[this.itemChildren]
+        })
+      },
+      processOptions: function (options) {
+        options.forEach(o => {
+          if (o[this.itemChildren]) {
+            o[this.itemChildren].forEach(oo => {
+              oo._parent = o
+            })
+            this.processOptions(o[this.itemChildren])
+          }
+        })
+        return options
+      },
+
+      onItemClick: function (item) {
+        this.processOptions(this.options)
+        this.findPath(item)
         if (this.changeOnSelect || !children || children.length === 0) {
           this.calculateStringResult()
         }
@@ -246,13 +267,13 @@
       },
 
       calculateStringResult: function (silent) {
-        let result = []
+        let indexResult = []
         let text = []
         let objectResult = []
         for (let key of this.cascade.keys()) {
           let index = this.cascade.get(key)
           if (index >= 0) {
-            result.push(index)
+            indexResult.push(index)
             objectResult.push(key[index])
           }
           if (key[index]) {
@@ -266,38 +287,16 @@
         } else {
           this.resultText = text[text.length - 1]
         }
-        if(silent){
+        if (silent) {
           return
         }
 
-        if (!this.returnObject) {
-          if (this.returnLeaf) {
-            if(this.returnValue){
-              this.$emit('changeCascadeResult', objectResult.pop()[this.itemValue])
-            }else {
-              this.$emit('changeCascadeResult', result.pop())
-            }
-          } else {
-            if(this.returnValue){
-              this.$emit('changeCascadeResult',objectResult.map(e=>e[this.itemValue]))
-            }else {
-              this.$emit('changeCascadeResult', result)
-            }
-          }
+        if (this.returnObject) {
+          this.$emit('changeCascadeResult', objectResult)
+        } else if (this.returnIndex) {
+          this.$emit('changeCascadeResult', indexResult)
         } else {
-          if (this.returnLeaf) {
-            if(this.returnValue){
-              this.$emit('changeCascadeResult', objectResult.pop()[this.itemValue])
-            }else {
-              this.$emit('changeCascadeResult', objectResult.pop())
-            }
-          } else {
-            if(this.returnValue){
-              this.$emit('changeCascadeResult',objectResult.map(e=>e[this.itemValue]))
-            }else {
-              this.$emit('changeCascadeResult', objectResult)
-            }
-          }
+          this.$emit('changeCascadeResult', objectResult.map(e => e[this.itemValue]))
         }
       },
     },
