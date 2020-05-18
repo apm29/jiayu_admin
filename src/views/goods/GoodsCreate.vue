@@ -213,7 +213,7 @@
                 <v-card-actions>
                     <v-spacer/>
                     <v-btn color="primary" @click="doAddSpecification">
-                        添加
+                        保存
                     </v-btn>
                 </v-card-actions>
             </v-card>
