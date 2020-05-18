@@ -123,6 +123,21 @@
         },
       }
     },
+    watch: {
+      options: {
+        deep: true,
+        handler: function (val) {
+          this.tableSettings.page = val.page
+          this.tableSettings.rows = val.itemsPerPage
+          this.tableSettings.sort = val.sortBy && val.sortBy[0]
+          this.tableSettings.order = val.sortDesc && val.sortDesc[0] ? 'desc' : 'asc'
+          if (val.sortDesc && val.sortDesc.length === 0) {
+            this.tableSettings.order = undefined
+          }
+          this.loadBrandList()
+        },
+      },
+    },
     created: function () {
       this.loadBrandList()
     },

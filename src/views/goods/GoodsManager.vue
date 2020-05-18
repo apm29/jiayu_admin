@@ -58,8 +58,8 @@
                 sortable: false,
               },
               {
-                text: '描述',
-                value: 'description',
+                text: '简介',
+                value: 'brief',
                 sortable: false,
               },
               {
@@ -93,7 +93,20 @@
               this.loadGoodsList()
             }
         }
-      }
+      },
+      options: {
+        deep: true,
+        handler: function (val) {
+          this.tableSettings.page = val.page
+          this.tableSettings.rows = val.itemsPerPage
+          this.tableSettings.sort = val.sortBy && val.sortBy[0]
+          this.tableSettings.order = val.sortDesc && val.sortDesc[0] ? 'desc' : 'asc'
+          if (val.sortDesc && val.sortDesc.length === 0) {
+            this.tableSettings.order = undefined
+          }
+          this.loadGoodsList()
+        },
+      },
     },
     methods: {
       loadGoodsList: async function () {
