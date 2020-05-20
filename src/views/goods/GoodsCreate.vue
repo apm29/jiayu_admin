@@ -191,13 +191,13 @@
                 </v-card-title>
                 <v-card-text>
                     <v-form ref="specificationForm">
-                        <v-autocomplete
+                        <v-text-field
                                 outlined
                                 label="规格名称"
                                 persistent-hint
+                                no-filter
                                 v-model="specificationForm.specification"
                                 hide-no-data
-                                :items="specificationsExist"
                         />
                         <v-text-field outlined label="规格值" persistent-hint v-model="specificationForm.value"/>
                         <v-file-uploader
