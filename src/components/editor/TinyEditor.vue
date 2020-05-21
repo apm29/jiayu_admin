@@ -1,13 +1,17 @@
 <template>
     <div>
-        <editor
-                v-if="show"
-                ref="editor"
-                v-model="text"
-                :disabled="disabled"
-                :init="settings"
+        <v-lazy
+                v-model="isActive"
         >
-        </editor>
+            <editor
+                    v-if="show"
+                    ref="editor"
+                    v-model="text"
+                    :disabled="disabled"
+                    :init="settings"
+            >
+            </editor>
+        </v-lazy>
         <v-bottom-sheet v-model="showDrawer" scrollable inset style="position: absolute;z-index: 999999">
             <v-file-browser @file-selected="fileSelectedCallback"></v-file-browser>
         </v-bottom-sheet>
@@ -38,6 +42,7 @@
     data: function () {
       return {
         text: this.value,
+        isActive: false,
         show: true,
         showDrawer: false,
         settings: {
