@@ -55,7 +55,7 @@
                     />
                     <v-text-field outlined label="* 商品简介" persistent-hint v-model="form.brief"/>
                     <v-label>* 商品详细介绍</v-label>
-                    <tiny-editor v-model="form.detail" v-if="!($route.query.id&&!form.detail)"/>
+                    <tiny-editor v-model="form.detail" v-if="form.goodsSn"/>
                 </v-form>
             </v-card-text>
         </v-card>
