@@ -10,6 +10,9 @@
                 :loading="tableSettings.loading"
                 :footer-props="{'items-per-page-options': tableSettings.rowDict}"
         >
+            <template v-slot:item.brief="{item}">
+                <div style="width: 150px" class="text-truncate">{{item.brief}}</div>
+            </template>
             <template v-slot:item.picUrl="{item}">
                 <v-image-viewer img-class="image-thumbnail" :src="$path+item.picUrl"></v-image-viewer>
             </template>
@@ -20,9 +23,9 @@
                 </v-btn>
             </template>
             <template v-slot:item.operation="{item}">
-                <v-row justify="space-around">
-                    <v-btn small color="error" @click="deleteGoods(item)">删除</v-btn>
-                    <v-btn small color="info" @click="editGoods(item)">编辑</v-btn>
+                <v-row justify="start">
+                    <v-btn small color="info" @click="editGoods(item)" class="mr-2">编辑</v-btn>
+                    <v-btn small color="error"  @click="deleteGoods(item)">删除</v-btn>
                 </v-row>
             </template>
         </v-data-table>
@@ -61,6 +64,7 @@
                 text: '简介',
                 value: 'brief',
                 sortable: false,
+                width: 150
               },
               {
                 text: '排序',
@@ -74,7 +78,7 @@
                 text: '操作',
                 value: 'operation',
                 sortable: false,
-                width: '190px',
+                width: 160
               },
             ],
             loading: false,
