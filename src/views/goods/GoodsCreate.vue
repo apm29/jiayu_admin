@@ -6,10 +6,10 @@
             </v-card-title>
             <v-card-text>
                 <v-form>
-                    <v-text-field outlined label="商品编号" persistent-hint v-model="form.goodsSn" append-icon="mdi-cached"
+                    <v-text-field outlined label="* 商品编号" persistent-hint v-model="form.goodsSn" append-icon="mdi-cached"
                                   @click:append="generatorNo">
                     </v-text-field>
-                    <v-text-field outlined label="商品名称" persistent-hint v-model="form.name"/>
+                    <v-text-field outlined label="* 商品名称" persistent-hint v-model="form.name"/>
                     <div class="px-3 d-flex flex-row">
                         <v-switch class="mr-7" v-model="form.isNew" label="新品"/>
                         <v-switch class="mr-7" v-model="form.isHot" label="热卖"/>
@@ -18,14 +18,14 @@
                     <v-file-uploader
                             single
                             v-model="form.picUrl"
-                            hint="商品图片"
+                            hint="* 商品图片"
                             grid
                             produceOnlyPath
                             acceptOnlyPath
                     />
                     <v-file-uploader
                             v-model="form.gallery"
-                            hint="商品画廊"
+                            hint="* 商品画廊"
                             grid
                             produceOnlyPath
                             acceptOnlyPath
@@ -40,20 +40,20 @@
                             :options="categories"
                             persistent-hint
                             return-value
-                            label="选择商品类目"
+                            label="* 选择商品类目"
                             item-value="id"
                             item-label="name"
                     />
                     <paged-menu
                             outlined
                             v-model="form.brandId"
-                            label="选择商品品牌"
+                            label="* 选择商品品牌"
                             persistent-hint
                             item-label="name"
                             item-value="id"
                     />
-                    <v-text-field outlined label="商品简介" persistent-hint v-model="form.brief"/>
-                    <v-label>商品详细介绍</v-label>
+                    <v-text-field outlined label="* 商品简介" persistent-hint v-model="form.brief"/>
+                    <v-label>* 商品详细介绍</v-label>
                     <tiny-editor v-model="form.detail" v-if="!($route.query.id&&!form.detail)"/>
                 </v-form>
             </v-card-text>
@@ -91,7 +91,7 @@
 
         <v-card>
             <v-card-title>
-                商品规格
+                * 商品规格
                 <v-spacer/>
                 <v-btn color="primary" @click="addSpecification">添加规格</v-btn>
             </v-card-title>
@@ -184,7 +184,7 @@
             </v-btn>
         </v-footer>
 
-        <v-dialog v-model="showAddSpecificationDialog">
+        <v-dialog v-model="showAddSpecificationDialog" width="60vw">
             <v-card>
                 <v-card-title>
                     添加规格
@@ -192,14 +192,31 @@
                 <v-card-text>
                     <v-form ref="specificationForm">
                         <v-text-field
+                                class="flex-grow-1"
                                 outlined
-                                label="规格名称"
+                                label="* 规格名称"
                                 persistent-hint
                                 no-filter
                                 v-model="specificationForm.specification"
                                 hide-no-data
-                        />
-                        <v-text-field outlined label="规格值" persistent-hint v-model="specificationForm.value"/>
+                        >
+                            <template v-slot:append>
+                                <v-menu
+                                        offset-y
+                                >
+                                    <template v-slot:activator="{ on }">
+                                        <v-icon v-on="on" class="mb-3">mdi-chevron-down</v-icon>
+                                    </template>
+                                    <v-list>
+                                        <v-list-item v-for="(spec,index) of specificationsExist" :key="index"
+                                                     @click="chooseExistSpec(spec)">
+                                            {{spec}}
+                                        </v-list-item>
+                                    </v-list>
+                                </v-menu>
+                            </template>
+                        </v-text-field>
+                        <v-text-field outlined label="* 规格值" persistent-hint v-model="specificationForm.value"/>
                         <v-file-uploader
                                 single
                                 v-model="specificationForm.url"
@@ -225,8 +242,8 @@
                 </v-card-title>
                 <v-card-text>
                     <v-form ref="specificationForm">
-                        <v-text-field outlined label="属性名称" persistent-hint v-model="attributeForm.attribute"/>
-                        <v-text-field outlined label="属性值" persistent-hint v-model="attributeForm.value"/>
+                        <v-text-field outlined label="* 属性名称" persistent-hint v-model="attributeForm.attribute"/>
+                        <v-text-field outlined label="* 属性值" persistent-hint v-model="attributeForm.value"/>
                     </v-form>
                 </v-card-text>
                 <v-card-actions>
@@ -244,8 +261,8 @@
                 </v-card-title>
                 <v-card-text>
                     <v-form ref="specificationForm">
-                        <v-text-field outlined label="售价" persistent-hint v-model="productForm.price"/>
-                        <v-text-field outlined label="库存" persistent-hint v-model="productForm.number"/>
+                        <v-text-field outlined label="* 售价" persistent-hint v-model="productForm.price"/>
+                        <v-text-field outlined label="* 库存" persistent-hint v-model="productForm.number"/>
                         <v-file-uploader
                                 single
                                 v-model="productForm.url"
@@ -575,6 +592,11 @@
             type: 'error',
           })
         }
+      },
+
+      chooseExistSpec: function (spec) {
+        this.specificationForm.specification = spec
+        this.$forceUpdate()
       },
 
       saveGoods: async function () {
