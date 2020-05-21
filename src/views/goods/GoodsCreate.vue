@@ -10,6 +10,7 @@
                                   @click:append="generatorNo">
                     </v-text-field>
                     <v-text-field outlined label="* 商品名称" persistent-hint v-model="form.name"/>
+                    <v-text-field outlined label="* 专柜价(原价)" type="number" persistent-hint v-model="form.originPrice"/>
                     <div class="px-3 d-flex flex-row">
                         <v-switch class="mr-7" v-model="form.isNew" label="新品"/>
                         <v-switch class="mr-7" v-model="form.isHot" label="热卖"/>
@@ -261,7 +262,7 @@
                 </v-card-title>
                 <v-card-text>
                     <v-form ref="specificationForm">
-                        <v-text-field outlined label="* 售价" persistent-hint v-model="productForm.price"/>
+                        <v-text-field outlined label="* 售价" type="number" persistent-hint v-model="productForm.price"/>
                         <v-text-field outlined label="* 库存" persistent-hint v-model="productForm.number"/>
                         <v-file-uploader
                                 single
