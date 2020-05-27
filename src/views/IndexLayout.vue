@@ -18,7 +18,7 @@
   import VAppSettingBar from '@/components/app/VAppSettingBar'
 
   export default {
-    name: 'DashBoard',
+    name: 'IndexLayout',
     components: {
       VAppSettingBar,
       VAppSideBar,

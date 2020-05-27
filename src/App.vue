@@ -91,4 +91,8 @@
         box-shadow: 1px 1px 3px #e9edf5;
         padding-right: 12px;
     }
+
+    .fill-width{
+        width: 100%;
+    }
 </style>
