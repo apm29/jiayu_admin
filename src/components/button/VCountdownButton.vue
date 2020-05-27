@@ -1,5 +1,5 @@
 <template>
-    <v-btn small text color="primary" @click="doSend" :disabled="waiting">{{waiting?countdown:label}}</v-btn>
+    <v-btn small text color="primary" @click="doSend" :disabled="disabled">{{disabled?countdown:label}}</v-btn>
 </template>
 
 <script>
@@ -23,7 +23,7 @@
     },
     data:function(){
       return {
-        waiting:false,
+        disabled:false,
         count:this.duration,
         timer:undefined
       }
@@ -38,12 +38,19 @@
     },
     methods:{
       doSend: async function () {
-        await this.sendCaptcha()
-        this.startCountdown()
+        try {
+          this.disabled = true
+          await this.sendCaptcha()
+          this.startCountdown()
+        } catch (e) {
+          console.log(e)
+        } finally {
+           this.disabled = false
+        }
       },
       startCountdown:function () {
-        this.waiting = this.count >= 0
-        if(!this.waiting){
+        this.disabled = this.count >= 0
+        if(!this.disabled){
           this.count = this.duration
           return
         }

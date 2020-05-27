@@ -1,24 +1,36 @@
 <template>
     <div>
-        <ol>
-            <li v-for="(kitItem) of kitType" :key="kitItem.id">
-                {{kitItem}}
-            </li>
-        </ol>
-        <ol>
-            <li v-for="(role) of roles" :key="role.id">
-                {{role}}
-            </li>
-        </ol>
-        <v-btn @click="getKit">Kit</v-btn>
-        <v-btn @click="getRoles">Roles</v-btn>
-        <v-btn @click="logout">Logout</v-btn>
-        <v-btn @click="alert">Alert</v-btn>
-        <v-btn @click="toast">Toast</v-btn>
-        <v-btn @click="notify('error')">Notify</v-btn>
-        <v-btn @click="notify('success')">Notify</v-btn>
-        <v-btn @click="notify('warning')">Notify</v-btn>
-        <v-btn @click="notify('info')">Notify</v-btn>
+       <v-container fluid>
+            <div class="d-flex flex-row">
+                <v-list-item>
+                    <v-list-item-avatar>
+                        <v-icon x-large color="info">mdi-account</v-icon>
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                       <v-list-item-title>用户数量</v-list-item-title>
+                        <v-list-item-subtitle class="title font-weight-bold">{{mallInfo.wechatUserCount}}</v-list-item-subtitle>
+                    </v-list-item-content>
+                </v-list-item>
+                <v-list-item>
+                    <v-list-item-avatar>
+                        <v-icon x-large color="success">mdi-shopping</v-icon>
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                        <v-list-item-title>商品数量</v-list-item-title>
+                        <v-list-item-subtitle class="title font-weight-bold">{{mallInfo.goodsCount}}</v-list-item-subtitle>
+                    </v-list-item-content>
+                </v-list-item>
+                <v-list-item>
+                    <v-list-item-avatar>
+                        <v-icon x-large color="primary">mdi-shopping-search</v-icon>
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                        <v-list-item-title>货品数量</v-list-item-title>
+                        <v-list-item-subtitle class="title font-weight-bold">{{mallInfo.productsCount}}</v-list-item-subtitle>
+                    </v-list-item-content>
+                </v-list-item>
+            </div>
+       </v-container>
     </div>
 </template>
 
@@ -27,53 +39,23 @@
     name: 'Dashboard',
     data:function(){
       return {
-        kitType:[],
-        roles:[],
+        mallInfo:{
+          wechatUserCount:0,
+          goodsCount:0,
+          productsCount:0
+        }
       }
     },
+    created(){
+      this.getMallInfo()
+    },
     methods:{
-      getKit: async function () {
+      getMallInfo: async function () {
         let res = await this.$remote.post({
-          url: "/kitType/getAsTree"
+          url: "/statistics/mallInfo"
         })
-        console.log(res)
-        this.kitType = res.Data
+        this.mallInfo = res.Data
       },
-      getRoles: async function () {
-        let res = await this.$remote.post({
-          url: "/authorization/roles/mine"
-        })
-        console.log(res)
-        this.roles = res.Data
-      },
-      logout: async function () {
-        let logout = await this.$messenger.confirm({
-          msg: "确定退出吗?"
-        })
-        console.log(logout)
-        if(logout) {
-          await this.$store.dispatch('logout')
-        }
-      },
-      alert: async function () {
-        let logout = await this.$messenger.alert({
-          msg: "ALERT!"
-        })
-        console.log(logout)
-      },
-      toast: async function () {
-        let logout = await this.$messenger.toast({
-          msg: "TOAST"
-        })
-        console.log(logout)
-      },
-      notify: async function (type) {
-        await this.$notify({
-          title:'标题',
-          text:'自己去玩恶趣味',
-          type:type||'error'
-        })
-      }
     }
   }
 </script>

@@ -97,6 +97,11 @@
           })
         } catch (e) {
           console.log(e)
+          this.$notify({
+            title:'发送失败',
+            text:e,
+            type:'error'
+          })
         }
 
       },
