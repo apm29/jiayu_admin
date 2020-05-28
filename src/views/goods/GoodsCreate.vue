@@ -1,178 +1,191 @@
 <template>
-    <v-container fluid class="pa-12">
-        <v-card class="fill-height d-flex flex-column">
-            <v-card-title>
-                商品介绍
-            </v-card-title>
-            <v-card-text>
-                <v-form>
-                    <v-text-field outlined label="* 商品编号" persistent-hint v-model="form.goodsSn" append-icon="mdi-cached"
-                                  @click:append="generatorNo">
-                    </v-text-field>
-                    <v-text-field outlined label="* 商品名称" persistent-hint v-model="form.name"/>
-                    <v-text-field outlined label="* 专柜价(原价)" type="number" persistent-hint v-model="form.originPrice"/>
-                    <div class="px-3 d-flex flex-row">
-                        <v-switch class="mr-7" v-model="form.isNew" label="新品"/>
-                        <v-switch class="mr-7" v-model="form.isHot" label="热卖"/>
-                        <v-switch class="mr-7" v-model="form.isOnSale" label="在售"/>
-                    </div>
-                    <v-file-uploader
-                            single
-                            v-model="form.picUrl"
-                            hint="* 商品图片"
-                            grid
-                            produceOnlyPath
-                            acceptOnlyPath
-                    />
-                    <v-file-uploader
-                            v-model="form.gallery"
-                            hint="* 商品画廊"
-                            grid
-                            produceOnlyPath
-                            acceptOnlyPath
-                    />
-                    <v-autocomplete :items="unitDict" outlined label="商品单位(如 个/斤/盒)" persistent-hint
-                                    v-model="form.unit"/>
+    <v-container fluid class="pa-5">
+        <div class="d-flex flex-row flex-wrap">
+            <div class="flex-grow-1" style="min-width: 300px;max-width: 750px">
+                <v-card>
+                    <v-card-title>
+                        商品介绍
+                    </v-card-title>
+                    <v-card-text>
+                        <v-form>
+                            <v-text-field outlined label="* 商品编号" persistent-hint v-model="form.goodsSn"
+                                          append-icon="mdi-cached"
+                                          @click:append="generatorNo">
+                            </v-text-field>
+                            <v-text-field outlined label="* 商品名称" persistent-hint v-model="form.name"/>
+                            <v-text-field outlined label="* 专柜价(原价)" type="number" persistent-hint
+                                          v-model="form.originPrice"/>
+                            <div class="px-3 d-flex flex-row flex-wrap">
+                                <v-switch class="mr-7" v-model="form.isNew" label="新品"/>
+                                <v-switch class="mr-7" v-model="form.isHot" label="热卖"/>
+                                <v-switch class="mr-7" v-model="form.isOnSale" label="在售"/>
+                            </div>
+                            <v-file-uploader
+                                    single
+                                    v-model="form.picUrl"
+                                    hint="* 商品图片"
+                                    grid
+                                    produceOnlyPath
+                                    acceptOnlyPath
+                            />
+                            <v-file-uploader
+                                    v-model="form.gallery"
+                                    hint="* 商品画廊"
+                                    grid
+                                    produceOnlyPath
+                                    acceptOnlyPath
+                            />
+                            <v-autocomplete :items="unitDict" outlined label="商品单位(如 个/斤/盒)" persistent-hint
+                                            v-model="form.unit"/>
 
-                    <v-addable-chips v-model="form.keywords" class="mb-4"/>
-                    <v-cascader
-                            outlined
-                            v-model="form.categoryId"
-                            :options="categories"
-                            persistent-hint
-                            return-value
-                            label="* 选择商品类目"
-                            item-value="id"
-                            item-label="name"
-                    />
-                    <paged-menu
-                            outlined
-                            v-model="form.brandId"
-                            label="* 选择商品品牌"
-                            persistent-hint
-                            item-label="name"
-                            item-value="id"
-                    />
-                    <v-text-field outlined label="* 商品简介" persistent-hint v-model="form.brief"/>
-                    <v-label>* 商品详细介绍</v-label>
-                    <tiny-editor v-model="form.detail" v-if="form.goodsSn"/>
-                </v-form>
-            </v-card-text>
-        </v-card>
+                            <v-addable-chips v-model="form.keywords" class="mb-4"/>
+                            <v-cascader
+                                    outlined
+                                    v-model="form.categoryId"
+                                    :options="categories"
+                                    persistent-hint
+                                    return-value
+                                    label="* 选择商品类目"
+                                    item-value="id"
+                                    item-label="name"
+                            />
+                            <paged-menu
+                                    outlined
+                                    v-model="form.brandId"
+                                    label="* 选择商品品牌"
+                                    persistent-hint
+                                    item-label="name"
+                                    item-value="id"
+                            />
+                            <v-text-field outlined label="* 商品简介" persistent-hint v-model="form.brief"/>
+                            <v-label>* 商品详细介绍</v-label>
+                            <tiny-editor v-model="form.detail" v-if="form.goodsSn"/>
+                        </v-form>
+                    </v-card-text>
+                </v-card>
 
-        <v-card class="mt-8">
-            <v-card-title>
-                商品属性
-                <v-spacer/>
-                <v-btn color="primary" @click="addAttribute">添加属性</v-btn>
-            </v-card-title>
-            <v-card-text>
-                <v-simple-table>
-                    <thead>
-                    <tr>
-                        <th class="text-left">属性名称</th>
-                        <th class="text-left">属性值</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="item in attributes" :key="item.attribute">
-                        <td>{{ item.attribute }}</td>
-                        <td>
-                            <v-chip color="info" small>
-                                {{ item.value }}
-                            </v-chip>
-                        </td>
-                    </tr>
-                    </tbody>
-                </v-simple-table>
-            </v-card-text>
-        </v-card>
+                <v-card class="mt-8">
+                    <v-card-title>
+                        商品属性
+                        <v-spacer/>
+                        <v-btn color="primary" @click="addAttribute">添加属性</v-btn>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-simple-table>
+                            <thead>
+                            <tr>
+                                <th class="text-left">属性名称</th>
+                                <th class="text-left">属性值</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="item in attributes" :key="item.attribute">
+                                <td>{{ item.attribute }}</td>
+                                <td>
+                                    <v-chip color="info" small>
+                                        {{ item.value }}
+                                    </v-chip>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </v-simple-table>
+                    </v-card-text>
+                </v-card>
 
-        <v-switch class="mt-8" @change="changeMode" label="使用单规格模式"></v-switch>
+                <v-switch class="mt-8" @change="changeMode" label="使用单规格模式"></v-switch>
 
-        <v-card>
-            <v-card-title>
-                * 商品规格
-                <v-spacer/>
-                <v-btn color="primary" @click="addSpecification">添加规格</v-btn>
-            </v-card-title>
-            <v-card-subtitle>
-                例如:规格名称--尺寸 对应 规格值 M / S / L / XL
-            </v-card-subtitle>
-            <v-card-text>
-                <v-simple-table>
-                    <thead>
-                    <tr>
-                        <th class="text-left">规格名称</th>
-                        <th class="text-left">规格值</th>
-                        <th class="text-left">规格图片</th>
-                        <th class="text-left">操作</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="(item,index) of specifications" :key="item.value+'_specification_'+index">
-                        <td>{{ item.specification }}</td>
-                        <td>
-                            <v-chip color="info" small>
-                                {{ item.value }}
-                            </v-chip>
-                        </td>
-                        <td>
-                            <v-image-viewer v-if="item.url" img-class="image-thumbnail"
-                                            :src="$path+item.url"></v-image-viewer>
-                        </td>
-                        <td>
-                            <v-btn small class="mr-3" color="error" @click="deleteSpecification(item)">删除</v-btn>
-                            <v-btn small class="mr-3" color="info" @click="editSpecification(item)">编辑</v-btn>
-                        </td>
-                    </tr>
-                    </tbody>
-                </v-simple-table>
-            </v-card-text>
-        </v-card>
+                <v-card>
+                    <v-card-title>
+                        * 商品规格
+                        <v-spacer/>
+                        <v-btn color="primary" @click="addSpecification">添加规格</v-btn>
+                    </v-card-title>
+                    <v-card-subtitle>
+                        例如:规格名称--尺寸 对应 规格值 M / S / L / XL
+                    </v-card-subtitle>
+                    <v-card-text>
+                        <v-simple-table>
+                            <thead>
+                            <tr>
+                                <th class="text-left">规格名称</th>
+                                <th class="text-left">规格值</th>
+                                <th class="text-left">规格图片</th>
+                                <th class="text-left">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(item,index) of specifications" :key="item.value+'_specification_'+index">
+                                <td>{{ item.specification }}</td>
+                                <td>
+                                    <v-chip color="info" small>
+                                        {{ item.value }}
+                                    </v-chip>
+                                </td>
+                                <td>
+                                    <v-image-viewer v-if="item.url" img-class="image-thumbnail"
+                                                    :src="$path+item.url"></v-image-viewer>
+                                </td>
+                                <td>
+                                    <v-btn small class="mr-3" color="error" @click="deleteSpecification(item)">删除</v-btn>
+                                    <v-btn small class="mr-3" color="info" @click="editSpecification(item)">编辑</v-btn>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </v-simple-table>
+                    </v-card-text>
+                </v-card>
 
-        <v-card class="mt-8">
-            <v-card-title>
-                商品库存
-            </v-card-title>
-            <v-card-subtitle>
-                由规格产生的对应关系,需要手动输入库存和价格
-            </v-card-subtitle>
-            <v-card-text>
-                <v-simple-table>
-                    <thead>
-                    <tr>
-                        <th class="text-left">规格</th>
-                        <th class="text-left">售价</th>
-                        <th class="text-left">数量</th>
-                        <th class="text-left">图片</th>
-                        <th class="text-left">操作</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="(item,index) of products" :key="item.specification + '_product_'+index">
-                        <td>
-                            <v-chip-group>
-                                <v-chip v-for="(value,index) of item.specifications" color="info" small
-                                        :key="index='_specification'">
-                                    {{value}}
-                                </v-chip>
-                            </v-chip-group>
-                        </td>
-                        <td>{{ item.price }}</td>
-                        <td>{{ item.number }}</td>
-                        <td>
-                            <v-image-viewer v-if="item.url" img-class="image-thumbnail"
-                                            :src="$path+item.url"></v-image-viewer>
-                        </td>
-                        <td>
-                            <v-btn small color="info" @click="editProduct(item)">设置</v-btn>
-                        </td>
-                    </tr>
-                    </tbody>
-                </v-simple-table>
-            </v-card-text>
-        </v-card>
+                <v-card class="mt-8">
+                    <v-card-title>
+                        商品库存
+                    </v-card-title>
+                    <v-card-subtitle>
+                        由规格产生的对应关系,需要手动输入库存和价格
+                    </v-card-subtitle>
+                    <v-card-text>
+                        <v-simple-table>
+                            <thead>
+                            <tr>
+                                <th class="text-left">规格</th>
+                                <th class="text-left">售价</th>
+                                <th class="text-left">数量</th>
+                                <th class="text-left">图片</th>
+                                <th class="text-left">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(item,index) of products" :key="item.specification + '_product_'+index">
+                                <td>
+                                    <v-chip-group>
+                                        <v-chip v-for="(value,index) of item.specifications" color="info" small
+                                                :key="index+'_specification'">
+                                            {{value}}
+                                        </v-chip>
+                                    </v-chip-group>
+                                </td>
+                                <td>{{ item.price }}</td>
+                                <td>{{ item.number }}</td>
+                                <td>
+                                    <v-image-viewer v-if="item.url" img-class="image-thumbnail"
+                                                    :src="$path+item.url"></v-image-viewer>
+                                </td>
+                                <td>
+                                    <v-btn small color="info" @click="editProduct(item)">设置</v-btn>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </v-simple-table>
+                    </v-card-text>
+                </v-card>
+            </div>
+            <goods-preview
+                    :goods="form"
+                    :products="products"
+                    :specifications="specifications"
+                    :attributes="attributes"
+            >
+            </goods-preview>
+        </div>
 
         <v-footer class="mt-8 transparent px-0">
             <v-btn
@@ -294,6 +307,7 @@
   import VFileUploader from '@/components/file/VFileUploader'
   import VAddableChips from '@/components/select/VAddableChips'
   import VImageViewer from '@/components/image/VImageViewer'
+  import GoodsPreview from '@/views/goods/GoodsPreview'
 
   const defaultForm = {
     goodsSn: undefined,
@@ -316,7 +330,7 @@
 
   export default {
     name: 'GoodsCreate',
-    components: { VImageViewer, VAddableChips, VFileUploader, PagedMenu, VCascader, TinyEditor },
+    components: { GoodsPreview, VImageViewer, VAddableChips, VFileUploader, PagedMenu, VCascader, TinyEditor },
     data: function () {
       return {
         showAddSpecificationDialog: false,

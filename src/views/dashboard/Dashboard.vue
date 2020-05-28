@@ -1,7 +1,7 @@
 <template>
     <div class="fill-height">
         <v-container fluid class="fill-height" style="background-color: #667086">
-            <v-card dark class="d-flex flex-row fill-width">
+            <v-card dark class="d-flex flex-row fill-width flex-wrap">
                 <v-list-item dark>
                     <v-list-item-avatar>
                         <v-icon x-large color="info">mdi-account</v-icon>

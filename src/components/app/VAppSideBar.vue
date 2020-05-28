@@ -116,9 +116,17 @@
         this.$emit('changeTemporary', newVal.smAndDown)
         this.temporary = newVal.smAndDown
       },
+      drawer:{
+        handler: function (val) {
+          this.$store.commit('showToolBar',val)
+        },
+      },
       '$store.state.layout.showToolbar': {
         immediate: true,
         handler: function (val) {
+          if(val === this.drawer){
+            return
+          }
           this.drawer = val
         },
       },

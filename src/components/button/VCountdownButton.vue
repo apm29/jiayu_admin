@@ -1,5 +1,5 @@
 <template>
-    <v-btn small text color="primary" @click="doSend" :disabled="disabled">{{disabled?countdown:label}}</v-btn>
+    <v-btn small text color="primary" @click="doSend" :disabled="disabled" :loading="sending">{{sending?'发送中':disabled?countdown:label}}</v-btn>
 </template>
 
 <script>
@@ -24,6 +24,7 @@
     data: function () {
       return {
         disabled: false,
+        sending: false,
         count: this.duration,
         timer: undefined,
       }
@@ -40,11 +41,14 @@
       doSend: async function () {
         try {
           this.disabled = true
+          this.sending = true
           await this.sendCaptcha()
+          this.sending = false
           await this.startCountdown()
         } catch (e) {
           console.log(e)
         } finally {
+          this.sending = false
           this.disabled = false
         }
       },
