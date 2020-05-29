@@ -270,7 +270,7 @@
                 <v-card-actions>
                     <v-spacer/>
                     <v-btn color="primary" @click="doAddAttribute">
-                       保存
+                        保存
                     </v-btn>
                 </v-card-actions>
             </v-card>
@@ -333,6 +333,23 @@
     originPrice: undefined,
     retailPrice: undefined,
     detail: undefined,
+  }
+
+  //比较两个规格是否相同
+  function isSpecificationEquals (first, second) {
+    if (first.length !== second.length) {
+      return false
+    }
+    if(first.join() === second.join){
+      return true
+    }
+    let equals = true
+    first.forEach(item => {
+      if (second.indexOf(item) < 0) {
+        equals = false
+      }
+    })
+    return equals
   }
 
   export default {
@@ -439,7 +456,7 @@
             }
 
             //组合:M选N
-            let res = this.calculateCombination(arr)
+            let res = this.calculateCombinations(arr)
             let newProducts = res.map((arr, index) => {
               return {
                 productId: index,
@@ -450,7 +467,7 @@
               }
             })
             newProducts.map((p) => {
-              let find = this.products.find((e) => e.specifications.join() === p.specifications.join())
+              let find = this.products.find((e) => isSpecificationEquals(e.specifications, p.specifications))
               if (find) {
                 Object.assign(
                   p, find,
@@ -463,7 +480,47 @@
       },
     },
     methods: {
-      //递归方法
+      //array:[...[]] 二维数组
+      //计算所有组合
+      calculateCombinations: function (array) {
+        if (!array instanceof Array) {
+          throw '必须是二维数组'
+        }
+        if (array.length === 1) {
+          return array[0].map(e => [e])
+        }
+        let tempArray = [...array]
+        while (tempArray.length > 1) {
+          if (!tempArray[0] instanceof Array || !tempArray[1] instanceof Array) {
+            throw '必须是二维数组'
+          }
+          let newArrayOne = []
+          for (let i = 0; i < tempArray[0].length; i++) {
+            for (let j = 0; j < tempArray[1].length; j++) {
+              let itemZero = tempArray[0][i]
+              let itemOne = tempArray[1][j]
+              let newArrayItem = []
+              if (itemZero instanceof Array) {
+                newArrayItem = [
+                  ...itemZero,
+                  itemOne,
+                ]
+              } else {
+                newArrayItem = [
+                  itemZero,
+                  itemOne,
+                ]
+              }
+              newArrayOne.push(newArrayItem)
+            }
+          }
+          tempArray = [
+            newArrayOne,
+            ...tempArray.slice(2),
+          ]
+        }
+        return tempArray
+      },
       /**
        * 算法二，非递归计算所有组合
        * @param inputList 所有数组的列表
@@ -633,7 +690,7 @@
         this.$forceUpdate()
       },
 
-      footerIntersect:function(entries, observer, isIntersecting){
+      footerIntersect: function (entries, observer, isIntersecting) {
         this.isFooterVisible = entries[0].isIntersecting
       },
 
