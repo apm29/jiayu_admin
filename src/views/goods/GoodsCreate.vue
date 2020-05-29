@@ -1,7 +1,7 @@
 <template>
     <v-container fluid class="pa-5">
         <div class="d-flex flex-row flex-wrap">
-            <div class="flex-grow-1" style="min-width: 300px;max-width: 750px">
+            <div class="flex-grow-1" style="min-width: 360px;max-width: 768px">
                 <v-card>
                     <v-card-title>
                         商品介绍
@@ -76,6 +76,7 @@
                             <tr>
                                 <th class="text-left">属性名称</th>
                                 <th class="text-left">属性值</th>
+                                <th class="text-left">操作</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -85,6 +86,10 @@
                                     <v-chip color="info" small>
                                         {{ item.value }}
                                     </v-chip>
+                                </td>
+                                <td>
+                                    <v-btn small class="mr-3" color="error" @click="deleteAttribute(item)">删除
+                                    </v-btn>
                                 </td>
                             </tr>
                             </tbody>
@@ -126,8 +131,8 @@
                                                     :src="$path+item.url"></v-image-viewer>
                                 </td>
                                 <td>
-                                    <v-btn small class="mr-3" color="error" @click="deleteSpecification(item)">删除</v-btn>
-                                    <v-btn small class="mr-3" color="info" @click="editSpecification(item)">编辑</v-btn>
+                                    <v-btn small class="mr-3" color="error" @click="deleteSpecification(item)">删除
+                                    </v-btn>
                                 </td>
                             </tr>
                             </tbody>
@@ -187,7 +192,7 @@
             </goods-preview>
         </div>
 
-        <v-footer class="mt-8 transparent px-0">
+        <v-footer class="mt-8 transparent px-0" v-intersect="footerIntersect">
             <v-btn
                     @click="saveGoods"
                     color="primary"
@@ -197,7 +202,9 @@
                 {{form.id?'更新':'上架'}}
             </v-btn>
         </v-footer>
-
+        <v-btn v-if="form.id && !isFooterVisible" fab bottom right fixed color="primary">
+            更新
+        </v-btn>
         <v-dialog v-model="showAddSpecificationDialog" width="60vw">
             <v-card>
                 <v-card-title>
@@ -255,7 +262,7 @@
                     添加属性
                 </v-card-title>
                 <v-card-text>
-                    <v-form ref="specificationForm">
+                    <v-form ref="attributeForm">
                         <v-text-field outlined label="* 属性名称" persistent-hint v-model="attributeForm.attribute"/>
                         <v-text-field outlined label="* 属性值" persistent-hint v-model="attributeForm.value"/>
                     </v-form>
@@ -263,7 +270,7 @@
                 <v-card-actions>
                     <v-spacer/>
                     <v-btn color="primary" @click="doAddAttribute">
-                        添加
+                       保存
                     </v-btn>
                 </v-card-actions>
             </v-card>
@@ -333,6 +340,7 @@
     components: { GoodsPreview, VImageViewer, VAddableChips, VFileUploader, PagedMenu, VCascader, TinyEditor },
     data: function () {
       return {
+        isFooterVisible: false,
         showAddSpecificationDialog: false,
         showAddAttributeDialog: false,
         showEditProductDialog: false,
@@ -532,6 +540,13 @@
         }) &&
         this.specifications.splice(this.specifications.indexOf(item), 1)
       },
+
+      deleteAttribute: async function (item) {
+        await this.$messenger.confirm({
+          msg: `确定删除规格:${item.attribute}吗?`,
+        }) &&
+        this.attributes.splice(this.attributes.indexOf(item), 1)
+      },
       addSpecification: function () {
         this.specificationForm = {}
         this.showAddSpecificationDialog = true
@@ -539,6 +554,10 @@
       editSpecification: function (item) {
         this.specificationForm = { ...item }
         this.showAddSpecificationDialog = true
+      },
+      editAttribute: function (item) {
+        this.attributeForm = { ...item }
+        this.showAddAttributeDialog = true
       },
       doAddSpecification: function () {
         let find = this.specifications.find(
@@ -612,6 +631,10 @@
       chooseExistSpec: function (spec) {
         this.specificationForm.specification = spec
         this.$forceUpdate()
+      },
+
+      footerIntersect:function(entries, observer, isIntersecting){
+        this.isFooterVisible = entries[0].isIntersecting
       },
 
       saveGoods: async function () {

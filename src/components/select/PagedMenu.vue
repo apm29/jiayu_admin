@@ -205,7 +205,6 @@
             this.settings.search,
             this.settings.loading,
           )
-          console.log(res)
           this.data = res.data
           this.settings.total = res.total
           this.settings.hasMore = this.settings.total > this.data.length
