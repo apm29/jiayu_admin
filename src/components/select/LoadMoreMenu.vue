@@ -15,7 +15,7 @@
                     :label="label"
                     :persistent-hint="persistentHint"
                     @click:clear="clear"
-                    readonly
+                    @input="search"
                     :clear-icon="(clearable&&result)?'mdi-close':''"
                     :append-icon="showMenu?'mdi-menu-up':'mdi-menu-down'"
                     @click:append="showMenu=!showMenu"
@@ -23,33 +23,33 @@
             >
             </v-text-field>
         </template>
-        <v-card :loading="settings.loading" :disabled="settings.loading">
-            <div class="pa-2 d-flex flex-row align-baseline">
-                <v-text-field placeholder="搜索" v-model="settings.search" class="flex-grow-1" dense hide-details>
-                </v-text-field>
-                <v-btn class="ml-2" small @click="search(settings.search)" color="primary">搜索</v-btn>
-            </div>
-            <v-list :style="{maxHeight:menuHeight}" class="overflow-y-auto">
-                <template v-for="(item,index) of data">
-                    <slot name="item" :item="item" :index="index">
-                        <v-list-item @click="chooseItem(item,index)" :key="index+'item'">
-                            {{item[itemLabel]}}
-                        </v-list-item>
-                    </slot>
-                </template>
-            </v-list>
-            <v-pagination
-                    v-model="settings.page"
-                    :length="parseInt(settings.total/settings.rows)"
+        <v-card>
+            <load-more-list
+                    @on-load-more="callLoadFunction"
+                    :loading="settings.loading"
+                    :has-more="this.settings.hasMore"
+                    style="height: 25vh"
             >
-            </v-pagination>
+                <v-list>
+                    <template v-for="(item,index) of data">
+                        <slot name="item" :item="item" :index="index">
+                            <v-list-item @click="chooseItem(item,index)" :key="index+'item'">
+                                {{item[itemLabel]}}
+                            </v-list-item>
+                        </slot>
+                    </template>
+                </v-list>
+            </load-more-list>
         </v-card>
     </v-menu>
 </template>
 
 <script>
+  import LoadMoreList from '@/components/list/LoadMoreList'
+
   export default {
     name: 'PagedMenu',
+    components: { LoadMoreList },
     props: {
       result: {
         type: Object | Number | String,
@@ -58,13 +58,9 @@
       loadFunction: {
         type: Function,
         //约定返回{ data: [...] ,total:xxx}
-        default: async function (pageNo, pageSize, search, loading) {
-          return await this.loadBrandList(pageNo, pageSize, search, loading)
+        default: async function (pageNo, pageSize, order, sort, search, loading) {
+          return await this.loadBrandList(pageNo, pageSize, order, sort, search, loading)
         },
-      },
-      menuHeight: {
-        type: Number | String,
-        default: '30vh',
       },
       itemLabel: {
         type: String,
@@ -136,13 +132,12 @@
       event: 'menuSelectionChanged',
     },
     created () {
-      console.log('created')
       this.callLoadFunction()
     },
     data: function () {
       return {
         showMenu: false,
-        searching: false,
+        searching:false,
         resultText: undefined,
         data: [],
         options: {},
@@ -151,7 +146,7 @@
           loading: false,
           hasMore: true,
           page: 1,
-          rows: this.pageSize || 20,
+          rows: this.pageSize||20,
           total: 0,
         },
       }
@@ -160,35 +155,30 @@
       result: {
         immediate: true,
         handler: function (val) {
-          if (this.searching) {
+          if(this.searching){
             return
           }
           let find = this.data.find((item) => {
             return item[this.itemValue] === val
           })
-          if (find) {
+          if(find) {
             this.resultText = find[this.itemLabel]
           }
         },
       },
       data: {
         handler: function (val) {
-          // if (this.searching) {
-          //   return
-          // }
-          // let find = val.find((item) => {
-          //   return item[this.itemValue] === this.result
-          // })
-          // if (find) {
-          //   this.resultText = find[this.itemLabel]
-          // } else {
-          //   this.callLoadFunction()
-          // }
-        },
-      },
-      'settings.page': {
-        handler: function () {
-          this.callLoadFunction()
+          if(this.searching){
+            return
+          }
+          let find = val.find((item) => {
+            return item[this.itemValue] === this.result
+          })
+          if(find) {
+            this.resultText = find[this.itemLabel]
+          } else {
+            this.callLoadFunction()
+          }
         },
       },
     },
@@ -202,13 +192,12 @@
           let res = await this.loadFunction(
             this.settings.page,
             this.settings.rows,
-            this.settings.search,
-            this.settings.loading,
+            this.settings.search
           )
-          console.log(res)
-          this.data = res.data
+          this.data = this.data.concat(res.data)
           this.settings.total = res.total
           this.settings.hasMore = this.settings.total > this.data.length
+          this.settings.page+=1
         } catch (e) {
           console.log(e)
         } finally {
@@ -237,9 +226,7 @@
         }
       },
       search: function (val) {
-        if (this.settings.loading) {
-          return
-        }
+        this.resultText = val || ''
         this.settings.search = val || ''
         this.settings.page = 1
         this.settings.hasMore = true

@@ -100,4 +100,7 @@
         font-size: 12px;
         background-color: #333333;
     }
+    ::-webkit-scrollbar {/*隐藏滚轮*/
+        display: none;
+    }
 </style>
