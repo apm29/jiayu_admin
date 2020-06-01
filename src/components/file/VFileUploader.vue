@@ -384,23 +384,7 @@
             this.uploadResults.push(item)
           }
           let val = this.uploadResults
-          if (!this.single) {
-            if (this.produceOnlyPath) {
-              this.$emit('onFileValueChange', val.map(e => e[this.fileValue]))
-            } else {
-              this.$emit('onFileValueChange', val)
-            }
-          } else {
-            if (val.length === 0) {
-              this.$emit('onFileValueChange', undefined)
-            } else {
-              if (this.produceOnlyPath) {
-                this.$emit('onFileValueChange', val[0][this.fileValue])
-              } else {
-                this.$emit('onFileValueChange', val[0])
-              }
-            }
-          }
+          this.emitResult(val)
         } catch (e) {
           console.log(e)
         } finally {
@@ -408,8 +392,30 @@
           this.$refs[this._uid + 'form'].reset()
         }
       },
+
+      emitResult:function(val){
+        if (!this.single) {
+          if (this.produceOnlyPath) {
+            this.$emit('onFileValueChange', val.map(e => e[this.fileValue]))
+          } else {
+            this.$emit('onFileValueChange', val)
+          }
+        } else {
+          if (val.length === 0) {
+            this.$emit('onFileValueChange', undefined)
+          } else {
+            if (this.produceOnlyPath) {
+              this.$emit('onFileValueChange', val[0][this.fileValue])
+            } else {
+              this.$emit('onFileValueChange', val[0])
+            }
+          }
+        }
+      },
+
       onDeleteClick: function (fileResult, index) {
         this.uploadResults.splice(index, 1)
+        this.emitResult(this.uploadResults)
       },
 
       previewImage: function (fileUploadResult) {
