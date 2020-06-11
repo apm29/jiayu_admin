@@ -39,7 +39,7 @@
           this.loading = true
           let res = await this.$remote.post({
             url: '/files/list',
-            hide:!this.showOverlay,
+            hide: !this.showOverlay,
             data: {
               dirName: this.currentDirectory,
             },
@@ -53,24 +53,21 @@
         }
       },
 
-      //TODO 批量删除
       deleteSelectedFile: async function () {
         try {
           this.loading = true
           console.log(this.selected)
-          for (const path of this.selected) {
-            let res = await this.$remote.post({
-              url: '/files/delete',
-              hide:!this.showOverlay,
-              data: {
-                name: path,
-              },
-            })
-            this.$notify({
-              text: res.Msg,
-              type: 'success',
-            })
-          }
+          let res = await this.$remote.post({
+            url: '/files/deleteBatch',
+            hide: !this.showOverlay,
+            data: {
+              name: this.selected,
+            },
+          })
+          this.$notify({
+            text: res.Msg,
+            type: 'success',
+          })
           this.selected = undefined
           await this.getDirectoryInfo()
         } catch (e) {
@@ -79,7 +76,7 @@
             text: e,
             type: 'error',
           })
-        }finally {
+        } finally {
           this.loading = false
         }
       },
@@ -88,7 +85,7 @@
           this.loading = true
           let res = await this.$remote.post({
             url: '/files/createDir',
-            hide:!this.showOverlay,
+            hide: !this.showOverlay,
             data: {
               dirName: this.currentDirectory + newDirName + '/',
             },
