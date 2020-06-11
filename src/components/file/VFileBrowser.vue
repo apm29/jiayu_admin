@@ -26,7 +26,7 @@
         <v-card-text>
             <v-row tile>
                 <v-col :cols="6">
-                    <v-list tile class="pl-3" >
+                    <v-list tile class="pl-3">
                         <v-list-item
                                 v-for="(directory,index) of directories"
                                 :key="index+'dir'"
@@ -80,7 +80,7 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer/>
-                        <v-btn @click="createDir">确定</v-btn>
+                        <v-btn @click="createNewDir">确定</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
@@ -89,26 +89,30 @@
 </template>
 
 <script>
+  import FileBrowserMixin from '@/components/file/FileBrowserMixin'
+  import FileMixin from '@/components/file/FileMixin'
+
   export default {
     name: 'VFileBrowser',
-    props:{
-      value:String
+    props: {
+      value: String | Array,
+
+      single: {
+        type: Boolean,
+        default: false,
+      },
     },
-    model:{
-      prop:'value',
-      event:'file-selected'
+    mixins: [
+      FileBrowserMixin, FileMixin,
+    ],
+    model: {
+      prop: 'value',
+      event: 'file-selected',
     },
     data: function () {
       return {
-        files: [],
-        directories: [],
-        currentDirectory: 'images/',
-        selected: undefined,
         showCreatNewDirDialog: false,
         newDirName: undefined,
-        dirStack: [],
-        showOverlay: false,
-        loading: false,
       }
     },
 
@@ -116,98 +120,11 @@
       this.getDirectoryInfo()
     },
     methods: {
-      isImage: function (image) {
-        if (!image) {
-          return false
-        }
-        let imageLower = image.toLowerCase()
-        return imageLower.indexOf('.jpg') >= 0
-          || imageLower.indexOf('.png') >= 0
-          || imageLower.indexOf('.jpeg') >= 0
-          || imageLower.indexOf('.bmp') >= 0
+      createNewDir:function(){
+        this.createDir(this.newDirName)
       },
       chooseFile: function (file) {
         this.selected = file
-      },
-      backward: function () {
-        this.selected = undefined
-        this.currentDirectory = this.dirStack.pop()
-        this.getDirectoryInfo()
-      },
-      loadNextDir: function (dir) {
-        this.dirStack.push(this.currentDirectory)
-        this.currentDirectory = dir
-        this.selected = undefined
-        this.getDirectoryInfo()
-      },
-      getDirectoryInfo: async function () {
-        try {
-          this.loading = true
-          let res = await this.$remote.post({
-            url: '/files/list',
-            hide:!this.showOverlay,
-            data: {
-              dirName: this.currentDirectory,
-            },
-          })
-          this.files = res.Data.files
-          this.directories = res.Data.directories
-        } catch (e) {
-          console.log(e)
-        } finally {
-          this.loading = false
-        }
-      },
-      deleteSelectedFile: async function () {
-        try {
-          this.loading = true
-          let res = await this.$remote.post({
-            url: '/files/delete',
-            hide:!this.showOverlay,
-            data: {
-              name: this.selected,
-            },
-          })
-          this.$notify({
-            text: res.Msg,
-            type: 'success',
-          })
-        } catch (e) {
-          console.log(e)
-          this.$notify({
-            text: e,
-            type: 'error',
-          })
-        }finally {
-          this.loading = false
-        }
-      },
-      createDir: async function () {
-        try {
-          this.loading = true
-          let res = await this.$remote.post({
-            url: '/files/createDir',
-            hide:!this.showOverlay,
-            data: {
-              dirName: this.currentDirectory + this.newDirName + '/',
-            },
-          })
-          this.$notify({
-            text: res.Msg,
-            type: 'success',
-          })
-          this.newDirName = undefined
-          this.showCreatNewDirDialog = false
-          await this.getDirectoryInfo()
-        } catch (e) {
-          console.log(e)
-          this.$notify({
-            text: e,
-            type: 'error',
-          })
-        } finally {
-          this.loading = false
-        }
       },
       uploadFile: function (e) {
         this.$refs[this._uid + 'input'].click(e)
@@ -217,8 +134,8 @@
         await this.upload(file)
         await this.getDirectoryInfo()
       },
-      chooseImage:function(){
-        this.$emit("file-selected",this.selected)
+      chooseImage: function () {
+        this.$emit('file-selected', this.selected)
       },
 
       upload: async function (file) {

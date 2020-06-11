@@ -2,7 +2,7 @@
   import FileInfo from './FileInfo'
 
   export default {
-    name: 'ImageFileMixin',
+    name: 'FileMixin',
     methods:{
       isImage: function (image) {
         if('string' != typeof image){
