@@ -1,84 +1,94 @@
 <template>
-    <v-row align="start">
-        <v-progress-linear
-                indeterminate
-                color="primary"
-                v-show="uploadingFiles"
-        ></v-progress-linear>
-        <v-col
-                v-for="(fileInfo, i) of fileInfoList"
-                :key="i"
-                :cols="4"
-        >
-            <div>
-                <v-img
-                        v-if="isImage(fileInfo.url)"
-                        :src="fileInfo.url"
-                        width="100%"
-                        :aspect-ratio="1"
-                        class="text-right pa-2 grey lighten-2"
-                >
-                    <template v-slot:placeholder>
-                        <v-row
-                                class="fill-height ma-0"
-                                align="center"
-                                justify="center"
-                        >
-                            <v-progress-circular indeterminate
-                                                 color="grey lighten-5"></v-progress-circular>
-                        </v-row>
-                    </template>
-                    <v-btn
-                            icon
-                            dark
-                            :disabled="disabled"
-                            @click.stop="doDeleteFileInfo(fileInfo)"
+    <div>
+        <div class="grey--text lighten-4">{{hint}}</div>
+        <v-row align="start">
+
+            <v-progress-linear
+                    indeterminate
+                    color="primary"
+                    v-show="uploadingFiles"
+            ></v-progress-linear>
+            <v-col
+                    v-for="(fileInfo, i) of fileInfoList"
+                    :key="i"
+                    :cols="4"
+            >
+                <div>
+                    <v-img
+                            v-if="isImage(fileInfo.url)"
+                            :src="fileInfo.url"
+                            width="100%"
+                            :aspect-ratio="1"
+                            class="text-right pa-2 grey lighten-2"
                     >
-                        <v-icon :class="{'shadow-icon':!disabled}">
-                            mdi-close
-                        </v-icon>
-                    </v-btn>
-                </v-img>
-                <v-responsive :aspect-ratio="1" v-else>
-                    <div class="d-flex align-center justify-center pa-2 grey lighten-2 fill-height"
-                         :style="{width: '100%',height:'100%',position:'relative'}">
+                        <template v-slot:placeholder>
+                            <v-row
+                                    class="fill-height ma-0"
+                                    align="center"
+                                    justify="center"
+                            >
+                                <v-progress-circular indeterminate
+                                                     color="grey lighten-5"></v-progress-circular>
+                            </v-row>
+                        </template>
                         <v-btn
                                 icon
                                 dark
                                 :disabled="disabled"
-                                style="position: absolute;right: 5%;top:5%"
                                 @click.stop="doDeleteFileInfo(fileInfo)"
                         >
                             <v-icon :class="{'shadow-icon':!disabled}">
-                                mdi-delete-outline
+                                mdi-close
                             </v-icon>
                         </v-btn>
-                        <v-icon x-large>mdi-file</v-icon>
+                    </v-img>
+                    <v-responsive :aspect-ratio="1" v-else>
+                        <div class="d-flex align-center justify-center pa-2 grey lighten-2 fill-height"
+                             :style="{width: '100%',height:'100%',position:'relative'}">
+                            <v-btn
+                                    icon
+                                    dark
+                                    :disabled="disabled"
+                                    style="position: absolute;right: 5%;top:5%"
+                                    @click.stop="doDeleteFileInfo(fileInfo)"
+                            >
+                                <v-icon :class="{'shadow-icon':!disabled}">
+                                    mdi-delete-outline
+                                </v-icon>
+                            </v-btn>
+                            <v-icon x-large>mdi-file</v-icon>
+                        </div>
+                    </v-responsive>
+                    <div class="subtitle-2 text-no-wrap d-inline-block text-truncate" style="width: 100%">
+                        {{fileInfo.name}}
+                    </div>
+                </div>
+            </v-col>
+            <v-col
+                    v-if="showAdd"
+                    :cols="4"
+            >
+                <v-responsive :aspect-ratio="1">
+                    <div
+                            class="pa-2 grey d-flex flex-row justify-center fill-height text-center align-center lighten-2"
+                            style="height:100%"
+                            @click="onAddFileClick"
+                            v-ripple
+                    >
+                        <v-icon large dark>
+                            mdi-plus
+                        </v-icon>
                     </div>
                 </v-responsive>
-                <div class="subtitle-2 text-no-wrap d-inline-block text-truncate" style="width: 100%">
-                    {{fileInfo.name}}
-                </div>
-            </div>
-        </v-col>
-        <v-col
-                v-if="showAdd"
-                :cols="4"
-        >
-            <v-responsive :aspect-ratio="1">
-                <div
-                        class="pa-2 grey d-flex flex-row justify-center fill-height text-center align-center lighten-2"
-                        style="height:100%"
-                        @click="onAddFileClick"
-                        v-ripple
-                >
-                    <v-icon large dark>
-                        mdi-plus
-                    </v-icon>
-                </div>
-            </v-responsive>
-        </v-col>
-    </v-row>
+            </v-col>
+        </v-row>
+        <v-bottom-sheet v-model="showFileManagerSheet" scrollable inset>
+            <v-file-browser
+                :ref="'file_manager'+_uid"
+                :single="single"
+            ></v-file-browser>
+        </v-bottom-sheet>
+    </div>
 </template>
 
 <script>
@@ -107,13 +117,16 @@
   import ImageFileMixin from './FileMixin'
   //标准的文件信息返回值
   import FileInfo from './FileInfo'
-
+  import VFileBrowser from '@/components/file/VFileBrowser'
   //value转化流程:
   //fileInfoList:  Object/String/Array -> Array[FileInfo]
   //template中统一使用FileInfo来render
   //返回值 emitResult: Array[FileInfo] -> 根据returnType返回对应类型
   export default {
     name: 'VFileSelector',
+    components: {
+      VFileBrowser,
+    },
     mixins: [
       ImageFileMixin,
     ],
@@ -138,6 +151,9 @@
         default: '.doc,.docx,.xls,.xlsx,.pdf,image/*,video/*,audio/*',
       },
 
+      hint: {
+        type: String,
+      },
       fileName: {
         type: String,
         default: 'fileName',
@@ -199,6 +215,8 @@
         default: function (success, error) {
           if (this.localUploader) {
             this.doSelectLocalFile(success, error)
+          } else if (this.useFileManager) {
+            this.doSelectFileManagerFile(success, error)
           }
         },
       },
@@ -212,8 +230,8 @@
             uploadUrl: '/files/upload',
             //上传文件名
             formDataName: 'file',
-            //上传方法,定义后将覆盖前面两个配置,接收一个File参数,返回一个FileInfo对象
-            upload:undefined
+            //TODO 上传方法,定义后将覆盖前面两个配置,接收一个File参数,返回一个FileInfo对象
+            upload: undefined,
           }
         },
       },
@@ -250,7 +268,7 @@
       customUploader: function () {
         return this.uploadType === 'custom'
       },
-      userFileManager: function () {
+      useFileManager: function () {
         return this.uploadType === 'fileManager'
       },
 
@@ -261,7 +279,7 @@
           //Single转Array
           tempArray = this.value ? [this.value] : []
         } else {
-          tempArray = this.value
+          tempArray = this.value ? this.value : []
         }
         let returnObject = this.returnObject
         let returnPath = this.returnPath
@@ -301,12 +319,14 @@
     data: function () {
       return {
         uploadingFiles: false,
+        showFileManagerSheet: false,
       }
     },
     created () {
 
     },
     methods: {
+
       //选择/上传文件部分
       onAddFileClick: async function () {
         try {
@@ -324,7 +344,7 @@
               ))
             }
             this.emitResult(tempArray)
-          } else if(this.customUploader){
+          } else if (this.customUploader) {
             //自定义文件选择/上传:如微信
             //在file-select返回一个Array[FileInfo]对象
             let files = await this.doSelectFileWrapper()
@@ -338,7 +358,7 @@
               ))
             }
             this.emitResult(tempArray)
-          } else if(this.userFileManager){
+          } else if (this.useFileManager) {
             //使用文件管理器文件选择/上传
             //在file-select返回一个Array[FileInfo]对象
             let files = await this.doSelectFileWrapper()
@@ -351,11 +371,12 @@
                 f.name,
               ))
             }
+            console.log(tempArray)
             this.emitResult(tempArray)
-          } else{
+          } else {
             throw Error('未知的文件选择/上传方式')
           }
-        }finally {
+        } finally {
           this.uploadingFiles = false
         }
       },
@@ -398,6 +419,22 @@
         } finally {
         }
       },
+
+      doSelectFileManagerFile: function (success, error) {
+        try {
+          this.showFileManagerSheet = true
+          this.$nextTick(()=>{
+            this.$refs['file_manager'+this._uid].$once('file-selected', (selected)=> {
+              success(selected)
+              this.showFileManagerSheet = false
+            })
+          })
+        } catch (e) {
+          error(e)
+        } finally {
+        }
+      },
+
       //本地文件已选择
       onFileAdded: function (success, error) {
         try {
@@ -427,6 +464,7 @@
         } else {
           let fileInfo = this.getArrayFileInfo(fileInfoList)
           let result = this.getReturnValueFromReturnType(fileInfo)
+          console.log(result)
           this.$emit('selected-file-change', result)
         }
       },

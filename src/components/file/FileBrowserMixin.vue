@@ -52,20 +52,27 @@
           this.loading = false
         }
       },
+
+      //TODO 批量删除
       deleteSelectedFile: async function () {
         try {
           this.loading = true
-          let res = await this.$remote.post({
-            url: '/files/delete',
-            hide:!this.showOverlay,
-            data: {
-              name: this.selected,
-            },
-          })
-          this.$notify({
-            text: res.Msg,
-            type: 'success',
-          })
+          console.log(this.selected)
+          for (const path of this.selected) {
+            let res = await this.$remote.post({
+              url: '/files/delete',
+              hide:!this.showOverlay,
+              data: {
+                name: path,
+              },
+            })
+            this.$notify({
+              text: res.Msg,
+              type: 'success',
+            })
+          }
+          this.selected = undefined
+          await this.getDirectoryInfo()
         } catch (e) {
           console.log(e)
           this.$notify({

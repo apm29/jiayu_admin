@@ -20,21 +20,33 @@
                                 <v-switch class="mr-7" v-model="form.isHot" label="热卖"/>
                                 <v-switch class="mr-7" v-model="form.isOnSale" label="在售"/>
                             </div>
-                            <v-file-uploader
-                                    single
+                            <v-file-selector
+                                    upload-type="fileManager"
                                     v-model="form.picUrl"
                                     hint="* 商品图片"
-                                    grid
-                                    produceOnlyPath
-                                    acceptOnlyPath
-                            />
-                            <v-file-uploader
+                            >
+                            </v-file-selector>
+                            <v-file-selector
+                                    upload-type="fileManager"
                                     v-model="form.gallery"
                                     hint="* 商品画廊"
-                                    grid
-                                    produceOnlyPath
-                                    acceptOnlyPath
-                            />
+                            >
+                            </v-file-selector>
+<!--                            <v-file-uploader-->
+<!--                                    single-->
+<!--                                    v-model="form.picUrl"-->
+<!--                                    hint="* 商品图片"-->
+<!--                                    grid-->
+<!--                                    produceOnlyPath-->
+<!--                                    acceptOnlyPath-->
+<!--                            />-->
+<!--                            <v-file-uploader-->
+<!--                                    v-model="form.gallery"-->
+<!--                                    hint="* 商品画廊"-->
+<!--                                    grid-->
+<!--                                    produceOnlyPath-->
+<!--                                    acceptOnlyPath-->
+<!--                            />-->
                             <v-autocomplete :items="unitDict" outlined label="商品单位(如 个/斤/盒)" persistent-hint
                                             v-model="form.unit"/>
 
@@ -315,6 +327,7 @@
   import VAddableChips from '@/components/select/VAddableChips'
   import VImageViewer from '@/components/image/VImageViewer'
   import GoodsPreview from '@/views/goods/GoodsPreview'
+  import VFileSelector from '@/components/file/VFileSelector'
 
   const defaultForm = {
     goodsSn: undefined,
@@ -354,7 +367,7 @@
 
   export default {
     name: 'GoodsCreate',
-    components: { GoodsPreview, VImageViewer, VAddableChips, VFileUploader, PagedMenu, VCascader, TinyEditor },
+    components: { VFileSelector, GoodsPreview, VImageViewer, VAddableChips, VFileUploader, PagedMenu, VCascader, TinyEditor },
     data: function () {
       return {
         isFooterVisible: false,
