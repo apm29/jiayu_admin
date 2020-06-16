@@ -31,6 +31,7 @@
                     <v-btn small color="error" @click="deleteRole(item)">删除</v-btn>
                     <v-btn small color="info" @click="editRole(item)">编辑</v-btn>
                     <v-btn small color="warning" @click="editRolePermission(item)">授权</v-btn>
+                    <v-btn small color="warning" @click="editRoleMenu(item)">分配菜单</v-btn>
                 </v-row>
             </template>
             <template v-slot:header.operation>
@@ -72,12 +73,41 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="showRoleMenuMenu" max-width="60vw">
+            <v-card :loading="loadingRoleMenuMenu">
+                <v-card-title>分配菜单</v-card-title>
+                <v-card-text>
+                    <v-treeview
+                            :items="menus"
+                            selectable
+                            v-model="roleMenu"
+                            open-on-click
+                    >
+                        <template v-slot:label="{item}">
+                            {{item.name}}--{{item.id}}
+                        </template>
+                    </v-treeview>
+                    {{roleMenu}}
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer/>
+                    <v-btn @click="showRoleMenuMenu = false">取消</v-btn>
+                    <v-btn color="primary" @click="doAddRoleMenu">分配</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-card>
 </template>
 
 <script>
+  import MenuDistributeMixin from '@/views/system/MenuDistributeMixin'
+  import PermissionAuthorizeMixin from '@/views/system/PermissionAuthorizeMixin'
+
   export default {
     name: 'RoleManager',
+    mixins: [
+      MenuDistributeMixin, PermissionAuthorizeMixin,
+    ],
     data () {
       return {
         data: [],
@@ -112,7 +142,7 @@
               text: '操作',
               value: 'operation',
               sortable: false,
-              width: '190px',
+              width: '250px',
             },
           ],
           loading: false,
@@ -124,12 +154,7 @@
           name: undefined,
           description: undefined,
         },
-        showAddMenu: false,
-        showRolePermissionMenu: false,
-        loadingRolePermissionMenu: false,
-        role:undefined,
-        rolePermission: [],
-        permissions: [],
+
       }
     },
     watch: {
@@ -146,6 +171,9 @@
           this.loadRolesData()
         },
       },
+    },
+    created(){
+      this.$on('role-reload',this.loadRolesData)
     },
     methods: {
       loadRolesData: async function () {
@@ -233,59 +261,7 @@
         }
 
       },
-      editRolePermission: async function (role) {
-        this.loadingRolePermissionMenu = true
-        try {
-          let resRolePermission = await this.$remote.post({
-            url: '/authorization/permission/byRole',
-            data: role,
-          })
-          this.rolePermission = resRolePermission.Data.map(p => p.id)
-          let resAllPermission = await this.$remote.post({
-            url: '/authorization/permission/getAsTree',
-          })
-          this.permissions = resAllPermission.Data
-          this.role = role
-        } catch (e) {
-          this.$notify({
-            text: e,
-            type: 'error',
-          })
-        } finally {
-          this.showRolePermissionMenu = true
-          this.loadingRolePermissionMenu = false
-          this.$forceUpdate()
-        }
-      },
-      doAddRolePermission:async function(){
-        this.loadingRolePermissionMenu = true
-        try {
-          let res = await this.$remote.post({
-            url: '/authorization/roles/authorize',
-            data: {
-              role: this.role,
-              permissions:this.rolePermission.map(id=>{
-                return {
-                  id:id
-                }
-              })
-            },
-          })
-          this.showRolePermissionMenu = false
-          this.$notify({
-            text: res.Msg,
-            type: 'success',
-          })
-        } catch (e) {
-          this.$notify({
-            text: e,
-            type: 'error',
-          })
-        } finally {
-          this.loadingRolePermissionMenu = false
-          this.loadRolesData()
-        }
-      },
+
     },
   }
 </script>

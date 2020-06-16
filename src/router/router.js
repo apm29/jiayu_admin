@@ -2,12 +2,13 @@ import VueRouter from 'vue-router'
 import nprogress from 'nprogress'
 import store from '@/store/store'
 import Vue from 'vue'
+
 Vue.use(VueRouter)
-let router =  new VueRouter({
+let router = new VueRouter({
   routes: [
     {
       path: '/',
-      icon:'mdi-compass',
+      icon: 'mdi-compass',
       component: () => import('@/views/IndexLayout'),
       children: [
         {
@@ -23,8 +24,8 @@ let router =  new VueRouter({
       path: '/',
       name: '商品管理',
       component: () => import('@/views/IndexLayout'),
-      meta:{
-        roles:['admin','operator']
+      meta: {
+        roles: ['admin', 'operator'],
       },
       children: [
         {
@@ -45,12 +46,12 @@ let router =  new VueRouter({
       path: '/',
       name: '商城管理',
       component: () => import('@/views/IndexLayout'),
-      meta:{
-        roles:['admin']
+      meta: {
+        roles: ['admin'],
       },
       children: [
         {
-          path: '/mall/manager',
+          path: '/brand/manager',
           name: '品牌管理',
           icon: 'mdi-cards-playing-outline',
           component: () => import('@/views/mall/BrandManager'),
@@ -68,8 +69,8 @@ let router =  new VueRouter({
       path: '/system',
       name: '系统管理',
       component: () => import('@/views/IndexLayout'),
-      meta:{
-        roles:['admin']
+      meta: {
+        roles: ['admin'],
       },
       children: [
         {
@@ -90,6 +91,12 @@ let router =  new VueRouter({
           icon: 'mdi-eye-plus',
           component: () => import('@/views/system/PermissionManager'),
         },
+        {
+          path: '/system/menu',
+          name: '菜单设置',
+          icon: 'mdi-playlist-edit',
+          component: () => import('@/views/system/MenuManager'),
+        },
       ],
     },
     {
@@ -107,7 +114,6 @@ let router =  new VueRouter({
   ],
 })
 
-
 router.beforeEach(async (to, from, next) => {
   nprogress.start()
   if (await store.dispatch('isLogin') || to.path === '/login') {
@@ -123,7 +129,7 @@ router.beforeEach(async (to, from, next) => {
     })
   }
 })
-router.afterEach(()=>{
-  nprogress.start()
+router.afterEach(() => {
+  nprogress.done()
 })
 export default router

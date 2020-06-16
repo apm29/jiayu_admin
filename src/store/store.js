@@ -16,6 +16,8 @@ export default new Vuex.Store({
     user: {
       info: {},
       roles: [],
+      menu: [],
+      allMenu: [],
     },
     layout: {
       miniSide: true,
@@ -47,10 +49,13 @@ export default new Vuex.Store({
     login: function (state, payload) {
       state.user.info = payload.info
       state.user.roles = payload.roles
+      state.user.menu = payload.menu
+      state.user.allMenu = payload.allMenu
     },
     logout: function (state) {
       state.user.info = {}
       state.user.roles = []
+      state.user.menu = []
     },
     loading: function (state, payload) {
       state.app.loading += payload
@@ -65,12 +70,20 @@ export default new Vuex.Store({
         let rolesRes = await remote.post({
           url: '/authorization/roles/mine',
         })
+        let menuRes = await remote.post({
+          url: '/authorization/menu/mine',
+        })
+        let menuAllRes = await remote.post({
+          url: '/authorization/menu/get',
+        })
         let infoRes = await remote.post({
           url: '/user/getUserInfo',
         })
         context.commit('login', {
           roles: rolesRes.Data,
           info: infoRes.Data,
+          menu: menuRes.Data,
+          allMenu: menuAllRes.Data,
         })
       } catch (e) {
         console.log(e)
