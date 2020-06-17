@@ -3,9 +3,6 @@ let dynamicRouters = [
     path: '/',
     name: '商品管理',
     component: () => import('@/views/IndexLayout'),
-    meta: {
-      roles: ['admin', 'operator'],
-    },
     children: [
       {
         path: '/goods/create',
@@ -25,9 +22,6 @@ let dynamicRouters = [
     path: '/',
     name: '商城管理',
     component: () => import('@/views/IndexLayout'),
-    meta: {
-      roles: ['admin'],
-    },
     children: [
       {
         path: '/brand/manager',
@@ -47,9 +41,6 @@ let dynamicRouters = [
     path: '/system',
     name: '系统管理',
     component: () => import('@/views/IndexLayout'),
-    meta: {
-      roles: ['admin'],
-    },
     children: [
       {
         path: '/system/admin',

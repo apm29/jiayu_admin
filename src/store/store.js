@@ -1,7 +1,9 @@
 import Vuex from 'vuex'
 import remote from '@/utils/remote'
-import router from '@/router/router'
+import router, { functionalRoutes } from '@/router/router'
 import config from '@/utils/config'
+import dynamicRouters from '@/router/dynamicRouters'
+import filterAsyncRouter from '@/store/permission'
 
 Vue.use(Vuex)
 
@@ -15,9 +17,13 @@ export default new Vuex.Store({
     },
     user: {
       info: {},
+      //角色
       roles: [],
+      //当前用户菜单权限
       menu: [],
+      //全部菜单权限
       allMenu: [],
+      //自己维护一份动态路由表,用于菜单权限
       generatedRoutes: undefined
     },
     layout: {
@@ -112,6 +118,14 @@ export default new Vuex.Store({
     hasRouteGenerated: async function (context) {
       return !!context.state.user.generatedRoutes
     },
+    generateRoute:async function(context){
+      let filter = filterAsyncRouter(dynamicRouters,context.state.user.menu.map(m => m.path))
+      let generated = [...filter].concat( functionalRoutes)
+      router.addRoutes(
+        generated
+      )
+      context.commit('routeGenerated',generated)
+    }
   },
   modules: {},
 })

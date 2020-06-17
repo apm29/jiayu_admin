@@ -105,6 +105,9 @@ export const constRoutes = [
     component: () => import('@/views/Login'),
     hidden: true,
   },
+]
+
+export const functionalRoutes = [
   {
     path: '*',
     name: '404',
@@ -112,53 +115,21 @@ export const constRoutes = [
     hidden: true,
   },
 ]
+
 let router = new VueRouter({
   routes: constRoutes,
 })
-
-/**
- * 递归过滤异步路由表，返回符合用户角色权限的路由表
- * @param routes asyncRouterMap
- * @param pathList
- */
-function filterAsyncRouter (routes, pathList) {
-  const res = []
-
-  routes.forEach(route => {
-    const routeInfo = { ...route }
-    if (routeInfo.children) {
-      routeInfo.children = filterAsyncRouter(routeInfo.children, pathList)
-      if (routeInfo.children && routeInfo.children.length > 0) {
-        res.push(routeInfo)
-      }
-    } else {
-      if (hasPermission(pathList, routeInfo)) {
-        res.push(routeInfo)
-      }
-    }
-  })
-
-  return res
-}
-
-function hasPermission (pathList, routeInfo) {
-  console.log(routeInfo.path,pathList.findIndex(p => p === routeInfo.path))
-  return pathList.findIndex(p => p === routeInfo.path) >= 0
-}
 
 router.beforeEach(async (to, from, next) => {
   nprogress.start()
   if (await store.dispatch('isLogin') || to.path === '/login') {
     document.title = to.name
     if (await store.dispatch('hasRouteGenerated')) {
+      console.log('A',to)
       next()
     } else {
-      let filter = filterAsyncRouter(dynamicRouters,
-        store.state.user.menu.map(m => m.path))
-      router.addRoutes(
-        filter,
-      )
-      store.commit('routeGenerated',filter)
+      await store.dispatch('generateRoute')
+      console.log('B',to)
       next({ ...to, replace: true })
     }
 
