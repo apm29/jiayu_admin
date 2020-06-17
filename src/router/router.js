@@ -2,7 +2,6 @@ import VueRouter from 'vue-router'
 import nprogress from 'nprogress'
 import store from '@/store/store'
 import Vue from 'vue'
-import dynamicRouters from '@/router/dynamicRouters'
 
 Vue.use(VueRouter)
 export const constRoutes = [
@@ -125,11 +124,9 @@ router.beforeEach(async (to, from, next) => {
   if (await store.dispatch('isLogin') || to.path === '/login') {
     document.title = to.name
     if (await store.dispatch('hasRouteGenerated')) {
-      console.log('A',to)
       next()
     } else {
       await store.dispatch('generateRoute')
-      console.log('B',to)
       next({ ...to, replace: true })
     }
 
