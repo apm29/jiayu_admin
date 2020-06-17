@@ -13,6 +13,7 @@ module.exports = {
     port: 3154,
   },
   configureWebpack: {
+    name:'佳瑜Admin',
     plugins: process.env.NODE_ENV === 'development'
       ? [
         new BundleAnalyzerPlugin(),

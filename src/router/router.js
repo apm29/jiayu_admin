@@ -100,7 +100,7 @@ export const constRoutes = [
   // },
   {
     path: '/login',
-    name: 'login',
+    name: '登录管理平台',
     component: () => import('@/views/Login'),
     hidden: true,
   },
