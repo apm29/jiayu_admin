@@ -146,15 +146,8 @@
     },
     computed: {
       routes: function () {
-        return this.$store.state.user.generatedRoutes.concat(constRoutes).sort((a,b)=>{
-          if(a.path==='/'){
-            return -1
-          }
-          if(a.path ==='*'){
-            return 1
-          }
-          return 0
-        })
+        console.log(11111)
+        return this.$store.state.user.generatedRoutes
       },
     },
 

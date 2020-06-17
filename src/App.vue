@@ -61,15 +61,15 @@
         let dark = this.$store.state.app.dark
         switch (type) {
           case 'info':
-            return dark?'#424242':'white'
+            return dark ? '#424242' : 'white'
           case 'error':
-            return dark?'#424242':'red'
+            return dark ? '#424242' : 'red'
           case 'warning':
-            return dark?'#424242':'orange'
+            return dark ? '#424242' : 'orange'
           case 'success':
-            return dark?'#424242':'white'
+            return dark ? '#424242' : 'white'
           default:
-            return dark?'#424242':'white'
+            return dark ? '#424242' : 'white'
         }
       },
     },
@@ -92,7 +92,7 @@
         padding-right: 12px;
     }
 
-    .fill-width{
+    .fill-width {
         width: 100%;
     }
 </style>
