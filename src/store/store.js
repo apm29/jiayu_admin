@@ -18,6 +18,7 @@ export default new Vuex.Store({
       roles: [],
       menu: [],
       allMenu: [],
+      generatedRoutes: undefined
     },
     layout: {
       miniSide: true,
@@ -60,6 +61,9 @@ export default new Vuex.Store({
     loading: function (state, payload) {
       state.app.loading += payload
     },
+    routeGenerated:function (state, payload) {
+      state.user.generatedRoutes = payload
+    }
   },
   actions: {
     login: async function (context) {
@@ -104,6 +108,9 @@ export default new Vuex.Store({
         await this.dispatch('login')
       }
       return validate
+    },
+    hasRouteGenerated: async function (context) {
+      return !!context.state.user.generatedRoutes
     },
   },
   modules: {},

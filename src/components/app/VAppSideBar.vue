@@ -95,8 +95,7 @@
 </template>
 
 <script>
-  import dynamicRouters from '@/router/dynamicRouters'
-  import router from '@/router/router'
+  import { constRoutes } from '@/router/router'
 
   export default {
     name: 'VAppSidebar',
@@ -147,33 +146,15 @@
     },
     computed: {
       routes: function () {
-
-        let menu = this.$store.state.user.menu
-        let allMenu = this.$store.state.user.allMenu
-        let menuPath = new Set()
-        menu.forEach(m => {
-          let find = allMenu.find(e => e.id === m.parentId)
-          if (find) {
-            //加入父菜单
-            menuPath.add(find.path)
+        return this.$store.state.user.generatedRoutes.concat(constRoutes).sort((a,b)=>{
+          if(a.path==='/'){
+            return -1
           }
-          menuPath.add(m.path)
+          if(a.path ==='*'){
+            return 1
+          }
+          return 0
         })
-        menuPath = Array.from(menuPath)
-        let { routes } = this.$router.options
-        let filter = dynamicRouters.filter(route => {
-          let number = menuPath.findIndex(v => v === route.path)
-          console.log(route.path, number)
-          let oldIndex = routes.findIndex(r => r.path === route.path)
-          return number >= 0 && oldIndex < 0
-        })
-        console.log(filter)
-        this.$router.addRoutes(
-          [...filter],
-        )
-        routes = this.$router.options.routes
-        console.log(routes)
-        return routes
       },
     },
 
