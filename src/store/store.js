@@ -25,7 +25,6 @@ export default new Vuex.Store({
       allMenu: [],
       //自己维护一份动态路由表,用于菜单权限
       generatedRoutes: undefined,
-      generatedRoutesOnInit: false,//标记是否是重新获取用户信息时生成的routes,是的话路由守卫要replace下
     },
     layout: {
       miniSide: true,
@@ -69,12 +68,9 @@ export default new Vuex.Store({
       state.app.loading += payload
     },
     routeGenerated: function (state, payload) {
-      console.log('generate routes')
       state.user.generatedRoutes = payload
     },
-    markRouteGeneratedOnInit:function (state, payload) {
-      state.user.generatedRoutesOnInit = payload
-    }
+
   },
   actions: {
     login: async function (context) {
@@ -116,14 +112,10 @@ export default new Vuex.Store({
     },
     isLogin: async function () {
       let token = localStorage.getItem(config.tokenKey)
-      let validate = !!token
-      if (validate) {
-        await this.dispatch('login')
-      }
-      return validate
+      return !!token
     },
-    hasRouteGenerated: async function (context) {
-      return !!context.state.user.generatedRoutes
+    hasGetUserInfo: async function (context) {
+      return !!context.state.user.info && !!context.state.user.generatedRoutes
     },
     generateRoute: async function (context) {
       let filter = filterAsyncRouter(dynamicRouters,

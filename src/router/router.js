@@ -122,18 +122,11 @@ router.beforeEach(async (to, from, next) => {
   NProgress.start()
   if (await store.dispatch('isLogin') || to.path === '/login') {
     document.title = to.name
-    if ( await store.dispatch('hasRouteGenerated')) {
-      if (store.state.user.generatedRoutesOnInit){
-        //已登录刷新页面
-        store.commit('markRouteGeneratedOnInit',false)
-        next({ ...to, replace: true })
-      }else {
-        next()
-      }
-    } else {
-      store.commit('markRouteGeneratedOnInit',false)
-      await store.dispatch('generateRoute')
+    if ( !await store.dispatch('hasGetUserInfo') && to.path !=='/login') {
+      await store.dispatch('login')
       next({ ...to, replace: true })
+    } else {
+      next()
     }
 
   } else {
