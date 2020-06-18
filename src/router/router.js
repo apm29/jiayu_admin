@@ -1,8 +1,7 @@
 import VueRouter from 'vue-router'
-import nprogress from 'nprogress'
+import NProgress from 'nprogress'
 import store from '@/store/store'
 import Vue from 'vue'
-
 Vue.use(VueRouter)
 export const constRoutes = [
   {
@@ -120,12 +119,19 @@ let router = new VueRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  nprogress.start()
+  NProgress.start()
   if (await store.dispatch('isLogin') || to.path === '/login') {
     document.title = to.name
-    if (await store.dispatch('hasRouteGenerated')) {
-      next()
+    if ( await store.dispatch('hasRouteGenerated')) {
+      if (store.state.user.generatedRoutesOnInit){
+        //已登录刷新页面
+        store.commit('markRouteGeneratedOnInit',false)
+        next({ ...to, replace: true })
+      }else {
+        next()
+      }
     } else {
+      store.commit('markRouteGeneratedOnInit',false)
       await store.dispatch('generateRoute')
       next({ ...to, replace: true })
     }
@@ -141,6 +147,6 @@ router.beforeEach(async (to, from, next) => {
   }
 })
 router.afterEach(() => {
-  nprogress.done()
+  NProgress.done()
 })
 export default router
