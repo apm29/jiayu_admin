@@ -143,10 +143,13 @@
     ],
     props: {
       value: {
-        type: Array | FileInfo | String,
+        type: Array | Object | String,
         validator: function (val) {
+          if ('undefined' === typeof val) {
+            return true
+          }
           let isArray = val instanceof Array
-          let isObject = val instanceof FileInfo
+          let isObject = val instanceof Object
           let isString = val instanceof String || 'string' === typeof val
           let valid = isArray || isObject || isString
           if (!valid) {
@@ -165,6 +168,7 @@
       hint: {
         type: String,
       },
+      //fileName/filePath/fileUrl三项只在returnType为Object时有效
       fileName: {
         type: String,
         default: 'fileName',
@@ -475,10 +479,10 @@
         } else {
           let fileInfo = this.getArrayFileInfo(fileInfoList)
           let result = this.getReturnValueFromReturnType(fileInfo)
-          console.log(result)
           this.$emit('selected-file-change', result)
         }
       },
+      //将Array<FileInfo>转化为FileInfo(取第一个元素)
       getSingleFileInfo: function (fileInfoList) {
         if (fileInfoList && fileInfoList.length === 1) {
           return fileInfoList[0]
@@ -486,6 +490,7 @@
           return undefined
         }
       },
+      //将Array<FileInfo>转化为Array<FileInfo>,不是Array时返回空数组
       getArrayFileInfo: function (fileInfoList) {
         if (fileInfoList && fileInfoList instanceof Array) {
           return [...fileInfoList]
@@ -494,13 +499,17 @@
         }
       },
 
+      //info : Array[FileInfo] 或 FileInfo
+      //吧info转为 Array[Object],Object为定义的{fileUrl,fileName,filePath}
       getReturnValueFromReturnType: function (info) {
         let returnObject = this.returnObject
         let returnPath = this.returnPath
         let returnUrl = this.returnUrl
+        //undefined 原样返回
         if (!info) {
           return info
         }
+        //single时
         if (this.isFileInfo(info)) {
           if (returnObject) {
             let newTypeInfo = {}
@@ -516,6 +525,7 @@
             throw Error('错误的返回类型')
           }
         } else if (info instanceof Array) {
+          //非single
           if (returnObject) {
             return info.map(infoItem => {
               let newTypeInfo = {}
@@ -535,24 +545,31 @@
           throw Error('错误的FileInfo类型')
         }
       },
+      //判断新旧Value是否相同,减少Value更新,防止死循环
       arrayEqual: function (newVal, oldVal) {
         let returnObject = this.returnObject
         let returnPath = this.returnPath
         let returnUrl = this.returnUrl
-        if (newVal instanceof Array && oldVal instanceof Array && newVal.length === oldVal.length) {
-          let find = newVal.find((e, index) => {
-            if (returnObject) {
-              return e.path !== oldVal[index].path
-            } else if (returnPath) {
-              return e !== oldVal[index]
-            } else if (returnUrl) {
-              return e !== oldVal[index]
-            } else {
-              throw Error('错误的返回类型')
-            }
-          })
-          return !find
+        //都为Array时
+        if (newVal instanceof Array && oldVal instanceof Array) {
+          if (newVal.length === oldVal.length) {
+            let find = newVal.find((e, index) => {
+              if (returnObject) {
+                return e[this.filePath] !== oldVal[index][this.filePath]
+              } else if (returnPath) {
+                return e !== oldVal[index]
+              } else if (returnUrl) {
+                return e !== oldVal[index]
+              } else {
+                throw Error('错误的返回类型')
+              }
+            })
+            return !find
+          } else {
+            return false
+          }
         } else {
+          //都为Object或者String(returnType为path/url类型)
           if (newVal !== oldVal && (!oldVal || !newVal)) {
             return false
           }
@@ -565,7 +582,7 @@
           }
         }
       },
-      //删除某个FileInfo
+      //删除某个FileInfo,并触发更新
       doDeleteFileInfo: function (fileInfo) {
         let tempArray = [...this.fileInfoList]
         tempArray.splice(tempArray.indexOf(fileInfo), 1)
