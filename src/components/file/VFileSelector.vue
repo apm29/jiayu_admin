@@ -59,8 +59,19 @@
                             <v-icon x-large>mdi-file</v-icon>
                         </div>
                     </v-responsive>
-                    <div class="subtitle-2 text-no-wrap d-inline-block text-truncate" style="width: 100%">
-                        {{fileInfo.name}}
+                    <div
+                            class="subtitle-2 text-no-wrap d-inline-block text-truncate"
+                            style="width: 100%"
+                    >
+                        <v-tooltip bottom>
+                            <template v-slot:activator="{ on, attrs }">
+                            <span
+                                    v-bind="attrs"
+                                    v-on="on"
+                            > {{fileInfo.name}}</span>
+                            </template>
+                            <span> {{fileInfo.name}}</span>
+                        </v-tooltip>
                     </div>
                 </div>
             </v-col>
@@ -84,8 +95,8 @@
         </v-row>
         <v-bottom-sheet v-model="showFileManagerSheet" scrollable inset>
             <v-file-browser
-                :ref="'file_manager'+_uid"
-                :single="single"
+                    :ref="'file_manager'+_uid"
+                    :single="single"
             ></v-file-browser>
         </v-bottom-sheet>
     </div>
@@ -423,8 +434,8 @@
       doSelectFileManagerFile: function (success, error) {
         try {
           this.showFileManagerSheet = true
-          this.$nextTick(()=>{
-            this.$refs['file_manager'+this._uid].$once('file-selected', (selected)=> {
+          this.$nextTick(() => {
+            this.$refs['file_manager' + this._uid].$once('file-selected', (selected) => {
               success(selected)
               this.showFileManagerSheet = false
             })
@@ -525,10 +536,10 @@
         }
       },
       arrayEqual: function (newVal, oldVal) {
+        let returnObject = this.returnObject
+        let returnPath = this.returnPath
+        let returnUrl = this.returnUrl
         if (newVal instanceof Array && oldVal instanceof Array && newVal.length === oldVal.length) {
-          let returnObject = this.returnObject
-          let returnPath = this.returnPath
-          let returnUrl = this.returnUrl
           let find = newVal.find((e, index) => {
             if (returnObject) {
               return e.path !== oldVal[index].path
@@ -542,7 +553,16 @@
           })
           return !find
         } else {
-          return false
+          if (newVal !== oldVal && (!oldVal || !newVal)) {
+            return false
+          }
+          if (returnObject) {
+            return newVal[this.fileName] === oldVal[this.fileName] &&
+              newVal[this.filePath] === oldVal[this.filePath] &&
+              newVal[this.fileName] === oldVal[this.fileName]
+          } else {
+            return newVal !== oldVal
+          }
         }
       },
       //删除某个FileInfo
