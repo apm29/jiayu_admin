@@ -1,5 +1,6 @@
 import VueRouter from 'vue-router'
 import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 import store from '@/store/store'
 import Vue from 'vue'
 
@@ -131,8 +132,8 @@ const routeWhiteList = [
 
 router.beforeEach(async (to, from, next) => {
   NProgress.start()
+  document.title = to.name || store.state.app.name
   if (await store.dispatch('isLogin') || to.path === '/login') {
-    document.title = to.name
     if (!await store.dispatch('hasGetUserInfo') && to.path !== '/login') {
       await store.dispatch('login')
       next({ ...to, replace: true })

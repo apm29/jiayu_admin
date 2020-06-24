@@ -10,8 +10,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     app: {
-      name: 'MY ADMIN',
-      subtext: 'pearl',
+      name: '佳谕ADMIN',
+      subtext: '商城管理平台',
       dark: false,
       loading: 0,
     },
