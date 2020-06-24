@@ -70,7 +70,6 @@ export default new Vuex.Store({
     routeGenerated: function (state, payload) {
       state.user.generatedRoutes = payload
     },
-
   },
   actions: {
     login: async function (context) {
@@ -96,7 +95,6 @@ export default new Vuex.Store({
           menu: menuRes.Data,
           allMenu: menuAllRes.Data,
         })
-        context.commit('markRouteGeneratedOnInit',true)
         await context.dispatch('generateRoute')
       } catch (e) {
         console.log(e)
@@ -126,6 +124,10 @@ export default new Vuex.Store({
       )
       context.commit('routeGenerated', generated)
     },
+    hasMenuPermission:function (context,payload) {
+      let path = payload.path
+      return context.state.user.menu.find(m => m.path === path)
+    }
   },
   modules: {},
 })

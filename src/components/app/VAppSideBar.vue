@@ -146,7 +146,6 @@
     },
     computed: {
       routes: function () {
-        console.log(11111)
         return this.$store.state.user.generatedRoutes
       },
     },
