@@ -93,6 +93,7 @@
                             :key="subItem.name + subIndex"
                             :to="subItem.path"
                             active-class="accent elevation-3 white--text"
+                            :class="{'pl-8':!miniVariant}"
                             link
                     >
                         <v-list-item-icon>
@@ -120,9 +121,8 @@
         clipped: true,
         temporary: false,
         sidebarColor: {
-          bgColor1: 'rgba(0, 0, 0, 0.6)',
-          bgColor2: 'rgba(0, 0, 0, 0.2)',
-          dark: true,
+          bgColor1: 'rgba(0, 0, 0, 0.8)',
+          bgColor2: 'rgba(0, 0, 0, 0.5)',
         },
       }
     },
@@ -161,6 +161,9 @@
       routes: function () {
         return this.$store.state.user.generatedRoutes
       },
+      dark:function () {
+        return this.$store.state.app.dark
+      }
     },
 
   }

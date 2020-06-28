@@ -80,7 +80,8 @@
 </script>
 <style>
     .image-thumbnail {
-        width: 90px;
+        max-width: 90px;
+        height: 80px;
     }
 
     .image-icon {
