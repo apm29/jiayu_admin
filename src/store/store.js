@@ -27,7 +27,7 @@ export default new Vuex.Store({
       generatedRoutes: undefined,
     },
     layout: {
-      miniSide: true,
+      miniSide: false,
       showToolbar: true,
       tags: [],
     },
