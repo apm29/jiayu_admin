@@ -4,11 +4,14 @@
         <notifications>
             <template slot="body" slot-scope="props">
                 <v-card class="mx-2 my-1">
-                    <v-list-item three-line :class="{
-                      [getColor(props.item.type)]:true,
-                      'lighten-5':true
-                    }">
-                        <v-list-item-icon>
+                    <v-list-item
+                            :three-line = "props.item.text && props.item.title"
+                            :class="{
+                              [getColor(props.item.type)]:true,
+                              'lighten-5':true
+                            }"
+                    >
+                        <v-list-item-icon class="align-self-center">
                             <v-icon :color="props.item.type">{{getIcon(props.item.type)}}</v-icon>
                         </v-list-item-icon>
                         <v-list-item-content>
@@ -20,7 +23,7 @@
                             <div v-else v-html="props.item.text">
                             </div>
                         </v-list-item-content>
-                        <v-list-item-action>
+                        <v-list-item-action class="align-self-center">
                             <v-btn icon @click="props.close">
                                 <v-icon>mdi-close</v-icon>
                             </v-btn>

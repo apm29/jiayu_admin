@@ -215,7 +215,7 @@
                 {{form.id?'更新':'上架'}}
             </v-btn>
         </v-footer>
-        <v-btn v-if="form.id && !isFooterVisible" fab bottom right fixed color="primary">
+        <v-btn v-if="form.id && !isFooterVisible" @click="saveGoods" fab bottom right fixed color="primary">
             更新
         </v-btn>
         <v-dialog v-model="showAddSpecificationDialog" width="60vw">
