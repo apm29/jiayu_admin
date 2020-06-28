@@ -4,9 +4,10 @@ import router, { constRoutes, functionalRoutes } from '@/router/router'
 import config from '@/utils/config'
 import dynamicRouters from '@/router/dynamicRouters'
 import filterAsyncRouter from '@/store/permission'
+import localStorageTools from '@/store/localStorageTools'
 
 Vue.use(Vuex)
-
+let layout = localStorageTools.getLayout()
 export default new Vuex.Store({
   state: {
     app: {
@@ -27,32 +28,33 @@ export default new Vuex.Store({
       generatedRoutes: undefined,
     },
     layout: {
-      miniSide: false,
-      showToolbar: true,
-      tags: [],
+      miniSide: layout.miniSide,
+      showToolbar: layout.showToolbar,
     },
   },
   getters: {},
   mutations: {
     showToolBar: function (state, payload) {
       state.layout.showToolbar = payload
+      localStorageTools.setToolbar(state.layout.showToolbar)
     },
-
     toggleToolbar: function (state) {
       state.layout.showToolbar = !state.layout.showToolbar
+      localStorageTools.setToolbar(state.layout.showToolbar)
+    },
+    setMiniSide: function (state, payload) {
+      state.layout.miniSide = payload
+      localStorageTools.setMiniSide(state.layout.miniSide)
+    },
+    toggleMiniSide: function (state) {
+      state.layout.miniSide = !state.layout.miniSide
+      localStorageTools.setMiniSide(state.layout.miniSide)
     },
     dark: function (state, payload) {
       state.app.dark = payload.dark
       payload.vue.$vuetify.theme.dark = payload.dark
     },
 
-    setMiniSide: function (state, payload) {
-      state.layout.miniSide = payload
-    },
-
-    toggleMiniSide: function (state) {
-      state.layout.miniSide = !state.layout.miniSide
-    },
     login: function (state, payload) {
       state.user.info = payload.info
       state.user.roles = payload.roles
@@ -118,16 +120,16 @@ export default new Vuex.Store({
     generateRoute: async function (context) {
       let filter = filterAsyncRouter(dynamicRouters,
         context.state.user.menu.map(m => m.path))
-      let generated = [...constRoutes,...filter,...functionalRoutes]
+      let generated = [...constRoutes, ...filter, ...functionalRoutes]
       router.addRoutes(
-        generated
+        generated,
       )
       context.commit('routeGenerated', generated)
     },
-    hasMenuPermission:function (context,payload) {
+    hasMenuPermission: function (context, payload) {
       let path = payload.path
       return context.state.user.menu.find(m => m.path === path)
-    }
+    },
   },
   modules: {},
 })
