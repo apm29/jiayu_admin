@@ -15,7 +15,6 @@
         </div>
         <v-treeview
                 dense
-                light
                 class="expandable-tree"
                 :items="categories"
                 item-key="id"
@@ -54,7 +53,7 @@
                     <v-list-item-action>
                         <v-img class="image-icon grey lighten-2" :src="$path+item.iconUrl"></v-img>
                     </v-list-item-action>
-                    <v-list-item-content class="subtitle-1">
+                    <v-list-item-content>
                         <v-list-item-title >
                             {{item.name}}
                         </v-list-item-title>
