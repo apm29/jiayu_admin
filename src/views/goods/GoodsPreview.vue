@@ -1,6 +1,10 @@
 <template>
     <div>
-        <v-menu offset-y :close-on-content-click="false" :close-on-click="false" fixed>
+        <v-menu
+                offset-y
+                :close-on-content-click="false"
+                fixed
+        >
             <template v-slot:activator="{on}">
                 <v-btn fab fixed top right v-on="on" style="margin-top: 120px" color="accent">
                     预览
@@ -187,6 +191,9 @@
       },
     },
     methods: {
+      onClickOutside:function(e){
+
+      },
       calculateGroupedSpecificationsMap: function () {
         this.groupedSpecificationsMap = this.specifications.reduce((map, current) => {
           let group = map.get(current.specification)
@@ -223,6 +230,7 @@
         width: 250px;
         height: 400px;
         border-radius: 5px;
+        background-color: white;
     }
 
     .goods-title {

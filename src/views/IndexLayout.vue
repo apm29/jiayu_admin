@@ -16,29 +16,16 @@
 <script>
   import VAppSideBar from '@/components/app/VAppSideBar'
   import VAppSettingBar from '@/components/app/VAppSettingBar'
+  import StateMixin from '@/mixins/StateMixin'
 
   export default {
     name: 'IndexLayout',
+    mixins:[StateMixin],
     components: {
       VAppSettingBar,
       VAppSideBar,
     },
-    data: function () {
-      return {
-        loading: false,
-      }
-    },
-    watch: {
-      '$store.state.app.loading': {
-        immediate: true,
-        handler: async function (val) {
-          if (val <= 0) {
-            await this.$delay(350)
-          }
-          this.loading = val > 0
-        },
-      },
-    },
+
 
   }
 </script>
