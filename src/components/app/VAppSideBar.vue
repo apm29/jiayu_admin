@@ -47,6 +47,22 @@
             <v-divider></v-divider>
 
             <template v-for="(route,index) of routes">
+                <!--没有子菜单-->
+                <v-list-item
+                        v-if="!route.hidden && (!route.children || route.children.length === 0)"
+                        :key="route.name + index"
+                        :to="route.path"
+                        active-class="accent elevation-3 white--text"
+                        link
+                >
+                    <v-list-item-icon>
+                        <v-icon>{{ route.icon }}</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                        <v-list-item-title>{{ route.name }}</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+                <!--单个子菜单-->
                 <v-list-item
                         v-if="!route.hidden && route.children && route.children.length === 1"
                         :key="route.children[0].name + index"
@@ -65,7 +81,6 @@
                         v-if="!route.hidden && route.children && route.children.length > 1"
                         :key="route.name + index"
                         color="secondary"
-                        active-class="white--text"
                 >
                     <template v-slot:prependIcon>
                         <v-icon>{{ route.icon || 'mdi-menu'}}</v-icon>
@@ -95,8 +110,6 @@
 </template>
 
 <script>
-  import { constRoutes } from '@/router/router'
-
   export default {
     name: 'VAppSidebar',
     data () {

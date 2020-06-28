@@ -2,6 +2,7 @@ let dynamicRouters = [
   {
     path: '/',
     name: '商品管理',
+    icon:'mdi-widgets',
     component: () => import('@/views/IndexLayout'),
     children: [
       {
@@ -21,18 +22,19 @@ let dynamicRouters = [
   {
     path: '/',
     name: '商城管理',
+    icon:'mdi-shopping',
     component: () => import('@/views/IndexLayout'),
     children: [
       {
         path: '/brand/manager',
         name: '品牌管理',
-        icon: 'mdi-cards-playing-outline',
+        icon: 'mdi-apple',
         component: () => import('@/views/mall/BrandManager'),
       },
       {
         path: '/category/manager',
         name: '类目管理',
-        icon: 'mdi-file-tree',
+        icon: 'mdi-sitemap',
         component: () => import('@/views/mall/CategoryManager'),
       },
     ],
@@ -40,18 +42,19 @@ let dynamicRouters = [
   {
     path: '/system',
     name: '系统管理',
+    icon:'mdi-cogs',
     component: () => import('@/views/IndexLayout'),
     children: [
       {
         path: '/system/admin',
         name: '管理员设置',
-        icon: 'mdi-monitor-lock',
+        icon: 'mdi-account-supervisor',
         component: () => import('@/views/system/AdminManager'),
       },
       {
         path: '/system/role',
         name: '角色管理',
-        icon: 'mdi-account-supervisor',
+        icon: 'mdi-account-tie',
         component: () => import('@/views/system/RoleManager'),
       },
       {
@@ -63,7 +66,7 @@ let dynamicRouters = [
       {
         path: '/system/menu',
         name: '菜单设置',
-        icon: 'mdi-playlist-edit',
+        icon: 'mdi-rhombus-split',
         component: () => import('@/views/system/MenuManager'),
       },
     ],
