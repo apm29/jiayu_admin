@@ -94,6 +94,12 @@
         box-shadow: 1px 1px 3px #e9edf5;
         padding-right: 12px;
     }
+    .theme--dark .expandable-tree .v-treeview-node__content{
+        background-color: #333 !important;
+        margin-bottom: 2px;
+        box-shadow: 2px 2px 3px #000;
+        padding-right: 12px;
+    }
 
     .fill-width {
         width: 100%;
