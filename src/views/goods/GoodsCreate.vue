@@ -23,6 +23,7 @@
                             <v-file-selector
                                     upload-type="fileManager"
                                     v-model="form.picUrl"
+                                    single
                                     hint="* 商品图片"
                             >
                             </v-file-selector>
