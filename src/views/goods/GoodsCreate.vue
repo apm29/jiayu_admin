@@ -20,6 +20,7 @@
                                 <v-switch class="mr-7" v-model="form.isHot" label="热卖"/>
                                 <v-switch class="mr-7" v-model="form.isOnSale" label="在售"/>
                             </div>
+                            <v-text-field outlined label="排序" type="number" persistent-hint v-model="form.sortOrder"/>
                             <v-file-selector
                                     upload-type="fileManager"
                                     v-model="form.picUrl"

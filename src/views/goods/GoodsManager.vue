@@ -73,6 +73,7 @@
               {
                 text: '图片',
                 value: 'picUrl',
+                sortable: false,
               },
               {
                 text: '操作',
