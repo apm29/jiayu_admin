@@ -34,5 +34,13 @@ module.exports = {
       'vue':'Vue',
       'vuetify':'Vuetify'
     },
+    context: path.resolve(__dirname, './'),
+    //别名配置
+    resolve: {
+      extensions: [',js', '.vue'],
+      alias: {
+        '@': path.resolve('src'),
+      }
+    }
   },
 }
