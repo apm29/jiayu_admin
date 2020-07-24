@@ -1,6 +1,7 @@
 import ConfirmDialog from './ConfirmDialog.vue'
 import AlertDialog from './AlertDialog.vue'
 import Toast from './Toast.vue'
+import Vue from 'vue'
 import vuetify from '@/plugins/vuetify'
 
 let confirmConstructor = Vue.extend(Object.assign(ConfirmDialog, { vuetify }))
@@ -20,23 +21,25 @@ let toastConstructor = Vue.extend(Object.assign(Toast, { vuetify }))
  * })
  */
 export default {
-
   // 提示对话框
   alert: function (options) {
     // 整理options
-    if (typeof (options) != 'object') options = {}
-    options = Object.assign({
-      title: '警告',
-      okBtnText: '确定',
-    }, options)
+    if (typeof options != 'object') options = {}
+    options = Object.assign(
+      {
+        title: '警告',
+        okBtnText: '确定',
+      },
+      options,
+    )
     // promise封装，ok执行resolve
     return new Promise((resolve, reject) => {
       try {
-        let container = document.getElementById('#app-alert')
+        let container = document.getElementById('app-alert')
         if (!container) {
           let div = document.createElement('div')
           div.id = 'app-alert';
-          (document.getElementById('app')||document.body).appendChild(div)
+          (document.getElementById('app') || document.body).appendChild(div)
           container = div
         }
 
@@ -47,11 +50,13 @@ export default {
             }
           },
           destroyed () {
-            container.removeChild(dialog.$el)
+            for (let child of container.children) {
+              container.removeChild(child)
+            }
             resolve(dialog.value)
           },
         })
-        container.appendChild(dialog.$mount().$el)
+        dialog.$mount(container)
       } catch (e) {
         reject(e)
       }
@@ -60,20 +65,23 @@ export default {
   // 确认对话框
   confirm: function (options) {
     // 整理options
-    if (typeof (options) != 'object') options = {}
-    options = Object.assign({
-      title: '确认',
-      okBtnText: '确定',
-      cancelBtnText: '取消',
-    }, options)
+    if (typeof options != 'object') options = {}
+    options = Object.assign(
+      {
+        title: '确认',
+        okBtnText: '确定',
+        cancelBtnText: '取消',
+      },
+      options,
+    )
     // promise封装，ok执行resolve，cancel执行reject
     return new Promise((resolve, reject) => {
       try {
-        let container = document.getElementById('#app-confirm')
+        let container = document.getElementById('app-confirm')
         if (!container) {
           let div = document.createElement('div')
           div.id = 'app-confirm';
-          (document.getElementById('app')||document.body).appendChild(div)
+          (document.getElementById('app') || document.body).appendChild(div)
           container = div
         }
 
@@ -84,11 +92,13 @@ export default {
             }
           },
           destroyed () {
-            container.removeChild(dialog.$el)
+            for (let child of container.children) {
+              container.removeChild(child)
+            }
             resolve(dialog.value)
           },
         })
-        container.appendChild(dialog.$mount().$el)
+        dialog.$mount(container)
       } catch (e) {
         reject(e)
       }
@@ -97,39 +107,53 @@ export default {
   // 消息提示
   toast: function (options) {
     // 整理options
-    if (typeof (options) != 'object') options = {}
-    options = Object.assign({
-      msg: '消息',
-      absolute: false,
-      top: false,
-      right: true,
-      bottom: true,
-      left: false,
-      timeout: 3000,
-      color: '',
-      multi_line: false,
-      close_text: 'mdi-close',
-      show_close: true,
-      close_text_color: 'white--text',
-    }, options)
+    if (typeof options != 'object') options = {}
+    options = Object.assign(
+      {
+        msg: '消息',
+        absolute: false,
+        top: true,
+        right: false,
+        bottom: false,
+        left: false,
+        timeout: 3000,
+        vertical: false,
+        color: 'info',
+        multi_line: false,
+        close_text: 'mdi-close',
+        show_close: true,
+        close_text_color: 'white--text',
+      },
+      options,
+    )
     // promise封装，ok执行resolve，cancel执行reject
     return new Promise((resolve, reject) => {
       try {
-        let container = document.getElementById('app')||document.body
+        let container = document.getElementById('app-toast')
+        if (!container) {
+          let div = document.createElement('div')
+          div.id = 'app-toast';
+          (document.getElementById('app') || document.body).appendChild(div)
+          container = div
+        }
         let dialog = new toastConstructor({
           data () {
             return {
+              show: true,
               options: options,
             }
           },
           destroyed () {
-            container.removeChild(dialog.$el)
-            resolve(dialog.value)
+            for (let child of container.children) {
+              container.removeChild(child)
+            }
           },
         })
-        container.appendChild(dialog.$mount().$el)
+        dialog.$mount(container)
       } catch (e) {
         reject(e)
+      } finally {
+        resolve()
       }
     })
   },

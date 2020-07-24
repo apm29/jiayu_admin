@@ -498,7 +498,7 @@
       //array:[...[]] 二维数组
       //计算所有组合
       calculateCombinations: function (array) {
-        if (!array instanceof Array) {
+        if (array instanceof! Array) {
           throw '必须是二维数组'
         }
         if (array.length === 1) {
@@ -506,7 +506,7 @@
         }
         let tempArray = [...array]
         while (tempArray.length > 1) {
-          if (!tempArray[0] instanceof Array || !tempArray[1] instanceof Array) {
+          if (tempArray[0] instanceof! Array || tempArray[1] instanceof! Array) {
             throw '必须是二维数组'
           }
           let newArrayOne = []
@@ -707,6 +707,7 @@
 
       footerIntersect: function (entries, observer, isIntersecting) {
         this.isFooterVisible = entries[0].isIntersecting
+        console.log(observer,isIntersecting)
       },
 
       saveGoods: async function () {

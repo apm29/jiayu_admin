@@ -104,11 +104,11 @@
 
 <script>
   //标准的文件信息返回值
-  let fileInfoTemplate = {
-    path: '/xxx/xxx',
-    url: 'http://xxxx.xx/xxx/xxx',
-    name: 'xxx',
-  }
+  //let fileInfoTemplate = {
+  //  path: '/xxx/xxx',
+  //  url: 'http://xxxx.xx/xxx/xxx',
+  //  name: 'xxx',
+  //}
   //1.返回格式
   //    return-path     ----> 返回 path
   //    return-object   ----> 返回整个FileInfo
@@ -143,7 +143,7 @@
     ],
     props: {
       value: {
-        type: Array | Object | String,
+        type: [Array,Object,String],
         validator: function (val) {
           if ('undefined' === typeof val) {
             return true
@@ -430,8 +430,7 @@
           document.body.append(inputElement)
           inputElement.click()
         } catch (e) {
-          error(e)
-        } finally {
+          console.log(e)
         }
       },
 
@@ -446,7 +445,6 @@
           })
         } catch (e) {
           error(e)
-        } finally {
         }
       },
 

@@ -45,15 +45,9 @@
 </template>
 
 <script>
-  import 'viewerjs/dist/viewer.css'
-  import Viewer from 'v-viewer'
-
-  Vue.use(Viewer)
   export default {
     name: 'VImageViewer',
-    components: {
-      Viewer,
-    },
+
     props: {
       //v-img属性
       alt: String,
@@ -61,12 +55,12 @@
       eager: Boolean,
       gradient: String,
       lazySrc: String,
-      height: Number | String,
-      maxHeight: Number | String,
-      maxWidth: Number | String,
-      minHeight: Number | String,
-      minWidth: Number | String,
-      width: Number | String,
+      height: [Number,String],
+      maxHeight: [Number,String],
+      maxWidth: [Number,String],
+      minHeight: [Number,String],
+      minWidth:[Number,String],
+      width: [Number,String],
       options: {
         type: Object,
         default: () => ({
@@ -81,17 +75,17 @@
       },
       sizes: String,
       src: {
-        type: String | Object,
+        type: [Object,String],
         default: '',
       },
       srcset: String,
       transition: {
-        type: Boolean | String,
+        type: [Boolean,String],
         default: 'fade-transition',
       },
       //其他属性
-      imgClass: Object | String,
-      imgStyle: Object | String,
+      imgClass: [Object,String],
+      imgStyle: [Object,String],
 
       srcList: {
         type: Array,

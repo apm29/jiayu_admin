@@ -52,7 +52,7 @@
     components: { LoadMoreList },
     props: {
       result: {
-        type: Object | Number | String,
+        type: [Object,Number,String],
         default: undefined,
       },
       loadFunction: {
@@ -222,7 +222,6 @@
           }
         } catch (e) {
           console.log(e)
-        } finally {
         }
       },
       search: function (val) {
@@ -238,7 +237,7 @@
         this.searching = false
         this.$emit('menuSelectionChanged', undefined)
       },
-      chooseItem: function (item, index) {
+      chooseItem: function (item) {
         this.showMenu = false
         this.searching = false
         if (this.returnObject) {

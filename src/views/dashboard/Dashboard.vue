@@ -123,7 +123,7 @@
         let max = seriesData.reduce((max, data) => {
           return max < data ? data : max
         }, 5)
-        const shadowData = this.collect.map(e => max)
+        const shadowData = this.collect.map(() => max)
         const xAxisData = this.collect.map(e => e.name)
         this.collectChartOption =  {
           backgroundColor: '#394056',
@@ -289,7 +289,7 @@
         let max = seriesData.reduce((max, data) => {
           return max < data ? data : max
         }, 5)
-        const shadowData = this.previewByGoods.map(e => max)
+        const shadowData = this.previewByGoods.map(() => max)
         const xAxisData = this.previewByGoods.map(e => e.name)
         this.previewChartOption =  {
           backgroundColor: '#394056',
@@ -455,7 +455,7 @@
         let max = seriesData.reduce((max, data) => {
           return max < data ? data : max
         }, 5)
-        const shadowData = this.previewByUser.map(e => max)
+        const shadowData = this.previewByUser.map(()=> max)
         const xAxisData = this.previewByUser.map(e => e.nickname)
         this.previewByUserChartOption =  {
           backgroundColor: '#394056',

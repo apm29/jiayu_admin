@@ -52,8 +52,10 @@
     name: 'PagedMenu',
     props: {
       result: {
-        type: Object | Number | String,
-        default: undefined,
+        type: [Object,Number,String],
+        default: function () {
+            return undefined;
+        },
       },
       loadFunction: {
         type: Function,
@@ -63,7 +65,7 @@
         },
       },
       menuHeight: {
-        type: Number | String,
+        type: [Number,String],
         default: '30vh',
       },
       itemLabel: {
@@ -171,21 +173,7 @@
           }
         },
       },
-      data: {
-        handler: function (val) {
-          // if (this.searching) {
-          //   return
-          // }
-          // let find = val.find((item) => {
-          //   return item[this.itemValue] === this.result
-          // })
-          // if (find) {
-          //   this.resultText = find[this.itemLabel]
-          // } else {
-          //   this.callLoadFunction()
-          // }
-        },
-      },
+
       'settings.page': {
         handler: function () {
           this.callLoadFunction()
@@ -232,7 +220,6 @@
           }
         } catch (e) {
           console.log(e)
-        } finally {
         }
       },
       search: function (val) {
@@ -250,7 +237,7 @@
         this.searching = false
         this.$emit('menuSelectionChanged', undefined)
       },
-      chooseItem: function (item, index) {
+      chooseItem: function (item) {
         this.showMenu = false
         this.searching = false
         if (this.returnObject) {

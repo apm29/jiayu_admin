@@ -1,7 +1,8 @@
-import axios from 'axios'
-import config from '@/utils/config'
-import router from '@/router/router'
-import store from '@/store/store'
+import axios from "axios"
+import config from "@/utils/config"
+import Vue from "vue";
+import router from "@/router/router"
+import store from "@/store/store"
 
 axios.defaults.withCredentials = true // 是否允许跨域
 axios.defaults.timeout = 10000
@@ -15,6 +16,7 @@ class Response{
     this.Msg = msg
   }
 }
+new Response();
 export default {
   // 上传处理
   async upload (options) {

@@ -117,7 +117,7 @@
   export default {
     name: 'VFileBrowser',
     props: {
-      value: String | Array,
+      value: [String,Array],
 
       single: {
         type: Boolean,
@@ -184,7 +184,7 @@
           }
           await this.getDirectoryInfo()
         } catch (e) {
-          error(e)
+          console.log(e)
         } finally {
           document.getElementById(fileInputElementId).remove()
         }
@@ -207,8 +207,7 @@
           document.body.append(inputElement)
           inputElement.click()
         } catch (e) {
-          error(e)
-        } finally {
+          console.log(e)
         }
       },
 

@@ -6,6 +6,8 @@ import router from '@/router/router'
 import remote from '@/utils/remote'
 import messenger from '@/utils/messenger/messenger'
 import config from '@/utils/config'
+import Vue from "vue";
+import moment from 'moment'
 Vue.use(Notifications)
 Vue.config.productionTip = false
 Vue.prototype.$remote = remote

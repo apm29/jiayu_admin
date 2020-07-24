@@ -191,9 +191,7 @@
       },
     },
     methods: {
-      onClickOutside:function(e){
 
-      },
       calculateGroupedSpecificationsMap: function () {
         this.groupedSpecificationsMap = this.specifications.reduce((map, current) => {
           let group = map.get(current.specification)

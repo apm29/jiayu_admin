@@ -5,7 +5,7 @@ import config from '@/utils/config'
 import dynamicRouters from '@/router/dynamicRouters'
 import filterAsyncRouter from '@/store/permission'
 import localStorageTools from '@/store/localStorageTools'
-
+import Vue from "vue";
 Vue.use(Vuex)
 let layout = localStorageTools.getLayout()
 export default new Vuex.Store({

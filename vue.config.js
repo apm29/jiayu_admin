@@ -8,7 +8,7 @@ module.exports = {
   publicPath: process.env.NODE_ENV === 'development'?'./':'/manager',
   outputDir: 'dist',
   assetsDir: 'static',
-  lintOnSave: process.env.NODE_ENV === 'development',
+  //lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
   devServer: {
     port: 3154,
@@ -17,7 +17,9 @@ module.exports = {
     name:'佳瑜Admin',
     plugins: process.env.NODE_ENV === 'development'
       ? [
-        new BundleAnalyzerPlugin(),
+        new BundleAnalyzerPlugin({
+          analyzerPort:8899
+        }),
         new CompressionWebpackPlugin({
           test:/\.js$|\.html$|.\css/, //匹配文件名
           threshold: 10240,//对超过10k的数据压缩
