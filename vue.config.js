@@ -1,5 +1,6 @@
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
+const path = require('path')
 module.exports = {
   'transpileDependencies': [
     'vuetify',
